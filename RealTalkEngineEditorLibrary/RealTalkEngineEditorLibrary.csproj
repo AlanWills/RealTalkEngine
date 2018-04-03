@@ -84,11 +84,11 @@
     <Compile Include="StorySystem\NodeViews\DialogNodeView.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\CelesteEnginePlus\BindingsKernel\BindingsKernel.csproj">
+    <ProjectReference Include="..\CelesteEngine\BindingsKernel\BindingsKernel.csproj">
       <Project>{cbd493a8-dfc5-444a-9bc6-ca02ccd76410}</Project>
       <Name>BindingsKernel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\CelesteEnginePlus\CelesteEngineEditorLibrary\CelesteEngineEditorLibrary.csproj">
+    <ProjectReference Include="..\CelesteEngine\CelesteEngineEditorLibrary\CelesteEngineEditorLibrary.csproj">
       <Project>{b2b41924-ff3d-451f-8a37-7b078053e910}</Project>
       <Name>CelesteEngineEditorLibrary</Name>
     </ProjectReference>

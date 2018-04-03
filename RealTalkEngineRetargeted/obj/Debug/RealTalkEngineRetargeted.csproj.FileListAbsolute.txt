@@ -3,3 +3,9 @@ C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngineR
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngineRetargeted\obj\Debug\RealTalkEngineRetargeted.csproj.CoreCompileInputs.cache
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngineRetargeted\obj\Debug\RealTalkEngineRetargeted.dll
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngineRetargeted\obj\Debug\RealTalkEngineRetargeted.pdb
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineRetargeted\bin\Debug\RealTalkEngineRetargeted.dll
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineRetargeted\bin\Debug\RealTalkEngineRetargeted.pdb
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineRetargeted\obj\Debug\RealTalkEngineRetargeted.csprojResolveAssemblyReference.cache
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineRetargeted\obj\Debug\RealTalkEngineRetargeted.csproj.CoreCompileInputs.cache
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineRetargeted\obj\Debug\RealTalkEngineRetargeted.dll
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineRetargeted\obj\Debug\RealTalkEngineRetargeted.pdb

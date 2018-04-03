@@ -47,17 +47,6 @@ C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\BindingsKernel.pdb
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\CelesteEngineEditorLibrary.pdb
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\RealTalkEngineRetargeted.pdb
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\log4net.xml
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\NodeNetwork.xml
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\NodeNetworkToolkit.xml
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\ReactiveUI.pdb
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\ReactiveUI.xml
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\Splat.pdb
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\System.Reactive.Core.xml
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\System.Reactive.Interfaces.xml
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\System.Reactive.Linq.xml
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\System.Reactive.PlatformServices.xml
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\System.Reactive.Windows.Threading.xml
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\DevZest.WpfDocking.xml
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\obj\Debug\RealTalkEngineEditorLibrary.csprojResolveAssemblyReference.cache
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\obj\Debug\GeneratedInternalTypeHelper.g.cs
