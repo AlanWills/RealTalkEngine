@@ -45,6 +45,11 @@
     <Compile Include="StorySystem\Nodes\DialogNode.cs" />
     <Compile Include="StorySystem\Story.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\CelesteEngine\BindingsKernel\BindingsKernel.csproj">
+      <Project>{CBD493A8-DFC5-444A-9BC6-CA02CCD76410}</Project>
+      <Name>BindingsKernel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

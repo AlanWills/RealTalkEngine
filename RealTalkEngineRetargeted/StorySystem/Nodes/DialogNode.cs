@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BindingsKernel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,7 @@ namespace RealTalkEngine.StorySystem.Nodes
         /// <summary>
         /// The dialog that will be spoken for this node.
         /// </summary>
+        [Serialize]
         public string Dialog { get; set; } = "";
 
         #endregion
