@@ -43,11 +43,9 @@ C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\BindingsKernel.dll
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\CelesteEngineEditorLibrary.dll
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\RealTalkEngineRetargeted.dll
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\DevZest.WpfDocking.dll
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\BindingsKernel.pdb
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\CelesteEngineEditorLibrary.pdb
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\RealTalkEngineRetargeted.pdb
-C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\DevZest.WpfDocking.xml
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\obj\Debug\RealTalkEngineEditorLibrary.csprojResolveAssemblyReference.cache
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\obj\Debug\RealTalkEngineEditorLibrary_MarkupCompile.cache
@@ -57,3 +55,12 @@ C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\obj\Debug\RealTalkEngineEditorLibrary.csproj.CoreCompileInputs.cache
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\obj\Debug\RealTalkEngineEditorLibrary.dll
 C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\obj\Debug\RealTalkEngineEditorLibrary.pdb
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\obj\Debug\Editors\StoryEditor\StoryEditor.g.cs
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\MahApps.Metro.dll
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\ControlzEx.dll
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\MahApps.Metro.pdb
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\MahApps.Metro.xml
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\System.Windows.Interactivity.xml
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\bin\Debug\ControlzEx.pdb
+C:\Users\alawi\Source\Repos\RealTalkGames\EmergencyResponderGame\RealTalkEngine\RealTalkEngineEditorLibrary\obj\Debug\Editors\StoryEditor\StoryEditor.baml

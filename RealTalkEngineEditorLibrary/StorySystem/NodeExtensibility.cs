@@ -1,4 +1,4 @@
-﻿using CelesteEngineEditorLibrary.Extensibility;
+﻿using CelesteEngineEditor.Extensibility;
 using NodeNetwork.ViewModels;
 using RealTalkEngineEditorLibrary.StorySystem.Attributes;
 using System;
