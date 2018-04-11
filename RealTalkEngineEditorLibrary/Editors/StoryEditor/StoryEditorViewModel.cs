@@ -65,7 +65,7 @@ namespace RealTalkEngineEditorLibrary.Editors
             }
 
             BaseNode node = Story.CreateNode(type, name);
-            NodeViewModel nodeViewModel = NodeViewModelFactory.CreateViewModel(node);
+            NodeViewModel nodeViewModel = CreateNodeViewModel(node);
             nodeViewModel.Position = position;
             
             return nodeViewModel;

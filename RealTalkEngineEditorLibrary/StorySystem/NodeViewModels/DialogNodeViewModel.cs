@@ -4,6 +4,7 @@ using ReactiveUI;
 using RealTalkEngine.StorySystem.Nodes;
 using RealTalkEngineEditorLibrary.StorySystem.Attributes;
 using RealTalkEngineEditorLibrary.StorySystem.NodeViews;
+using System.Reactive;
 
 namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
 {
@@ -40,7 +41,14 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
         public DialogNodeViewModel(DialogNode dialogNode) :
             base(dialogNode)
         {
-            CreateInputPin<NodeInputViewModel>("Input");
+            CreateInputPin<NodeInputViewModel>("Input").Changed.Subscribe(Observer.Create((IReactivePropertyChangedEventArgs<IReactiveObject> e) =>
+            {
+                NodeInputViewModel viewModel = e.Sender as NodeInputViewModel;
+                if (e.PropertyName == nameof(viewModel.Connections))
+                {
+
+                }
+            }));
             CreateOutputPin<NodeOutputViewModel>("Output");
         }
     }
