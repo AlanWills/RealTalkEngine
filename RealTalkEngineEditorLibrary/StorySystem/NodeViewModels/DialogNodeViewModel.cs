@@ -7,7 +7,7 @@ using RealTalkEngineEditorLibrary.StorySystem.NodeViews;
 
 namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
 {
-    [Node("Dialog Node")]
+    [NodeViewModel(typeof(DialogNode), "Dialog Node")]
     public class DialogNodeViewModel : BaseNodeViewModel<DialogNode>
     {
         #region Registration
@@ -37,7 +37,8 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
 
         #endregion
 
-        public DialogNodeViewModel()
+        public DialogNodeViewModel(DialogNode dialogNode) :
+            base(dialogNode)
         {
             CreateInputPin<NodeInputViewModel>("Input");
             CreateOutputPin<NodeOutputViewModel>("Output");

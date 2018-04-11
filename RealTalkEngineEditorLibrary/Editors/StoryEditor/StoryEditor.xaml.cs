@@ -5,6 +5,7 @@ using RealTalkEngine.StorySystem;
 using RealTalkEngineEditorLibrary.Editors;
 using RealTalkEngineEditorLibrary.StorySystem;
 using RealTalkEngineEditorLibrary.StorySystem.Attributes;
+using RealTalkEngineEditorLibrary.StorySystem.NodeViewModels;
 using System;
 using System.Reflection;
 using System.Windows;
@@ -28,18 +29,16 @@ namespace RealTalkEngineEditorLibrary.Editors
             base(new StoryEditorViewModel())
         {
             InitializeComponent();
-
-            Network.ViewModel = StoryEditorViewModel.Network;
             
             ContextMenu contextMenu = new ContextMenu();
             MenuItem createMenuItem = new MenuItem() { Header = "Create" };
             contextMenu.Items.Add(createMenuItem);
 
-            foreach (Type type in NodeExtensibility.LoadNodes())
+            foreach (Type type in NodeViewModelFactory.NodeViewModels)
             {
-                NodeAttribute nodeAttribute = type.GetCustomAttribute<NodeAttribute>();
+                NodeViewModelAttribute nodeAttribute = type.GetCustomAttribute<NodeViewModelAttribute>();
                 MenuItem nodeMenuItem = new MenuItem() { Header = nodeAttribute.MenuName };
-                nodeMenuItem.DataContext = type;
+                nodeMenuItem.DataContext = nodeAttribute.NodeType;
                 nodeMenuItem.Click += NodeMenuItem_Click;
                 createMenuItem.Items.Add(nodeMenuItem);
             }
@@ -56,12 +55,12 @@ namespace RealTalkEngineEditorLibrary.Editors
 
         private void NodeMenuItem_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            Type type = (sender as MenuItem).DataContext as Type;
+            Type nodeType = (sender as MenuItem).DataContext as Type;
             Point nodePosition = Network.NetworkViewportRegion.Location;
             Point originalMousePosition = (Point)Network.ContextMenu.DataContext;
             nodePosition.X += originalMousePosition.X;
             nodePosition.Y += originalMousePosition.Y;
-            StoryEditorViewModel.CreateNode(type, "New " + (sender as MenuItem).Header, nodePosition);
+            StoryEditorViewModel.CreateNode(nodeType, "New " + (sender as MenuItem).Header, nodePosition);
         }
     }
 }

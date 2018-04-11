@@ -5,14 +5,14 @@ using RealTalkEngineEditorLibrary.StorySystem.Interfaces;
 
 namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
 {
-    public class BaseNodeViewModel<T> : NodeViewModel, INodeViewModel where T : BaseNode, new()
+    public abstract class BaseNodeViewModel<T> : NodeViewModel, INodeViewModel where T : BaseNode, new()
     {
         #region Properties and Fields
 
         /// <summary>
         /// The underlying node object which we will be manipulating through this view model.
         /// </summary>
-        public T Node { get; private set; }
+        public T Node { get; }
 
         /// <summary>
         /// The name of the node being manipulated via this view model.
@@ -30,9 +30,13 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
 
         #endregion
 
-        public BaseNodeViewModel()
+        public BaseNodeViewModel(T node)
         {
-            Node = new T();
+            CelDebug.AssertNotNull(node);
+            Node = node;
+
+            // Have to set the name on the base view model otherwise it will not get refreshed in the UI when we create this view model
+            base.Name = node.Name;
         }
 
         #region Pin Utility Functions

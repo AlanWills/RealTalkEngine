@@ -43,6 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StorySystem\Nodes\BaseNode.cs" />
     <Compile Include="StorySystem\Nodes\DialogNode.cs" />
+    <Compile Include="StorySystem\Nodes\NodeFactory.cs" />
     <Compile Include="StorySystem\Story.cs" />
   </ItemGroup>
   <ItemGroup>

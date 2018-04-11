@@ -82,9 +82,9 @@
     </Compile>
     <Compile Include="Editors\StoryEditor\StoryEditorViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StorySystem\Attributes\NodeAttribute.cs" />
+    <Compile Include="StorySystem\Attributes\NodeViewModelAttribute.cs" />
     <Compile Include="StorySystem\Interfaces\INodeViewModel.cs" />
-    <Compile Include="StorySystem\NodeExtensibility.cs" />
+    <Compile Include="StorySystem\NodeViewModels\NodeViewModelFactory.cs" />
     <Compile Include="StorySystem\NodeViewModels\BaseNodeViewModel.cs" />
     <Compile Include="StorySystem\NodeViewModels\DialogNodeViewModel.cs" />
     <Compile Include="StorySystem\NodeViews\BaseNodeView.cs" />
