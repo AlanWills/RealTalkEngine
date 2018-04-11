@@ -100,6 +100,19 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
         }
 
         /// <summary>
+        /// Use the inputted node type name to create a view model from all the registered node view models.
+        /// Returns null if no view model exists for the inputted node type name.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static NodeViewModel CreateViewModel(string nodeTypeName)
+        {
+            BaseNode node = NodeFactory.CreateNode(nodeTypeName);
+            return node != null ? CreateViewModel(node) : null;
+        }
+
+        /// <summary>
         /// Use the inputted node to create a view model from all the registered node view models.
         /// Returns null if no view model exists for the inputted node type.
         /// </summary>
@@ -108,6 +121,31 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
         /// <returns></returns>
         public static T CreateViewModel<T>(BaseNode node) where T : NodeViewModel, INodeViewModel
         {
+            return CreateViewModel(node) as T;
+        }
+
+        /// <summary>
+        /// Use the inputted node type name to create a view model from all the registered node view models.
+        /// Returns null if no view model exists for the inputted node type name.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static T CreateViewModel<T>(string nodeTypeName) where T : NodeViewModel, INodeViewModel
+        {
+            return CreateViewModel(nodeTypeName) as T;
+        }
+
+        /// <summary>
+        /// Use the inputted node generic type to create a view model from all the registered node view models.
+        /// Returns null if no view model exists for the inputted node type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        public static T CreateViewModel<T>() where T : BaseNode, new()
+        {
+            T node = new T();
             return CreateViewModel(node) as T;
         }
 

@@ -49,7 +49,7 @@ namespace RealTalkEngine.StorySystem.Nodes
         #region Factory Functions
 
         /// <summary>
-        /// Use the inputted node type anme to create a node from all the registered nodes.
+        /// Use the inputted node type name to create a node from all the registered nodes.
         /// Returns null if no type exists for the inputted node type name.
         /// </summary>
         /// <param name="node"></param>
@@ -65,7 +65,7 @@ namespace RealTalkEngine.StorySystem.Nodes
             CelDebug.Fail("No node type for inputted node type " + nodeType);
             return null;
         }
-
+        
         #endregion
     }
 }

@@ -21,7 +21,7 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
         #endregion
 
         #region Properties and Fields
-
+        
         /// <summary>
         /// The dialog text that is represented by this node.
         /// </summary>

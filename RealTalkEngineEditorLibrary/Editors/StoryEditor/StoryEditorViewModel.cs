@@ -21,7 +21,7 @@ namespace RealTalkEngineEditorLibrary.Editors
         public Story Story { get { return TargetObject as Story; } }
 
         /// <summary>
-        /// The network GUI on display within the story editor.
+        /// The node map for this story.
         /// </summary>
         public NetworkViewModel Network { get; } = new NetworkViewModel();
 

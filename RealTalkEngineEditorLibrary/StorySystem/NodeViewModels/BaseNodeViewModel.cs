@@ -1,7 +1,10 @@
 ﻿using BindingsKernel;
 using NodeNetwork.ViewModels;
+using ReactiveUI;
 using RealTalkEngine.StorySystem.Nodes;
 using RealTalkEngineEditorLibrary.StorySystem.Interfaces;
+using System.Reactive;
+using System.Windows;
 
 namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
 {
@@ -17,7 +20,6 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
         /// <summary>
         /// The name of the node being manipulated via this view model.
         /// </summary>
-        [Serialize, DisplayPriority(0)]
         public new string Name
         {
             get { return Node.Name; }
@@ -27,9 +29,9 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
                 base.Name = value;
             }
         }
-
+        
         #endregion
-
+        
         public BaseNodeViewModel(T node)
         {
             CelDebug.AssertNotNull(node);
@@ -37,6 +39,19 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
 
             // Have to set the name on the base view model otherwise it will not get refreshed in the UI when we create this view model
             base.Name = node.Name;
+
+            // Have to set the position on the base view model otherwise it will not get refreshed in the UI when we create this view model
+            Position = new Point(node.Position.X, node.Position.Y);
+
+            // The node view model's position can be changed in the network, so we add a callback here to update the node's position too when that happens
+            Changed.Subscribe(Observer.Create((IReactivePropertyChangedEventArgs<IReactiveObject> e) =>
+            {
+                if (e.PropertyName == nameof(Position))
+                {
+                    Node.Position.X = (float)Position.X;
+                    Node.Position.Y = (float)Position.Y;
+                }
+            }));
         }
 
         #region Pin Utility Functions
