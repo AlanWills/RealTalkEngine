@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Alexa.NET" Version="1.5.2" />
+  </ItemGroup>
+
 </Project>

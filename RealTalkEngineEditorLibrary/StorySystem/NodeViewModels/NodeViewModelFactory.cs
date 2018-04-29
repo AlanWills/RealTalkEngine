@@ -54,12 +54,13 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
             NodeViewModelsImpl.Clear();
             NodeViewModelLookup.Clear();
 
-            // Go through each DLL
-            foreach (FileInfo assembly in ExtensibilityUtils.AssemblyFiles)
+            // Go through each custom loaded type
+            foreach (Type type in ExtensibilityUtils.Types)
             {
-                // Load the assembly
-                Assembly loadedAssembly = Assembly.LoadFile(assembly.FullName);
-                NodeViewModelsImpl.AddRange(loadedAssembly.GetTypes().Where(x => !x.IsAbstract && x.IsSubclassOf(typeof(NodeViewModel))));
+                if (!type.IsAbstract && type.IsSubclassOf(typeof(NodeViewModel)))
+                {
+                    NodeViewModelsImpl.Add(type);
+                }
             }
 
             foreach (Type viewModel in NodeViewModelsImpl)

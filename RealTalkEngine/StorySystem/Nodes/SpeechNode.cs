@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Alexa.NET.Response.Ssml;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace RealTalkEngine.StorySystem.Nodes
 {
-    public class DialogNode : BaseNode
+    public class SpeechNode : BaseNode
     {
         #region Properties and Fields
 
         /// <summary>
-        /// The dialog that will be spoken for this node.
+        /// The SSML elements that will be used for this node.
         /// </summary>
-        public string Dialog { get; set; } = "";
+        public Speech Speech { get; set; } = new Speech();
 
         #endregion
     }

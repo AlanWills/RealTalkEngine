@@ -15,7 +15,6 @@ namespace RealTalkEngine.StorySystem
     {
         #region Properties and Fields
 
-        [Serialize]
         private List<BaseNode> NodesImpl { get; set; } = new List<BaseNode>();
 
         private ReadOnlyCollection<BaseNode> nodes;
