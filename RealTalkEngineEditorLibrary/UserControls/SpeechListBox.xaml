@@ -1,0 +1,11 @@
+﻿<UserControl x:Class="RealTalkEngine.UserControls.SpeechListBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <!--Want a list here, with re-ordering and insertion/deletion-->
+    <!--Is it possible to have view/view models for this?-->
+    <!--Does property data template extend from user control or something?-->
+    <TextBlock Text="WubbaLubbaDubDub"/>
+</UserControl>
