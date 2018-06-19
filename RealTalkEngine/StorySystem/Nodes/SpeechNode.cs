@@ -15,7 +15,7 @@ namespace RealTalkEngine.StorySystem.Nodes
         /// The SSML elements that will be used for this node.
         /// </summary>
         public Speech Speech { get; set; } = new Speech();
-
+        
         #endregion
     }
 }

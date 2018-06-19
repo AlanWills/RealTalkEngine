@@ -117,9 +117,12 @@
     <Compile Include="StorySystem\NodeViewModels\SpeechNodeViewModel.cs" />
     <Compile Include="StorySystem\NodeViews\BaseNodeView.cs" />
     <Compile Include="StorySystem\NodeViews\SpeechNodeView.cs" />
-    <Compile Include="UserControls\SpeechListBox.xaml.cs">
+    <Compile Include="UserControls\SpeechListBox\SpeechDataTemplate.cs" />
+    <Compile Include="UserControls\SpeechListBox\SpeechListBox.xaml.cs">
       <DependentUpon>SpeechListBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\SpeechListBox\SpeechListBoxItemTemplateSelector.cs" />
+    <Compile Include="UserControls\SpeechListBox\SpeechListBoxViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CelesteEngine\BindingsKernel\BindingsKernel.csproj">
@@ -140,11 +143,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\SpeechListBox.xaml">
+    <Resource Include="UserControls\SpeechListBox\SpeechDataTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Page Include="UserControls\SpeechListBox\SpeechListBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Resource Include="ResourceDictionaries\EditorPropertyDataTemplates.xaml">
+    <Resource Include="ResourceDictionaries\EditorResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>

@@ -3,9 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d">
+             mc:Ignorable="d"
+             xmlns:user_controls="clr-namespace:RealTalkEngine.UserControls">
     <!--Want a list here, with re-ordering and insertion/deletion-->
-    <!--Is it possible to have view/view models for this?-->
-    <!--Does property data template extend from user control or something?-->
-    <TextBlock Text="WubbaLubbaDubDub"/>
+    <!--Item template selector for speech elements-->
+    <ListBox ItemsSource="{Binding Elements}">
+        <ListBox.ItemTemplateSelector>
+            <user_controls:SpeechListBoxItemTemplateSelector FallbackDataTemplate="{StaticResource StringSpeechDataTemplate}"/>
+        </ListBox.ItemTemplateSelector>
+    </ListBox>
 </UserControl>

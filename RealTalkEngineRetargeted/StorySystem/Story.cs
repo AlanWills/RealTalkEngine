@@ -1,10 +1,12 @@
 ﻿using BindingsKernel;
 using BindingsKernel.Serialization;
+using RealTalkEngine.Alexa;
 using RealTalkEngine.StorySystem.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -33,6 +35,13 @@ namespace RealTalkEngine.StorySystem
 
             foreach (BaseNode baseNode in Nodes)
             {
+                if (baseNode is SpeechNode)
+                {
+                    Speech speech = new Speech();
+                    speech.Elements.Add(new Sentence("Test"));
+                    (baseNode as SpeechNode).Speech = speech;
+                }
+
                 baseNode.WriteXml(writer);
             }
 
@@ -55,7 +64,7 @@ namespace RealTalkEngine.StorySystem
                 BaseNode node = NodeFactory.CreateNode(elementName);
                 if (node != null)
                 {
-                    node.ReadXml(reader, new Dictionary<Guid, System.Reflection.PropertyInfo>());
+                    node.ReadXml(reader, new Dictionary<Guid, PropertyInfo>());
                     NodesImpl.Add(node);
                 }
             }

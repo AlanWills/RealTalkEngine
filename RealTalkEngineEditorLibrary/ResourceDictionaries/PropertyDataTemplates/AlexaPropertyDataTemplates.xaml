@@ -4,6 +4,6 @@
                     xmlns:alexa="clr-namespace:RealTalkEngine.Alexa;assembly=RealTalkEngineRetargeted"
                     xmlns:user_controls="clr-namespace:RealTalkEngine.UserControls;assembly=RealTalkEngineEditorLibrary">
     <data_templates:PropertyDataTemplate x:Key="SpeechDataTemplate" DataType="{x:Type alexa:Speech}">
-        <user_controls:SpeechListBox/>
+        <user_controls:SpeechListBox Speech="{Binding DataContext.Value, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGridCell}}}"/>
     </data_templates:PropertyDataTemplate>
 </ResourceDictionary>
