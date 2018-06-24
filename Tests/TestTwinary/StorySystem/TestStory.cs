@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Twinary.StorySystem;
+using Twinary.StorySystem.Nodes;
 
 namespace TestTwinary.StorySystem
 {
@@ -101,6 +102,89 @@ namespace TestTwinary.StorySystem
             Assert.IsNotNull(speechNode.Tags);
             Assert.AreEqual(1, speechNode.Tags.Count);
             Assert.AreEqual("Node", speechNode.Tags[0]);
+            Assert.IsNotNull(speechNode.Transitions);
+            AssertExt.IsEmpty(speechNode.Transitions);
+        }
+
+        [TestMethod]
+        public void Story_Load_StoryWithSingleLink_DeserializesCorrectly()
+        {
+            /*
+            {
+              "passages": [
+                {
+                  "text": "[[Source Node Text|Destination Node]]",
+                  "links": [
+                    {
+                      "name": "Source Node Text|Destination Node",
+                      "link": "Source Node Text|Destination Node"
+                    }
+                  ],
+                  "name": "Source Node",
+                  "pid": "1",
+                  "position": {
+                    "x": "412",
+                    "y": "187.5"
+                  }
+                },
+                {
+                  "text": "Destination Node Text",
+                  "name": "Destination Node",
+                  "pid": "2",
+                  "position": {
+                    "x": "412",
+                    "y": "337.5"
+                  }
+                }
+              ],
+              "name": "SingleLinkStory",
+              "startnode": "1",
+              "creator": "Twine",
+              "creator-version": "2.2.1",
+              "ifid": "09337916-8C97-456D-B4BC-93182ECA4911"
+            }
+            */
+
+            Story story = Story.Load(JsonStoryResources.SingleLinkStory);
+
+            Assert.IsNotNull(story);
+            Assert.AreEqual("SingleLinkStory", story.Name);
+            Assert.AreEqual(1, story.StartNode);
+            Assert.AreEqual("Twine", story.Creator);
+            Assert.AreEqual("2.2.1", story.CreatorVersion);
+            Assert.AreEqual(new Guid("09337916-8C97-456D-B4BC-93182ECA4911"), story.IfID);
+            Assert.IsNotNull(story.Nodes);
+            Assert.AreEqual(2, story.Nodes.Count);
+
+            // First node
+            {
+                SpeechNode speechNode = story.Nodes[0];
+
+                Assert.IsNotNull(speechNode);
+                Assert.AreEqual("Source Node", speechNode.Name);
+                Assert.AreEqual("[[Source Node Text|Destination Node]]", speechNode.Text);
+                Assert.AreEqual(0, speechNode.NodeIndex);
+                Assert.IsNotNull(speechNode.Tags);
+                AssertExt.IsEmpty(speechNode.Tags);
+                Assert.IsNotNull(speechNode.Transitions);
+                Assert.AreEqual(1, speechNode.Transitions.Count);
+                Assert.AreEqual("Source Node Text|Destination Node", speechNode.Transitions[0].Name);
+                Assert.AreEqual("Destination Node", speechNode.Transitions[0].DestinationName);
+            }
+
+            // Second node
+            {
+                SpeechNode speechNode = story.Nodes[1];
+
+                Assert.IsNotNull(speechNode);
+                Assert.AreEqual("Destination Node", speechNode.Name);
+                Assert.AreEqual("Destination Node Text", speechNode.Text);
+                Assert.AreEqual(1, speechNode.NodeIndex);
+                Assert.IsNotNull(speechNode.Tags);
+                AssertExt.IsEmpty(speechNode.Tags);
+                Assert.IsNotNull(speechNode.Transitions);
+                AssertExt.IsEmpty(speechNode.Transitions);
+            }
         }
 
         #endregion

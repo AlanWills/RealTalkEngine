@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using Twinary.StorySystem.Transitions;
 
-namespace Twinary.StorySystem
+namespace Twinary.StorySystem.Nodes
 {
     [Serializable]
     public class SpeechNode
@@ -12,7 +13,7 @@ namespace Twinary.StorySystem
         #region Serialized Properties and Fields
 
         /// <summary>
-        /// The name display name of this node.
+        /// The display name of this node.
         /// </summary>
         [JsonProperty(PropertyName = "name", Required = Required.Always), DataMember(Name = "name", IsRequired = true)]
         public string Name { get; private set; }
@@ -35,6 +36,12 @@ namespace Twinary.StorySystem
         /// </summary>
         [JsonProperty(PropertyName = "tags"), DataMember(Name = "tags")]
         public List<string> Tags { get; private set; } = new List<string>();
+
+        /// <summary>
+        /// The transitions from this node to other nodes.
+        /// </summary>
+        [JsonProperty(PropertyName = "links"), DataMember(Name = "links")]
+        public List<Transition> Transitions { get; private set; } = new List<Transition>();
 
         #endregion
 
