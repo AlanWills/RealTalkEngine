@@ -1,0 +1,33 @@
+﻿{
+  "passages": [
+    {
+      "text": "[[Source Node Text|Destination Node]]",
+      "links": [
+        {
+          "name": "Source Node Text|Destination Node",
+          "link": "Source Node Text|Destination Node"
+        }
+      ],
+      "name": "Source Node",
+      "pid": "1",
+      "position": {
+        "x": "412",
+        "y": "187.5"
+      }
+    },
+    {
+      "text": "Destination Node Text",
+      "name": "Destination Node",
+      "pid": "2",
+      "position": {
+        "x": "412",
+        "y": "337.5"
+      }
+    }
+  ],
+  "name": "SingleLinkStory",
+  "startnode": "1",
+  "creator": "Twine",
+  "creator-version": "2.2.1",
+  "ifid": "09337916-8C97-456D-B4BC-93182ECA4911"
+}

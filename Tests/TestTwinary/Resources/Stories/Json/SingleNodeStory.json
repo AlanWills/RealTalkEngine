@@ -1,0 +1,21 @@
+﻿{
+  "passages": [
+    {
+      "text": "Single Node Text",
+      "name": "Single Node",
+      "pid": "1",
+      "position": {
+        "x": "412",
+        "y": "187.5"
+      },
+      "tags": [
+        "Node"
+      ]
+    }
+  ],
+  "name": "SingleNodeStory",
+  "startnode": "1",
+  "creator": "Twine",
+  "creator-version": "2.2.1",
+  "ifid": "E496B74E-C387-4E7F-B66E-9FB8927FE229"
+}
