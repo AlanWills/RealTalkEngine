@@ -40,7 +40,7 @@ namespace AudioConstsGenerator
                     builder.AppendLine("using System.Linq;");
                     builder.AppendLine("using System.Text;");
                     builder.AppendLine("using System.Threading.Tasks;");
-                    builder.Append("\nclass ");
+                    builder.Append("\npublic class ");
                     builder.Append(directoryClass);
                     builder.AppendLine("AudioConsts\n{");
 
