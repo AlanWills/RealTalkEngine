@@ -1,37 +1,31 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Text;
+using Twinary.StorySystem.Nodes;
 
 namespace Twinary.StorySystem.Transitions
 {
     [Serializable]
     public class Transition
     {
-        #region Serialized Properties
+        #region Properties and Fields
 
         /// <summary>
-        /// The display name of this transition.
+        /// The source node that this transitino is connected from.
         /// </summary>
-        [JsonProperty(PropertyName = "name", Required = Required.Always), DataMember(Name = "name", IsRequired = true)]
-        public string Name { get; private set; }
+        public SpeechNode Source { get; private set; }
 
         /// <summary>
-        /// The link which will be of the form [Link Text in Source|Destination Node Name]
+        /// The destination node that this transition is connected to.
         /// </summary>
-        [JsonProperty(Required = Required.Always), DataMember(IsRequired = true)]
-        private string link;
+        public SpeechNode Destination { get; private set; }
 
         #endregion
-        
-        #region Properties
 
-        /// <summary>
-        /// The display name of the destination node for this transition.
-        /// </summary>
-        public string DestinationName { get { return link.Split('|')[1]; } }
-
-        #endregion
+        public Transition(SpeechNode source, SpeechNode destination)
+        {
+            Source = source;
+            Destination = destination;
+        }
     }
 }
