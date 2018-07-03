@@ -28,6 +28,22 @@ namespace TestTwinary.StorySystem.Transitions
         }
 
         [TestMethod]
+        public void Constructor_Default_SetsLinkText_ToEmptyString()
+        {
+            TwineLink twineLink = new TwineLink();
+
+            Assert.AreEqual("", twineLink.LinkText);
+        }
+
+        [TestMethod]
+        public void Constructor_SetsLinkText_ToCorrectValue()
+        {
+            TwineLink twineLink = new TwineLink("Name", "Text|Destination");
+
+            Assert.AreEqual("Text", twineLink.LinkText);
+        }
+
+        [TestMethod]
         public void Constructor_Default_SetsDestinationName_ToEmptyString()
         {
             TwineLink twineLink = new TwineLink();

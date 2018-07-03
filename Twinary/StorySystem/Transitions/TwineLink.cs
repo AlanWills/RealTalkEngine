@@ -29,6 +29,11 @@ namespace Twinary.StorySystem.Transitions
         #region Properties
 
         /// <summary>
+        /// The link text for this transition.
+        /// </summary>
+        public string LinkText { get { return (Link.IndexOf('|') >= 0) ? Link.Split('|')[0] : ""; } }
+
+        /// <summary>
         /// The display name of the destination node for this transition.
         /// </summary>
         public string DestinationName { get { return (Link.IndexOf('|') >= 0) ? Link.Split('|')[1] : ""; } }

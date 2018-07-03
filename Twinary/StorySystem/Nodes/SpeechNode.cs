@@ -42,7 +42,7 @@ namespace Twinary.StorySystem.Nodes
         /// The twine links from this node to other nodes.
         /// Not really used in the runtime, but more for an intermediate storage.
         /// </summary>
-        [JsonProperty(PropertyName = "links"), DataMember(Name = "links")]
+        [JsonProperty(PropertyName = "links")]
         protected List<TwineLink> TwineLinks { get; private set; } = new List<TwineLink>();
 
         #endregion
@@ -58,6 +58,7 @@ namespace Twinary.StorySystem.Nodes
         /// The transitions between this node and other nodes within the story.
         /// Used at runtime to determine the next nodes when moving through the story.
         /// </summary>
+        [DataMember]
         private List<Transition> Transitions { get; set; } = new List<Transition>();
         
         /// <summary>
@@ -111,6 +112,18 @@ namespace Twinary.StorySystem.Nodes
         public Transition GetTransitionAt(uint index)
         {
             return index < TransitionCount ? Transitions[(int)index] : null;
+        }
+
+        #endregion
+
+        #region Utility Functions
+
+        public SpeechNode GetNextNode()
+        {
+            foreach (Transition transition in Transitions)
+            {
+                if (transition.)
+            }
         }
 
         #endregion
