@@ -17,45 +17,40 @@ namespace Twinary.StorySystem
         /// <summary>
         /// The name of this story.
         /// </summary>
-        [JsonProperty(PropertyName = "name", Required = Required.Always), DataMember(Name = "name", IsRequired = true)]
+        [JsonProperty(PropertyName = "name", Required = Required.Always)]
         public string Name { get; private set; }
 
         /// <summary>
         /// The 1-based index of the node index which is the starting node for this story.
         /// </summary>
-        [JsonProperty(PropertyName = "startnode", Required = Required.Always), DataMember(Name = "startnode", IsRequired = true)]
-        private int StartNodeIndex { get; set; }
+        [JsonProperty(PropertyName = "startnode", Required = Required.Always)]
+        public int OneBasedStartNodeIndex { get; private set; }
 
         /// <summary>
         /// The software responsible for creating this story.
         /// </summary>
-        [JsonProperty(PropertyName = "creator"), DataMember(Name = "creator")]
+        [JsonProperty(PropertyName = "creator")]
         public string Creator { get; private set; }
 
         /// <summary>
         /// The version of the software responsible for creating this story.
         /// </summary>
-        [JsonProperty(PropertyName = "creator-version"), DataMember(Name = "creator-version")]
+        [JsonProperty(PropertyName = "creator-version")]
         public string CreatorVersion { get; private set; }
 
-        [JsonProperty(PropertyName = "ifid"), DataMember(Name = "ifid")]
+        [JsonProperty(PropertyName = "ifid")]
         public Guid IfID { get; private set; }
 
         /// <summary>
         /// The nodes contained within this story.
         /// </summary>
-        [JsonProperty(PropertyName = "passages"), DataMember(Name = "passages")]
+        [JsonProperty(PropertyName = "passages")]
         public List<SpeechNode> Nodes { get; private set; } = new List<SpeechNode>();
 
         #endregion
 
         #region Properties and Fields
-
-        /// <summary>
-        /// The starting node for this story.
-        /// </summary>
-        public SpeechNode StartNode { get { return (0 < StartNodeIndex && StartNodeIndex <= Nodes.Count) ? Nodes[StartNodeIndex - 1] : null; } }
-
+        
         /// <summary>
         /// A dictionary of node name to node instance which allows us to quickly access nodes from their names.
         /// </summary>
@@ -105,7 +100,6 @@ namespace Twinary.StorySystem
         private void Initialize()
         {
             InitializeNodeLookup();
-            InitializeNodeTransitions();
         }
 
         /// <summary>
@@ -122,20 +116,7 @@ namespace Twinary.StorySystem
                 }
             }
         }
-
-        /// <summary>
-        /// Set up all the transitions between all the nodes in the story.
-        /// The node lookup must be initialized before calling this function.
-        /// </summary>
-        private void InitializeNodeTransitions()
-        {
-            Debug.Assert(Nodes.Count == NodeLookup.Count);
-            foreach (SpeechNode node in Nodes)
-            {
-                node.InitializeTransitions(NodeLookup);
-            }
-        }
-
+        
         #endregion
     }
 }

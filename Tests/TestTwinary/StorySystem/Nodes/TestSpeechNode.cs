@@ -15,21 +15,13 @@ namespace TestTwinary.StorySystem.Nodes
         #region Constructor Tests
 
         [TestMethod]
-        public void Constructor_Default_SetsName_ToEmptyString()
+        public void Constructor_SetsName_ToEmptyString()
         {
             SpeechNode speechNode = new SpeechNode();
 
             Assert.AreEqual("", speechNode.Name);
         }
-
-        [TestMethod]
-        public void Constructor_SetsName_ToInputtedString()
-        {
-            SpeechNode speechNode = new SpeechNode("Test", 0);
-
-            Assert.AreEqual("Test", speechNode.Name);
-        }
-
+        
         [TestMethod]
         public void Constructor_SetsText_ToEmptyString()
         {
@@ -45,82 +37,66 @@ namespace TestTwinary.StorySystem.Nodes
 
             AssertExt.IsEmpty(speechNode.Tags);
         }
-
+        
         [TestMethod]
-        public void Constructor_Default_SetsNodeIndex_ToZero()
+        public void Constructor_SetsTwineLinks_ToEmptyList()
         {
             SpeechNode speechNode = new SpeechNode();
 
-            Assert.AreEqual(0, speechNode.NodeIndex);
-        }
-
-        [TestMethod]
-        public void Constructor_SetsNodeIndex_ToInputtedIndex()
-        {
-            SpeechNode speechNode = new SpeechNode("Test", 2);
-
-            Assert.AreEqual(2, speechNode.NodeIndex);
-        }
-
-        [TestMethod]
-        public void Constructor_SetsTransitions_ToEmptyList()
-        {
-            SpeechNode speechNode = new SpeechNode();
-
-            Assert.AreEqual(0, speechNode.TransitionCount);
+            AssertExt.IsEmpty(speechNode.TwineLinks);
         }
 
         #endregion
 
-        #region Initialize Transitions
+        //#region Initialize Transitions
 
-        [TestMethod]
-        public void InitializeTransitions_InputtingNull_DoesNothing()
-        {
-            MockSpeechNode mockSpeechNode = new MockSpeechNode();
-            mockSpeechNode.TwineLinks_Public.Add(new TwineLink("Test Link", "Text|TestNode"));
+        //[TestMethod]
+        //public void InitializeTransitions_InputtingNull_DoesNothing()
+        //{
+        //    MockSpeechNode mockSpeechNode = new MockSpeechNode();
+        //    mockSpeechNode.TwineLinks_Public.Add(new TwineLink("Test Link", "Text|TestNode"));
 
-            Assert.AreEqual(0, mockSpeechNode.TransitionCount);
+        //    Assert.AreEqual(0, mockSpeechNode.TransitionCount);
 
-            mockSpeechNode.InitializeTransitions(null);
+        //    mockSpeechNode.InitializeTransitions(null);
 
-            Assert.AreEqual(0, mockSpeechNode.TransitionCount);
-        }
+        //    Assert.AreEqual(0, mockSpeechNode.TransitionCount);
+        //}
 
-        [TestMethod]
-        public void InitializeTransitions_InputtingDictionaryWithNoMatchingNodeNames_DoesNothing()
-        {
-            MockSpeechNode mockSpeechNode = new MockSpeechNode();
-            mockSpeechNode.TwineLinks_Public.Add(new TwineLink("Test Link", "Text|TestNode"));
+        //[TestMethod]
+        //public void InitializeTransitions_InputtingDictionaryWithNoMatchingNodeNames_DoesNothing()
+        //{
+        //    MockSpeechNode mockSpeechNode = new MockSpeechNode();
+        //    mockSpeechNode.TwineLinks_Public.Add(new TwineLink("Test Link", "Text|TestNode"));
 
-            Assert.AreEqual(0, mockSpeechNode.TransitionCount);
+        //    Assert.AreEqual(0, mockSpeechNode.TransitionCount);
 
-            mockSpeechNode.InitializeTransitions(new Dictionary<string, SpeechNode>());
+        //    mockSpeechNode.InitializeTransitions(new Dictionary<string, SpeechNode>());
 
-            Assert.AreEqual(0, mockSpeechNode.TransitionCount);
-        }
+        //    Assert.AreEqual(0, mockSpeechNode.TransitionCount);
+        //}
 
-        [TestMethod]
-        public void InitializeTransitions_InputtingDictionaryWithMatchingNodeNames_AddsCorrectTransitions()
-        {
-            MockSpeechNode mockSpeechNode = new MockSpeechNode();
-            mockSpeechNode.TwineLinks_Public.Add(new TwineLink("Test Link", "Text|TestNode"));
+        //[TestMethod]
+        //public void InitializeTransitions_InputtingDictionaryWithMatchingNodeNames_AddsCorrectTransitions()
+        //{
+        //    MockSpeechNode mockSpeechNode = new MockSpeechNode();
+        //    mockSpeechNode.TwineLinks_Public.Add(new TwineLink("Test Link", "Text|TestNode"));
 
-            Assert.AreEqual(0, mockSpeechNode.TransitionCount);
+        //    Assert.AreEqual(0, mockSpeechNode.TransitionCount);
 
-            SpeechNode speechNode = new SpeechNode("TestNode", 1);
-            Dictionary<string, SpeechNode> lookup = new Dictionary<string, SpeechNode>()
-            {
-                { "TestNode", speechNode }
-            };
+        //    SpeechNode speechNode = new SpeechNode("TestNode", 1);
+        //    Dictionary<string, SpeechNode> lookup = new Dictionary<string, SpeechNode>()
+        //    {
+        //        { "TestNode", speechNode }
+        //    };
 
-            mockSpeechNode.InitializeTransitions(lookup);
+        //    mockSpeechNode.InitializeTransitions(lookup);
 
-            Assert.AreEqual(1, mockSpeechNode.TransitionCount);
-            Assert.AreSame(mockSpeechNode, mockSpeechNode.GetTransitionAt(0).Source);
-            Assert.AreSame(speechNode, mockSpeechNode.GetTransitionAt(0).Destination);
-        }
+        //    Assert.AreEqual(1, mockSpeechNode.TransitionCount);
+        //    Assert.AreSame(mockSpeechNode, mockSpeechNode.GetTransitionAt(0).Source);
+        //    Assert.AreSame(speechNode, mockSpeechNode.GetTransitionAt(0).Destination);
+        //}
 
-        #endregion
+        //#endregion
     }
 }

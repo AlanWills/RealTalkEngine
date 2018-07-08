@@ -98,11 +98,10 @@ namespace TestTwinary.StorySystem
             Assert.IsNotNull(speechNode);
             Assert.AreEqual("Single Node", speechNode.Name);
             Assert.AreEqual("Single Node Text", speechNode.Text);
-            Assert.AreEqual(0, speechNode.NodeIndex);
             Assert.IsNotNull(speechNode.Tags);
             Assert.AreEqual(1, speechNode.Tags.Count);
             Assert.AreEqual("Node", speechNode.Tags[0]);
-            Assert.AreEqual(0, speechNode.TransitionCount);
+            AssertExt.IsEmpty(speechNode.TwineLinks);
         }
 
         [TestMethod]
@@ -162,12 +161,9 @@ namespace TestTwinary.StorySystem
                 Assert.IsNotNull(speechNode);
                 Assert.AreEqual("Source Node", speechNode.Name);
                 Assert.AreEqual("[[Source Node Text|Destination Node]]", speechNode.Text);
-                Assert.AreEqual(0, speechNode.NodeIndex);
                 Assert.IsNotNull(speechNode.Tags);
                 AssertExt.IsEmpty(speechNode.Tags);
-                Assert.AreEqual(1, speechNode.TransitionCount);
-                Assert.AreSame(speechNode, speechNode.GetTransitionAt(0).Source);
-                Assert.AreSame(story.Nodes[1], speechNode.GetTransitionAt(0).Destination);
+                Assert.AreEqual(1, speechNode.TwineLinks.Count);
             }
 
             // Second node
@@ -177,10 +173,9 @@ namespace TestTwinary.StorySystem
                 Assert.IsNotNull(speechNode);
                 Assert.AreEqual("Destination Node", speechNode.Name);
                 Assert.AreEqual("Destination Node Text", speechNode.Text);
-                Assert.AreEqual(1, speechNode.NodeIndex);
                 Assert.IsNotNull(speechNode.Tags);
                 AssertExt.IsEmpty(speechNode.Tags);
-                Assert.AreEqual(0, speechNode.TransitionCount);
+                AssertExt.IsEmpty(speechNode.TwineLinks);
             }
         }
 

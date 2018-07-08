@@ -1,11 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp2.0;net45;</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup>
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0'">
+    <DefineConstants>NETCOREAPP2_0</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0'">
     <PackageReference Include="Alexa.NET" Version="1.5.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Twinary\Twinary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
+    <PackageReference Include="Amazon.Lambda.Core">
+      <Version>1.0.0</Version>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

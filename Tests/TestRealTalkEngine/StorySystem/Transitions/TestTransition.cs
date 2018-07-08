@@ -5,7 +5,7 @@ using System.Text;
 using Twinary.StorySystem.Nodes;
 using Twinary.StorySystem.Transitions;
 
-namespace TestTwinary.StorySystem.Transitions
+namespace TestRealTalkEngine.StorySystem.Transitions
 {
     [TestClass]
     public class TestTransition
