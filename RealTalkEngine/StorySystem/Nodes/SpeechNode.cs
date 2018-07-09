@@ -79,6 +79,11 @@ namespace RealTalkEngine.StorySystem.Nodes
         /// <returns></returns>
         public Transition CreateAndAddTransition(SpeechNode destinationNode)
         {
+            if (destinationNode == null)
+            {
+                return null;
+            }
+
             Transition transition = new Transition(this, destinationNode);
             Transitions.Add(transition);
 

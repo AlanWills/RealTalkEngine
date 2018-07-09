@@ -25,6 +25,11 @@ namespace RealTalkEngine.StorySystem.Transitions
         /// </summary>
         private List<TransitionCondition> Conditions { get; set; } = new List<TransitionCondition>();
 
+        /// <summary>
+        /// Returns the number of conditions attached to this transition.
+        /// </summary>
+        public int ConditionCount { get { return Conditions.Count; } }
+
         #endregion
 
         public Transition(SpeechNode source, SpeechNode destination)
@@ -42,7 +47,14 @@ namespace RealTalkEngine.StorySystem.Transitions
         /// <returns></returns>
         public TransitionCondition AddCondition(TransitionCondition transitionCondition)
         {
+            if (transitionCondition == null)
+            {
+                return null;
+            }
+
+            transitionCondition.Transition = this;
             Conditions.Add(transitionCondition);
+
             return transitionCondition;
         }
 
@@ -51,12 +63,19 @@ namespace RealTalkEngine.StorySystem.Transitions
         /// </summary>
         /// <param name="transitionCondition"></param>
         /// <returns></returns>
-        public T CreateAndCondition<T>() where T : TransitionCondition, new()
+        public T CreateAndAddCondition<T>() where T : TransitionCondition, new()
         {
-            T condition = new T();
-            condition.Transition = this;
+            return AddCondition(new T()) as T;
+        }
 
-            return AddCondition(condition) as T;
+        /// <summary>
+        /// Returns the condition at the inputted index, or null if the index was invalid.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public TransitionCondition GetConditionAt(uint index)
+        {
+            return 0 <= index && index < Conditions.Count ? Conditions[(int)index] : null;
         }
 
         #endregion

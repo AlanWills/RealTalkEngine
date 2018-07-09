@@ -17,20 +17,20 @@ namespace Twinary.StorySystem.Nodes
         /// The display name of this node.
         /// </summary>
         [JsonProperty(PropertyName = "name", Required = Required.Always)]
-        public string Name { get; private set; } = "";
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// The one based index of this node in the story.
         /// Do not use this field, use the NodeIndex property instead.
         /// </summary>
         [JsonProperty(PropertyName = "pid", Required = Required.Always)]
-        public int OneBasedIndex { get; private set; } = 1;
+        public int OneBasedIndex { get; set; } = 1;
 
         /// <summary>
         /// The textual content of this node.
         /// </summary>
         [JsonProperty(PropertyName = "text")]
-        public string Text { get; private set; } = "";
+        public string Text { get; set; } = "";
 
         /// <summary>
         /// The tags that have been applied to this node.
