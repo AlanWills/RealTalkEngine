@@ -10,7 +10,7 @@ using Twinary.StorySystem.Nodes;
 namespace Twinary.StorySystem
 {
     [Serializable, DataContract]
-    public class Story
+    public class TwineStory
     {
         #region Serialized Properties
 
@@ -45,7 +45,7 @@ namespace Twinary.StorySystem
         /// The nodes contained within this story.
         /// </summary>
         [JsonProperty(PropertyName = "passages")]
-        public List<SpeechNode> Nodes { get; private set; } = new List<SpeechNode>();
+        public List<TwineSpeechNode> Nodes { get; private set; } = new List<TwineSpeechNode>();
 
         #endregion
 
@@ -54,14 +54,14 @@ namespace Twinary.StorySystem
         /// <summary>
         /// A dictionary of node name to node instance which allows us to quickly access nodes from their names.
         /// </summary>
-        private Dictionary<string, SpeechNode> NodeLookup { get; set; } = new Dictionary<string, SpeechNode>();
+        private Dictionary<string, TwineSpeechNode> NodeLookup { get; set; } = new Dictionary<string, TwineSpeechNode>();
 
         #endregion
 
         /// <summary>
         /// Ensure people use the public Load function for loading stories.
         /// </summary>
-        private Story()
+        private TwineStory()
         {
         }
 
@@ -73,7 +73,7 @@ namespace Twinary.StorySystem
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static Story Load(string filePath)
+        public static TwineStory Load(string filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -82,7 +82,7 @@ namespace Twinary.StorySystem
 
             try
             {
-                Story story = JsonConvert.DeserializeObject<Story>(File.ReadAllText(filePath));
+                TwineStory story = JsonConvert.DeserializeObject<TwineStory>(File.ReadAllText(filePath));
                 story?.Initialize();
 
                 return story;
@@ -107,7 +107,7 @@ namespace Twinary.StorySystem
         /// </summary>
         private void InitializeNodeLookup()
         {
-            foreach (SpeechNode node in Nodes)
+            foreach (TwineSpeechNode node in Nodes)
             {
                 Debug.Assert(!NodeLookup.ContainsKey(node.Name));
                 if (!NodeLookup.ContainsKey(node.Name))

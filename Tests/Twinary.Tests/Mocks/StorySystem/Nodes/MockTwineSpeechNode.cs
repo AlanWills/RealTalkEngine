@@ -4,9 +4,9 @@ using System.Text;
 using Twinary.StorySystem.Nodes;
 using Twinary.StorySystem.Transitions;
 
-namespace TestTwinary.Mocks
+namespace Twinary.Tests.Mocks
 {
-    public class MockSpeechNode : SpeechNode
+    public class MockTwineSpeechNode : TwineSpeechNode
     {
         #region Public Interfaces to Protected Fields
 

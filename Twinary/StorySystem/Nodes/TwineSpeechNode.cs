@@ -9,7 +9,7 @@ using Twinary.StorySystem.Transitions;
 namespace Twinary.StorySystem.Nodes
 {
     [Serializable]
-    public class SpeechNode
+    public class TwineSpeechNode
     {
         #region Serialized Properties and Fields
 

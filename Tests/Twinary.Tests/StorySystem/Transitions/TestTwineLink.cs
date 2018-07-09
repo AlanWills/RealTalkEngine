@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Twinary.StorySystem.Transitions;
 
-namespace TestTwinary.StorySystem.Transitions
+namespace Twinary.Tests.StorySystem.Transitions
 {
     [TestClass]
     public class TestTwineLink

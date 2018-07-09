@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestRealTalkEngine.Mocks.StorySystem.Conditions
+namespace RealTalkEngine.Tests.Mocks.StorySystem.Conditions
 {
     public class MockTransitionCondition : TransitionCondition
     {

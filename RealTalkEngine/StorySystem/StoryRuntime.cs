@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Twinary.StorySystem
+namespace RealTalkEngine.StorySystem
 {
     public class StoryRuntime
     {

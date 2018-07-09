@@ -47,13 +47,11 @@ namespace RealTalkEngine.StorySystem.Transitions
         /// <returns></returns>
         public TransitionCondition AddCondition(TransitionCondition transitionCondition)
         {
-            if (transitionCondition == null)
+            if (transitionCondition != null)
             {
-                return null;
+                transitionCondition.Transition = this;
+                Conditions.Add(transitionCondition);
             }
-
-            transitionCondition.Transition = this;
-            Conditions.Add(transitionCondition);
 
             return transitionCondition;
         }
@@ -63,7 +61,7 @@ namespace RealTalkEngine.StorySystem.Transitions
         /// </summary>
         /// <param name="transitionCondition"></param>
         /// <returns></returns>
-        public T CreateAndAddCondition<T>() where T : TransitionCondition, new()
+        public T CreateCondition<T>() where T : TransitionCondition, new()
         {
             return AddCondition(new T()) as T;
         }

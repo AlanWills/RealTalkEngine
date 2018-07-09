@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Text;
+using Twinary.StorySystem.Nodes;
 using Twinary.StorySystem.Transitions;
 
 namespace RealTalkEngine.StorySystem.Nodes
@@ -61,7 +62,7 @@ namespace RealTalkEngine.StorySystem.Nodes
         {
         }
 
-        public SpeechNode(Twinary.StorySystem.Nodes.SpeechNode twineSpeechNode)
+        public SpeechNode(TwineSpeechNode twineSpeechNode)
         {
             Name = twineSpeechNode.Name;
             Text = twineSpeechNode.Text;
@@ -77,7 +78,7 @@ namespace RealTalkEngine.StorySystem.Nodes
         /// </summary>
         /// <param name="destinationNode"></param>
         /// <returns></returns>
-        public Transition CreateAndAddTransition(SpeechNode destinationNode)
+        public Transition CreateTransition(SpeechNode destinationNode)
         {
             if (destinationNode == null)
             {

@@ -3,21 +3,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TestTwinary.Mocks;
+using Twinary.Tests.Mocks;
 using Twinary.StorySystem.Nodes;
 using Twinary.StorySystem.Transitions;
 
-namespace TestTwinary.StorySystem.Nodes
+namespace Twinary.Tests.StorySystem.Nodes
 {
     [TestClass]
-    public class TestSpeechNode
+    public class TestTwineSpeechNode
     {
         #region Constructor Tests
 
         [TestMethod]
         public void Constructor_SetsName_ToEmptyString()
         {
-            SpeechNode speechNode = new SpeechNode();
+            TwineSpeechNode speechNode = new TwineSpeechNode();
 
             Assert.AreEqual("", speechNode.Name);
         }
@@ -25,7 +25,7 @@ namespace TestTwinary.StorySystem.Nodes
         [TestMethod]
         public void Constructor_SetsText_ToEmptyString()
         {
-            SpeechNode speechNode = new SpeechNode();
+            TwineSpeechNode speechNode = new TwineSpeechNode();
 
             Assert.AreEqual("", speechNode.Text);
         }
@@ -33,7 +33,7 @@ namespace TestTwinary.StorySystem.Nodes
         [TestMethod]
         public void Constructor_SetsTags_ToEmptyList()
         {
-            SpeechNode speechNode = new SpeechNode();
+            TwineSpeechNode speechNode = new TwineSpeechNode();
 
             AssertExt.IsEmpty(speechNode.Tags);
         }
@@ -41,7 +41,7 @@ namespace TestTwinary.StorySystem.Nodes
         [TestMethod]
         public void Constructor_SetsTwineLinks_ToEmptyList()
         {
-            SpeechNode speechNode = new SpeechNode();
+            TwineSpeechNode speechNode = new TwineSpeechNode();
 
             AssertExt.IsEmpty(speechNode.TwineLinks);
         }

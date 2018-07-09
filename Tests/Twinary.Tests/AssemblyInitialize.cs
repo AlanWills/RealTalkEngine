@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestTwinary
+namespace Twinary.Tests
 {
     [TestClass]
     public class AssemblyInitialize

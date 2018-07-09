@@ -5,11 +5,11 @@ using RealTalkEngine.StorySystem.Transitions;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using TestRealTalkEngine.Mocks.StorySystem.Conditions;
+using RealTalkEngine.Tests.Mocks.StorySystem.Conditions;
 using Twinary.StorySystem.Transitions;
-using TwineSpeechNode = Twinary.StorySystem.Nodes.SpeechNode;
+using Twinary.StorySystem.Nodes;
 
-namespace TestRealTalkEngine.StorySystem.Nodes
+namespace RealTalkEngine.Tests.StorySystem.Nodes
 {
     [TestClass]
     public class TestSpeechNode
@@ -119,27 +119,27 @@ namespace TestRealTalkEngine.StorySystem.Nodes
 
         #endregion
 
-        #region Create And Add Transition Tests
+        #region Create Transition Tests
 
         [TestMethod]
-        public void CreateAndAddTransition_InputtingNullDestinationNode_ReturnsNull()
+        public void CreateTransition_InputtingNullDestinationNode_ReturnsNull()
         {
             SpeechNode speechNode = new SpeechNode();
 
             Assert.AreEqual(0, speechNode.TransitionCount);
-            Assert.IsNull(speechNode.CreateAndAddTransition(null));
+            Assert.IsNull(speechNode.CreateTransition(null));
             Assert.AreEqual(0, speechNode.TransitionCount);
         }
 
         [TestMethod]
-        public void CreateAndAddTransition_CreatesNewTransition_WithCorrectValues()
+        public void CreateTransition_CreatesNewTransition_WithCorrectValues()
         {
             SpeechNode speechNode = new SpeechNode();
             SpeechNode destinationNode = new SpeechNode();
 
             Assert.AreEqual(0, speechNode.TransitionCount);
 
-            speechNode.CreateAndAddTransition(destinationNode);
+            speechNode.CreateTransition(destinationNode);
 
             Assert.AreEqual(1, speechNode.TransitionCount);
             Assert.AreSame(speechNode, speechNode.GetTransitionAt(0).Source);
@@ -147,11 +147,11 @@ namespace TestRealTalkEngine.StorySystem.Nodes
         }
 
         [TestMethod]
-        public void CreateAndAddTransition_ReturnsCreatedTransition()
+        public void CreateTransition_ReturnsCreatedTransition()
         {
             SpeechNode speechNode = new SpeechNode();
             SpeechNode destinationNode = new SpeechNode();
-            Transition transition = speechNode.CreateAndAddTransition(destinationNode);
+            Transition transition = speechNode.CreateTransition(destinationNode);
 
             Assert.AreSame(transition, speechNode.GetTransitionAt(0));
         }
@@ -174,7 +174,7 @@ namespace TestRealTalkEngine.StorySystem.Nodes
         {
             SpeechNode speechNode = new SpeechNode();
             SpeechNode destinationNode = new SpeechNode();
-            Transition transition = speechNode.CreateAndAddTransition(destinationNode);
+            Transition transition = speechNode.CreateTransition(destinationNode);
 
             Assert.AreSame(transition, speechNode.GetTransitionAt(0));
         }
@@ -197,8 +197,8 @@ namespace TestRealTalkEngine.StorySystem.Nodes
         {
             SpeechNode speechNode = new SpeechNode();
             SpeechNode destinationNode = new SpeechNode();
-            Transition transition = speechNode.CreateAndAddTransition(destinationNode);
-            transition.CreateAndAddCondition<MockTransitionCondition>();
+            Transition transition = speechNode.CreateTransition(destinationNode);
+            transition.CreateCondition<MockTransitionCondition>();
 
             Assert.AreEqual(1, speechNode.TransitionCount);
             Assert.IsFalse(transition.ValidateConditions());
@@ -210,8 +210,8 @@ namespace TestRealTalkEngine.StorySystem.Nodes
         {
             SpeechNode speechNode = new SpeechNode();
             SpeechNode destinationNode = new SpeechNode();
-            Transition transition = speechNode.CreateAndAddTransition(destinationNode);
-            MockTransitionCondition condition = transition.CreateAndAddCondition<MockTransitionCondition>();
+            Transition transition = speechNode.CreateTransition(destinationNode);
+            MockTransitionCondition condition = transition.CreateCondition<MockTransitionCondition>();
             condition.ConditionPasses_Result = true;
 
             Assert.AreEqual(1, speechNode.TransitionCount);
@@ -225,13 +225,13 @@ namespace TestRealTalkEngine.StorySystem.Nodes
             SpeechNode speechNode = new SpeechNode();
 
             SpeechNode destinationNode = new SpeechNode();
-            Transition transition = speechNode.CreateAndAddTransition(destinationNode);
-            MockTransitionCondition condition = transition.CreateAndAddCondition<MockTransitionCondition>();
+            Transition transition = speechNode.CreateTransition(destinationNode);
+            MockTransitionCondition condition = transition.CreateCondition<MockTransitionCondition>();
             condition.ConditionPasses_Result = true;
 
             SpeechNode secondDestinationNode = new SpeechNode();
-            Transition secondTransition = speechNode.CreateAndAddTransition(secondDestinationNode);
-            MockTransitionCondition secondCondition = secondTransition.CreateAndAddCondition<MockTransitionCondition>();
+            Transition secondTransition = speechNode.CreateTransition(secondDestinationNode);
+            MockTransitionCondition secondCondition = secondTransition.CreateCondition<MockTransitionCondition>();
             secondCondition.ConditionPasses_Result = true;
 
             Assert.AreEqual(2, speechNode.TransitionCount);

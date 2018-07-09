@@ -8,10 +8,10 @@ using System.Text;
 using Twinary.StorySystem;
 using Twinary.StorySystem.Nodes;
 
-namespace TestTwinary.StorySystem
+namespace Twinary.Tests.StorySystem
 {
     [TestClass]
-    public class TestStory
+    public class TestTwineStory
     {
         #region Load Tests
 
@@ -21,14 +21,14 @@ namespace TestTwinary.StorySystem
             string path = "WubbaLubbaDubDub";
 
             Assert.IsFalse(File.Exists(path));
-            Assert.IsNull(Story.Load(path));
+            Assert.IsNull(TwineStory.Load(path));
         }
 
         [TestMethod]
         public void Story_Load_InputtingInvalidStoryFilePath_ReturnsNull()
         {
             Assert.IsTrue(File.Exists(JsonStoryResources.InvalidStory));
-            Assert.IsNull(Story.Load(JsonStoryResources.InvalidStory));
+            Assert.IsNull(TwineStory.Load(JsonStoryResources.InvalidStory));
         }
 
         [TestMethod]
@@ -43,11 +43,11 @@ namespace TestTwinary.StorySystem
               "ifid": "AB8A0633-93B4-4221-8F93-CD9E268C3211"
             }
             */
-            Story story = Story.Load(JsonStoryResources.EmptyStory);
+            TwineStory story = TwineStory.Load(JsonStoryResources.EmptyStory);
 
             Assert.IsNotNull(story);
             Assert.AreEqual("EmptyStory", story.Name);
-            Assert.IsNull(story.StartNode);
+            Assert.AreEqual(1, story.OneBasedStartNodeIndex);
             Assert.AreEqual("Twine", story.Creator);
             Assert.AreEqual("2.2.1", story.CreatorVersion);
             Assert.AreEqual(new Guid("AB8A0633-93B4-4221-8F93-CD9E268C3211"), story.IfID);
@@ -82,18 +82,18 @@ namespace TestTwinary.StorySystem
             }
             */
 
-            Story story = Story.Load(JsonStoryResources.SingleNodeStory);
+            TwineStory story = TwineStory.Load(JsonStoryResources.SingleNodeStory);
 
             Assert.IsNotNull(story);
             Assert.AreEqual("SingleNodeStory", story.Name);
-            Assert.AreEqual(story.Nodes[0], story.StartNode);
+            Assert.AreEqual(1, story.OneBasedStartNodeIndex);
             Assert.AreEqual("Twine", story.Creator);
             Assert.AreEqual("2.2.1", story.CreatorVersion);
             Assert.AreEqual(new Guid("E496B74E-C387-4E7F-B66E-9FB8927FE229"), story.IfID);
             Assert.IsNotNull(story.Nodes);
             Assert.AreEqual(1, story.Nodes.Count);
 
-            SpeechNode speechNode = story.Nodes[0];
+            TwineSpeechNode speechNode = story.Nodes[0];
 
             Assert.IsNotNull(speechNode);
             Assert.AreEqual("Single Node", speechNode.Name);
@@ -143,11 +143,11 @@ namespace TestTwinary.StorySystem
             }
             */
 
-            Story story = Story.Load(JsonStoryResources.SingleLinkStory);
+            TwineStory story = TwineStory.Load(JsonStoryResources.SingleLinkStory);
 
             Assert.IsNotNull(story);
             Assert.AreEqual("SingleLinkStory", story.Name);
-            Assert.AreEqual(story.Nodes[0], story.StartNode);
+            Assert.AreEqual(1, story.OneBasedStartNodeIndex);
             Assert.AreEqual("Twine", story.Creator);
             Assert.AreEqual("2.2.1", story.CreatorVersion);
             Assert.AreEqual(new Guid("09337916-8C97-456D-B4BC-93182ECA4911"), story.IfID);
@@ -156,7 +156,7 @@ namespace TestTwinary.StorySystem
 
             // First node
             {
-                SpeechNode speechNode = story.Nodes[0];
+                TwineSpeechNode speechNode = story.Nodes[0];
 
                 Assert.IsNotNull(speechNode);
                 Assert.AreEqual("Source Node", speechNode.Name);
@@ -168,7 +168,7 @@ namespace TestTwinary.StorySystem
 
             // Second node
             {
-                SpeechNode speechNode = story.Nodes[1];
+                TwineSpeechNode speechNode = story.Nodes[1];
 
                 Assert.IsNotNull(speechNode);
                 Assert.AreEqual("Destination Node", speechNode.Name);

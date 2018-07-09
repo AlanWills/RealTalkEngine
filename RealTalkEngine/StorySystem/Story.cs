@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Twinary.StorySystem;
+using Twinary.StorySystem.Nodes;
 using Twinary.StorySystem.Transitions;
 
 namespace RealTalkEngine.StorySystem
@@ -21,7 +22,7 @@ namespace RealTalkEngine.StorySystem
         /// The name of this story.
         /// </summary>
         [DataMember(IsRequired = true)]
-        public string Name { get; private set; }
+        public string Name { get; private set; } = "";
 
         /// <summary>
         /// The 0-based index of the node index which is the starting node for this story.
@@ -39,6 +40,11 @@ namespace RealTalkEngine.StorySystem
         #region Properties and Fields
 
         /// <summary>
+        /// The number of nodes in this story.
+        /// </summary>
+        public int NodeCount { get { return Nodes.Count; } }
+
+        /// <summary>
         /// The starting node for this story.
         /// </summary>
         public SpeechNode StartNode { get { return (0 <= StartNodeIndex && StartNodeIndex < Nodes.Count) ? Nodes[StartNodeIndex] : null; } }
@@ -54,14 +60,7 @@ namespace RealTalkEngine.StorySystem
         private Dictionary<string, SpeechNode> m_nodeLookup = new Dictionary<string, SpeechNode>();
 
         #endregion
-
-        /// <summary>
-        /// Ensure people use the public Load function for loading stories.
-        /// </summary>
-        private Story()
-        {
-        }
-
+        
         #region Loading
 
         /// <summary>
@@ -96,15 +95,15 @@ namespace RealTalkEngine.StorySystem
         /// Returns null if there was a problem converting the story.
         /// </summary>
         /// <returns></returns>
-        public static Story Load(Twinary.StorySystem.Story twineStory)
+        public static Story Load(TwineStory twineStory)
         {
             Story story = new Story();
             story.Name = twineStory.Name;
             story.StartNodeIndex = twineStory.OneBasedStartNodeIndex;
             
-            foreach (Twinary.StorySystem.Nodes.SpeechNode twineSpeechNode in twineStory.Nodes)
+            foreach (TwineSpeechNode twineSpeechNode in twineStory.Nodes)
             {
-                story.CreateAndAddNode(twineSpeechNode);
+                story.CreateNode(twineSpeechNode);
             }
 
             story.InitializeNodeLookup();
@@ -136,25 +135,24 @@ namespace RealTalkEngine.StorySystem
         /// Set up all the transitions between all the nodes in the story.
         /// The node lookup must be initialized before calling this function.
         /// </summary>
-        private void InitializeNodeTransitions(Twinary.StorySystem.Story twineStory)
+        private void InitializeNodeTransitions(TwineStory twineStory)
         {
             Debug.Assert(Nodes.Count == m_nodeLookup.Count);
 
             // For each twine node in the story
-            foreach (Twinary.StorySystem.Nodes.SpeechNode twineNode in twineStory.Nodes)
+            foreach (TwineSpeechNode twineNode in twineStory.Nodes)
             {
                 // Attempt to find the corresponding node in this story
-                SpeechNode speechNode, destinationNode;
-                if (m_nodeLookup.TryGetValue(twineNode.Name, out speechNode))
+                if (m_nodeLookup.TryGetValue(twineNode.Name, out SpeechNode speechNode))
                 {
                     // If we have found it, we go through each twine link in the original node
                     foreach (TwineLink twineLink in twineNode.TwineLinks)
                     {
                         // And try and find the corresponding destination node in this story that it was pointing to
-                        if (m_nodeLookup.TryGetValue(twineLink.DestinationName, out destinationNode))
+                        if (m_nodeLookup.TryGetValue(twineLink.DestinationName, out SpeechNode destinationNode))
                         {
                             // If we find it, we create a transition in this story
-                            speechNode.CreateAndAddTransition(destinationNode);
+                            speechNode.CreateTransition(destinationNode);
                         }
                     }
                 }
@@ -166,18 +164,51 @@ namespace RealTalkEngine.StorySystem
         #region Node Functions
 
         /// <summary>
+        /// Adds the inputted node into this story.
+        /// </summary>
+        /// <param name="speechNode"></param>
+        /// <returns></returns>
+        public SpeechNode AddNode(SpeechNode speechNode)
+        {
+            if (speechNode != null)
+            {
+                speechNode.ParentStory = this;
+                Nodes.Add(speechNode);
+            }
+
+            return speechNode;
+        }
+
+        /// <summary>
+        /// Creates a new SpeechNode and adds it to this story.
+        /// </summary>
+        /// <param name="twineSpeechNode"></param>
+        /// <returns></returns>
+        public SpeechNode CreateNode()
+        {
+            return AddNode(new SpeechNode());
+        }
+
+        /// <summary>
         /// Creates a new node in this story using the inputted twine speech node format.
         /// Will add the newly created node to this story.
         /// </summary>
         /// <param name="twineSpeechNode"></param>
         /// <returns></returns>
-        public SpeechNode CreateAndAddNode(Twinary.StorySystem.Nodes.SpeechNode twineSpeechNode)
+        public SpeechNode CreateNode(TwineSpeechNode twineSpeechNode)
         {
-            SpeechNode speechNode = new SpeechNode(twineSpeechNode);
-            speechNode.ParentStory = this;
-            Nodes.Add(speechNode);
+            return twineSpeechNode != null ? AddNode(new SpeechNode(twineSpeechNode)) : null;
+        }
 
-            return speechNode;
+        /// <summary>
+        /// If the inputted index is valid, returns the node at the corresponding index.
+        /// Otherwise returns null.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public SpeechNode GetNodeAt(uint index)
+        {
+            return 0 <= index && index < Nodes.Count ? Nodes[(int)index] : null;
         }
 
         #endregion
