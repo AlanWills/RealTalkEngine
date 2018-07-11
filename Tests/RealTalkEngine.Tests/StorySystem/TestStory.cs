@@ -1,15 +1,20 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using CelTestSharp;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RealTalkEngine.StorySystem;
+using RealTalkEngine.StorySystem.Conditions;
 using RealTalkEngine.StorySystem.Nodes;
+using RealTalkEngine.StorySystem.Transitions;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using Twinary.StorySystem.Nodes;
 
 namespace RealTalkEngine.Tests.StorySystem
 {
     [TestClass]
-    public class TestStory
+    public class TestStory : UnitTest
     {
         #region Constructor Tests
 
@@ -97,34 +102,46 @@ namespace RealTalkEngine.Tests.StorySystem
 
         #region Create Node Tests
 
-        #region Default
+        #region String
 
         [TestMethod]
-        public void CreateNode_Default_AddsNode_ToStory()
+        public void CreateNode_String_AddsNode_ToStory()
         {
             Story story = new Story();
 
             Assert.AreEqual(0, story.NodeCount);
 
-            story.CreateNode();
+            story.CreateNode("Test");
 
             Assert.AreEqual(1, story.NodeCount);
         }
 
         [TestMethod]
-        public void CreateNode_Default_SetsNodeParentStory_ToStory()
+        public void CreateNode_String_SetsNodeName_ToInputtedValue()
         {
             Story story = new Story();
-            SpeechNode speechNode = story.CreateNode();
+
+            Assert.AreEqual(0, story.NodeCount);
+
+            SpeechNode node = story.CreateNode("Test");
+
+            Assert.AreEqual("Test", node.Name);
+        }
+
+        [TestMethod]
+        public void CreateNode_String_SetsNodeParentStory_ToStory()
+        {
+            Story story = new Story();
+            SpeechNode speechNode = story.CreateNode("Test");
 
             Assert.AreSame(story, speechNode.ParentStory);
         }
 
         [TestMethod]
-        public void CreateNode_ReturnsCreatedNode()
+        public void CreateNode_String_ReturnsCreatedNode()
         {
             Story story = new Story();
-            SpeechNode speechNode = story.CreateNode();
+            SpeechNode speechNode = story.CreateNode("Test");
 
             Assert.AreEqual(1, story.NodeCount);
             Assert.AreSame(speechNode, story.GetNodeAt(0));
@@ -140,7 +157,7 @@ namespace RealTalkEngine.Tests.StorySystem
             Story story = new Story();
 
             Assert.AreEqual(0, story.NodeCount);
-            Assert.IsNull(story.CreateNode(null));
+            Assert.IsNull(story.CreateNode((TwineSpeechNode)null));
             Assert.AreEqual(0, story.NodeCount);
         }
 
@@ -206,10 +223,171 @@ namespace RealTalkEngine.Tests.StorySystem
         public void GetNodeAt_InputtingValidIndex_ReturnsCorrectNode()
         {
             Story story = new Story();
-            SpeechNode speechNode = story.CreateNode();
+            SpeechNode speechNode = story.CreateNode("Test");
 
             Assert.AreEqual(1, story.NodeCount);
             Assert.AreSame(speechNode, story.GetNodeAt(0));
+        }
+
+        #endregion
+
+        #region Load Tests
+
+        #region File Overload
+
+        [TestMethod]
+        public void InputtingNonExistentFile_ReturnsNull()
+        {
+            string filePath = "WubbaLubba";
+
+            FileAssert.FileDoesNotExist(filePath);
+            Assert.IsNull(Story.Load(filePath));
+        }
+
+        [TestMethod]
+        public void InputtingExistentInvalidFile_ReturnsNull()
+        {
+            string filePath = Path.Combine(Resources.TempDir, "Test.txt");
+            File.WriteAllText(filePath, "WubbaLubba");
+
+            FileAssert.FileExists(filePath);
+            Assert.IsNull(Story.Load(filePath));
+        }
+
+        [TestMethod]
+        public void InputtingExistentValidFile_ReturnsStory()
+        {
+            Story story = new Story();
+            story.Name = "Test";
+
+            string filePath = Path.Combine(Resources.TempDir, "Test.txt");
+            SaveStoryBinary(story, filePath);
+
+            FileAssert.FileExists(filePath);
+            Story loadedStory = Story.Load(filePath);
+
+            Assert.IsNotNull(story);
+            Assert.AreEqual("Test", loadedStory.Name);
+            Assert.AreEqual(0, loadedStory.NodeCount);
+        }
+
+        [TestMethod]
+        public void InputtingExistentValidFile_SetsUpNodesCorrectly()
+        {
+            Story story = new Story();
+            SpeechNode speechNode = story.CreateNode("TestNode");
+            speechNode.Text = "Test Text";
+            speechNode.Tags.Add("Tag1");
+
+            string filePath = Path.Combine(Resources.TempDir, "Test.txt");
+            SaveStoryBinary(story, filePath);
+
+            FileAssert.FileExists(filePath);
+            Story loadedStory = Story.Load(filePath);
+
+            Assert.IsNotNull(loadedStory);
+            Assert.AreEqual(1, loadedStory.NodeCount);
+
+            SpeechNode loadedNode = loadedStory.GetNodeAt(0);
+
+            Assert.IsNotNull(loadedNode);
+            Assert.AreEqual("TestNode", loadedNode.Name);
+            Assert.AreEqual("Test Text", loadedNode.Text);
+            Assert.AreEqual(1, loadedNode.Tags.Count);
+            Assert.AreEqual("Tag1", loadedNode.Tags[0]);
+            Assert.AreEqual(0, loadedNode.TransitionCount);
+            Assert.AreSame(loadedStory, loadedNode.ParentStory);
+        }
+
+        [TestMethod]
+        public void InputtingExistentValidFile_SetsUpTransitionsCorrectly()
+        {
+            Story story = new Story();
+            SpeechNode speechNode = story.CreateNode("Node1");
+            SpeechNode destinationNode = story.CreateNode("Node2");
+            Transition transition = speechNode.CreateTransition(destinationNode);
+            IntentCondition condition = transition.CreateCondition<IntentCondition>();
+            condition.IntentName = "TestIntent";
+
+            string filePath = Path.Combine(Resources.TempDir, "Test.txt");
+            SaveStoryBinary(story, filePath);
+
+            FileAssert.FileExists(filePath);
+            Story loadedStory = Story.Load(filePath);
+
+            Assert.IsNotNull(loadedStory);
+            Assert.AreEqual(2, loadedStory.NodeCount);
+
+            SpeechNode loadedNode = loadedStory.GetNodeAt(0);
+            SpeechNode loadedDestinationNode = loadedStory.GetNodeAt(1);
+
+            Assert.IsNotNull(loadedNode);
+            Assert.IsNotNull(loadedDestinationNode);
+            Assert.AreEqual(1, loadedNode.TransitionCount);
+
+            Transition loadedTransition = loadedNode.GetTransitionAt(0);
+
+            Assert.AreSame(loadedNode, loadedTransition.Source);
+            Assert.AreSame(loadedDestinationNode, loadedTransition.Destination);
+            Assert.AreEqual(1, loadedTransition.ConditionCount);
+
+            TransitionCondition loadedCondition = loadedTransition.GetConditionAt(0);
+
+            Assert.IsInstanceOfType(loadedCondition, typeof(IntentCondition));
+            Assert.AreEqual("TestIntent", (loadedCondition as IntentCondition).IntentName);
+            Assert.AreSame(loadedTransition, loadedCondition.Transition);
+        }
+        
+        #endregion
+
+        #region Twine Story Overload
+
+        [TestMethod]
+        public void InputtingNullTwineStory_ReturnsNull()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void InputtingNonNullTwineStory_ReturnsStory()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void InputtingNonNullTwineStory_SetsUpNodesCorrectly()
+        {
+            Assert.Fail();
+        }
+
+        [TestMethod]
+        public void InputtingNonNullTwineStory_SetsUpTransitionsCorrectly()
+        {
+            Assert.Fail();
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Utility Functions
+
+        /// <summary>
+        /// Saves the inputted story to the inputted file in binary format.
+        /// </summary>
+        /// <param name="story"></param>
+        /// <param name="filePath"></param>
+        public void SaveStoryBinary(Story story, string filePath)
+        {
+            using (FileStream file = new FileStream(filePath, FileMode.OpenOrCreate))
+            {
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(file, story);
+                }
+                catch (Exception e) { Assert.Fail(e.Message); }
+            }
         }
 
         #endregion

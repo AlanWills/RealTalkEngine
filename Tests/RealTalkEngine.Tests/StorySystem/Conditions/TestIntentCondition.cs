@@ -21,7 +21,7 @@ namespace RealTalkEngine.Tests.StorySystem.Conditions
             StoryRuntime runtime = new StoryRuntime(new Intent() { Name = "Test" }, null);
             Story story = new Story();
             story.Runtime = runtime;
-            SpeechNode speechNode = story.CreateNode();
+            SpeechNode speechNode = story.CreateNode("TestNode");
             Transition transition = speechNode.CreateTransition(new SpeechNode());
             IntentCondition intentCondition = transition.CreateCondition<IntentCondition>();
             intentCondition.IntentName = "WubbaLubbaDubDub";
@@ -35,7 +35,7 @@ namespace RealTalkEngine.Tests.StorySystem.Conditions
             StoryRuntime runtime = new StoryRuntime(new Intent() { Name = "Test" }, null);
             Story story = new Story();
             story.Runtime = runtime;
-            SpeechNode speechNode = story.CreateNode();
+            SpeechNode speechNode = story.CreateNode("TestNode");
             Transition transition = speechNode.CreateTransition(new SpeechNode());
             IntentCondition intentCondition = transition.CreateCondition<IntentCondition>();
             intentCondition.IntentName = "Test";

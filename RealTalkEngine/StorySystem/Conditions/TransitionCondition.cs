@@ -1,6 +1,7 @@
 ﻿using RealTalkEngine.StorySystem.Transitions;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace RealTalkEngine.StorySystem.Conditions
@@ -10,10 +11,16 @@ namespace RealTalkEngine.StorySystem.Conditions
     {
         #region Properties and Fields
 
+        [NonSerialized]
+        private Transition m_transition;
         /// <summary>
         /// The parent transition this condition is attached to.
         /// </summary>
-        public Transition Transition { get; set; }
+        public Transition Transition
+        {
+            get { return m_transition; }
+            set { m_transition = value; }
+        }
 
         #endregion
         

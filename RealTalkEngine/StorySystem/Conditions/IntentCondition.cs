@@ -8,7 +8,7 @@ namespace RealTalkEngine.StorySystem.Conditions
     [Serializable]
     public class IntentCondition : TransitionCondition
     {
-        #region Properties and Fields
+        #region Serialized Properties
 
         /// <summary>
         /// The intent name that needs to be matched for this condition to pass.

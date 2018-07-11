@@ -1,12 +1,13 @@
 ﻿using RealTalkEngine.StorySystem.Conditions;
 using RealTalkEngine.StorySystem.Nodes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace RealTalkEngine.StorySystem.Transitions
 {
     [Serializable]
-    public class Transition
+    public class Transition : IEnumerable<TransitionCondition>
     {
         #region Properties and Fields
 
@@ -96,6 +97,20 @@ namespace RealTalkEngine.StorySystem.Transitions
 
             // All of the conditions have passed so this transition is valid.
             return true;
+        }
+
+        #endregion
+
+        #region IEnumerable Implementation
+
+        public IEnumerator<TransitionCondition> GetEnumerator()
+        {
+            return Conditions.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return Conditions.GetEnumerator();
         }
 
         #endregion

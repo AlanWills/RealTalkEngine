@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
+using RealTalkEngine.StorySystem.Conditions;
 using RealTalkEngine.StorySystem.Nodes;
+using RealTalkEngine.StorySystem.Transitions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,7 +15,7 @@ using Twinary.StorySystem.Transitions;
 
 namespace RealTalkEngine.StorySystem
 {
-    [Serializable, DataContract]
+    [Serializable]
     public class Story
     {
         #region Serialized Properties
@@ -21,13 +23,11 @@ namespace RealTalkEngine.StorySystem
         /// <summary>
         /// The name of this story.
         /// </summary>
-        [DataMember(IsRequired = true)]
-        public string Name { get; private set; } = "";
+        public string Name { get; set; } = "";
 
         /// <summary>
         /// The 0-based index of the node index which is the starting node for this story.
         /// </summary>
-        [DataMember(IsRequired = true)]
         private int StartNodeIndex { get; set; }
 
         /// <summary>
@@ -49,14 +49,21 @@ namespace RealTalkEngine.StorySystem
         /// </summary>
         public SpeechNode StartNode { get { return (0 <= StartNodeIndex && StartNodeIndex < Nodes.Count) ? Nodes[StartNodeIndex] : null; } }
 
+        [NonSerialized]
+        private StoryRuntime m_runtime;
         /// <summary>
         /// The current runtime that this story is being processed by.
         /// </summary>
-        public StoryRuntime Runtime { get; set; }
+        public StoryRuntime Runtime
+        {
+            get { return m_runtime; }
+            set { m_runtime = value; }
+        }
 
         /// <summary>
         /// A dictionary of node name to node instance which allows us to quickly access nodes from their names.
         /// </summary>
+        [NonSerialized]
         private Dictionary<string, SpeechNode> m_nodeLookup = new Dictionary<string, SpeechNode>();
 
         #endregion
@@ -81,10 +88,7 @@ namespace RealTalkEngine.StorySystem
                 try
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    Story story = formatter.Deserialize(file) as Story;
-                    story?.InitializeNodeLookup();
-
-                    return story;
+                    return formatter.Deserialize(file) as Story;
                 }
                 catch { return null; }
             }
@@ -97,6 +101,11 @@ namespace RealTalkEngine.StorySystem
         /// <returns></returns>
         public static Story Load(TwineStory twineStory)
         {
+            if (twineStory == null)
+            {
+                return null;
+            }
+
             Story story = new Story();
             story.Name = twineStory.Name;
             story.StartNodeIndex = twineStory.OneBasedStartNodeIndex;
@@ -109,13 +118,41 @@ namespace RealTalkEngine.StorySystem
             story.InitializeNodeLookup();
             story.InitializeNodeTransitions(twineStory);
 
-            return null;
+            return story;
+        }
+
+        #endregion
+
+        #region Deserialization
+
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext context)
+        {
+            if (m_nodeLookup == null)
+            {
+                m_nodeLookup = new Dictionary<string, SpeechNode>();
+            }
+
+            InitializeNodes();
+            InitializeNodeLookup();
+            InitializeNodeTransitions();
         }
 
         #endregion
 
         #region Initialization
-        
+
+        /// <summary>
+        /// When binary deserializing, some node runtime references get lost so we fix them up here.
+        /// </summary>
+        private void InitializeNodes()
+        {
+            foreach (SpeechNode node in Nodes)
+            {
+                node.ParentStory = this;
+            }
+        }
+
         /// <summary>
         /// Initialize our NodeLookup to provide quick access to node instances within this story.
         /// </summary>
@@ -127,6 +164,27 @@ namespace RealTalkEngine.StorySystem
                 if (!m_nodeLookup.ContainsKey(node.Name))
                 {
                     m_nodeLookup.Add(node.Name, node);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set up all the transitions' references in this story.
+        /// If we have deserialized from binary, certain runtime references will be missing.
+        /// </summary>
+        private void InitializeNodeTransitions()
+        {
+            // For every node
+            foreach (SpeechNode node in Nodes)
+            {
+                // And every transition that node has
+                foreach (Transition transition in node)
+                {
+                    // Fix up the reference to the transition in every condition
+                    foreach (TransitionCondition condition in transition)
+                    {
+                        condition.Transition = transition;
+                    }
                 }
             }
         }
@@ -184,9 +242,14 @@ namespace RealTalkEngine.StorySystem
         /// </summary>
         /// <param name="twineSpeechNode"></param>
         /// <returns></returns>
-        public SpeechNode CreateNode()
+        public SpeechNode CreateNode(string nodeName)
         {
-            return AddNode(new SpeechNode());
+            SpeechNode speechNode = new SpeechNode
+            {
+                Name = nodeName
+            };
+
+            return AddNode(speechNode);
         }
 
         /// <summary>

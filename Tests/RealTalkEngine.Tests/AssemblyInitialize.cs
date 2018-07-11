@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Twinary.Tests
+namespace RealTalkEngine.Tests
 {
     [TestClass]
     public class AssemblyInitialize
