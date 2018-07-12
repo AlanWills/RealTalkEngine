@@ -241,5 +241,43 @@ namespace RealTalkEngine.Tests.StorySystem.Nodes
         }
 
         #endregion
+
+        #region IEnumerable Tests
+
+        [TestMethod]
+        public void IEnumerable_WithNoTransitions_DoesNothing()
+        {
+            SpeechNode speechNode = new SpeechNode();
+
+            Assert.AreEqual(0, speechNode.TransitionCount);
+
+            int counter = 0;
+            foreach (Transition transition in speechNode)
+            {
+                ++counter;
+            }
+
+            Assert.AreEqual(0, counter);
+        }
+
+        [TestMethod]
+        public void IEnumerable_WithTransitions_IteratesOverTransitions()
+        {
+            SpeechNode speechNode = new SpeechNode();
+            speechNode.CreateTransition(new SpeechNode());
+            speechNode.CreateTransition(new SpeechNode());
+
+            Assert.AreEqual(2, speechNode.TransitionCount);
+
+            int counter = 0;
+            foreach (Transition transition in speechNode)
+            {
+                ++counter;
+            }
+
+            Assert.AreEqual(2, counter);
+        }
+
+        #endregion
     }
 }

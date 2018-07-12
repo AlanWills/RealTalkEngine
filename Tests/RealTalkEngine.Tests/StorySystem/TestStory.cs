@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using Twinary.StorySystem;
 using Twinary.StorySystem.Nodes;
+using Twinary.StorySystem.Transitions;
 
 namespace RealTalkEngine.Tests.StorySystem
 {
@@ -345,25 +347,60 @@ namespace RealTalkEngine.Tests.StorySystem
         [TestMethod]
         public void InputtingNullTwineStory_ReturnsNull()
         {
-            Assert.Fail();
+            Assert.IsNull(Story.Load((TwineStory)null));
         }
 
         [TestMethod]
         public void InputtingNonNullTwineStory_ReturnsStory()
         {
-            Assert.Fail();
+            TwineStory twineStory = new TwineStory();
+            twineStory.Name = "Test";
+            Story story = Story.Load(twineStory);
+
+            Assert.IsNotNull(story);
+            Assert.AreEqual("Test", story.Name);
         }
 
         [TestMethod]
         public void InputtingNonNullTwineStory_SetsUpNodesCorrectly()
         {
-            Assert.Fail();
+            TwineStory twineStory = new TwineStory();
+            TwineSpeechNode twineSpeechNode = new TwineSpeechNode();
+            twineSpeechNode.Name = "TestName";
+            twineStory.Nodes.Add(twineSpeechNode);
+            Story story = Story.Load(twineStory);
+
+            Assert.IsNotNull(story);
+            Assert.AreEqual("TestName", twineSpeechNode.Name);
         }
 
         [TestMethod]
         public void InputtingNonNullTwineStory_SetsUpTransitionsCorrectly()
         {
-            Assert.Fail();
+            TwineStory twineStory = new TwineStory();
+            TwineSpeechNode twineSpeechNode = new TwineSpeechNode();
+            twineSpeechNode.Name = "TestName";
+            twineStory.Nodes.Add(twineSpeechNode);
+            TwineSpeechNode twineSpeechNode2 = new TwineSpeechNode();
+            twineSpeechNode2.Name = "TestName2";
+            twineStory.Nodes.Add(twineSpeechNode2);
+
+            TwineLink twineLink = new TwineLink("Link", "Text|TestName2");
+            twineSpeechNode.TwineLinks.Add(twineLink);
+
+            Story story = Story.Load(twineStory);
+
+            Assert.IsNotNull(story);
+            Assert.AreEqual(2, story.NodeCount);
+
+            SpeechNode speechNode = story.GetNodeAt(0);
+
+            Assert.AreEqual(1, speechNode.TransitionCount);
+
+            Transition transition = speechNode.GetTransitionAt(0);
+
+            Assert.AreSame(speechNode, transition.Source);
+            Assert.AreSame(story.GetNodeAt(1), transition.Destination);
         }
 
         #endregion

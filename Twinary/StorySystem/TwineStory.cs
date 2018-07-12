@@ -18,28 +18,28 @@ namespace Twinary.StorySystem
         /// The name of this story.
         /// </summary>
         [JsonProperty(PropertyName = "name", Required = Required.Always)]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// The 1-based index of the node index which is the starting node for this story.
         /// </summary>
         [JsonProperty(PropertyName = "startnode", Required = Required.Always)]
-        public int OneBasedStartNodeIndex { get; private set; }
+        public int OneBasedStartNodeIndex { get; set; }
 
         /// <summary>
         /// The software responsible for creating this story.
         /// </summary>
         [JsonProperty(PropertyName = "creator")]
-        public string Creator { get; private set; }
+        public string Creator { get; set; }
 
         /// <summary>
         /// The version of the software responsible for creating this story.
         /// </summary>
         [JsonProperty(PropertyName = "creator-version")]
-        public string CreatorVersion { get; private set; }
+        public string CreatorVersion { get; set; }
 
         [JsonProperty(PropertyName = "ifid")]
-        public Guid IfID { get; private set; }
+        public Guid IfID { get; set; }
 
         /// <summary>
         /// The nodes contained within this story.
@@ -57,14 +57,7 @@ namespace Twinary.StorySystem
         private Dictionary<string, TwineSpeechNode> NodeLookup { get; set; } = new Dictionary<string, TwineSpeechNode>();
 
         #endregion
-
-        /// <summary>
-        /// Ensure people use the public Load function for loading stories.
-        /// </summary>
-        private TwineStory()
-        {
-        }
-
+        
         #region Loading
 
         /// <summary>

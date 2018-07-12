@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using RealTalkEngine.Tests.Mocks.StorySystem.Conditions;
+using RealTalkEngine.StorySystem.Conditions;
 
 namespace RealTalkEngine.Tests.StorySystem.Transitions
 {
@@ -204,6 +205,44 @@ namespace RealTalkEngine.Tests.StorySystem.Transitions
             Assert.IsFalse(condition3.ConditionPasses());
             Assert.AreEqual(3, transition.ConditionCount);
             Assert.IsFalse(transition.ValidateConditions());
+        }
+
+        #endregion
+
+        #region IEnumerable Tests
+
+        [TestMethod]
+        public void IEnumerable_NoTransitionConditions_DoesNothing()
+        {
+            Transition transition = new Transition(new SpeechNode(), new SpeechNode());
+
+            Assert.AreEqual(0, transition.ConditionCount);
+
+            int counter = 0;
+            foreach (TransitionCondition condition in transition)
+            {
+                ++counter;
+            }
+
+            Assert.AreEqual(0, counter);
+        }
+
+        [TestMethod]
+        public void IEnumerable_WithTransitionConditions_IteratesOverNodes()
+        {
+            Transition transition = new Transition(new SpeechNode(), new SpeechNode());
+            transition.CreateCondition<MockTransitionCondition>();
+            transition.CreateCondition<MockTransitionCondition>();
+
+            Assert.AreEqual(2, transition.ConditionCount);
+
+            int counter = 0;
+            foreach (TransitionCondition condition in transition)
+            {
+                ++counter;
+            }
+
+            Assert.AreEqual(2, counter);
         }
 
         #endregion
