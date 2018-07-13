@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Alexa.NET.Request.Type;
+using RealTalkEngine.RequestHandling;
 using RealTalkEngine.StorySystem.Transitions;
 
 namespace RealTalkEngine.StorySystem.Conditions
@@ -25,7 +27,10 @@ namespace RealTalkEngine.StorySystem.Conditions
         /// <returns></returns>
         public override bool ConditionPasses()
         {
-            return Transition.Source.ParentStory.Runtime.Intent.Name == IntentName;
+            RequestContext context = Transition.Source.ParentStory.Runtime.RequestContext;
+            IntentRequest request = context.Request.Request as IntentRequest;
+
+            return request.Intent.Name == IntentName;
         }
 
         #endregion

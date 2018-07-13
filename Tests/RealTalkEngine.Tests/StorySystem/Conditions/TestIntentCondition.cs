@@ -1,5 +1,7 @@
 ﻿using Alexa.NET.Request;
+using Alexa.NET.Request.Type;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RealTalkEngine.RequestHandling;
 using RealTalkEngine.StorySystem;
 using RealTalkEngine.StorySystem.Conditions;
 using RealTalkEngine.StorySystem.Nodes;
@@ -18,7 +20,11 @@ namespace RealTalkEngine.Tests.StorySystem.Conditions
         [TestMethod]
         public void ConditionPasses_WithCurrentRuntimeSetToDifferentIntent_ReturnsFalse()
         {
-            StoryRuntime runtime = new StoryRuntime(new Intent() { Name = "Test" }, null);
+            SkillRequest request = new SkillRequest();
+            request.Request = new IntentRequest() { Intent = new Intent() { Name = "Test" } };
+            RequestContext requestContext = new RequestContext(request, null, null);
+
+            StoryRuntime runtime = new StoryRuntime(requestContext);
             Story story = new Story();
             story.Runtime = runtime;
             SpeechNode speechNode = story.CreateNode("TestNode");
@@ -32,7 +38,11 @@ namespace RealTalkEngine.Tests.StorySystem.Conditions
         [TestMethod]
         public void ConditionPasses_WithCurrentRuntimeSetToSameIntent_ReturnsTrue()
         {
-            StoryRuntime runtime = new StoryRuntime(new Intent() { Name = "Test" }, null);
+            SkillRequest request = new SkillRequest();
+            request.Request = new IntentRequest() { Intent = new Intent() { Name = "Test" } };
+            RequestContext requestContext = new RequestContext(request, null, null);
+
+            StoryRuntime runtime = new StoryRuntime(requestContext);
             Story story = new Story();
             story.Runtime = runtime;
             SpeechNode speechNode = story.CreateNode("TestNode");

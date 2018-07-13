@@ -1,0 +1,930 @@
+<tw-storydata name="NecroTestCards" startnode="2" creator="Twine" creator-version="2.2.1" ifid="0615FFBF-9366-4901-974F-1BB192603FCD" zoom="1" format="Harlowe" format-version="1.2.4" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script><tw-passagedata pid="1" name="To Do" tags="" position="14,19" size="100,100">Force: Will tend to involve small packets of extra damage being dealt both to the player and the monster in cards. Stat determines damage. Might determine hp.
+
+Dex: Will tend to involve staggering in cards. Used in determining whether you and the enemy hit one another. Stat also determines crit damage (these play into one another as staggering enemies greatly increases the chance of scoring a crit).
+
+Wit: Less useful in fights but sometimes you can respond to a threat using Horror which is abstracted out of wit, gore and filth
+
+Horror: Made of Wit, Gore and Filth. Used for intimidation and dank necro shit.
+
+Gore and filth: Affect Horror but also have their own drawbacks, such as debuffing the player&#39;s Wit score in social interactions, or making it harder for them to sneak because of the smell. It will often be possible to max these out (using a puddle of filth or an enemy corpse) but you&#39;ll also lose filth and gore if you go through a waterfall, for example. Most Gods won&#39;t like it if you approach them in such a state.
+
+
+NOT YET
+- monsterstatus bit for if you&#39;re his slave, as precursor for &#39;event&#39; system that doesn&#39;t use decks
+- multidimensional arrays
+- Get a basic version of this cards system on the go for fights
+- Physical descriptions of monsters
+- Add something generalisable to &#39;engulf&#39; for if you&#39;re in there for a while and can&#39;t get any air to breathe.
+- Status-button to give assessment of their strengths and weaknesses, with stuff about magicwary, amorphous, etc.
+- Things in room cards like muddy filth, rib-cages, thrones, altars, etc. should still be accessible after the fight is over.
+- Make a couple of rooms with custom traversals and possibly more than one screen, such as the slavepit &#39;pit&#39; card ending the fight and leaving you on the bottom of the pit if you fail at it.
+- think about how blood and filth affect your stats
+- think about items
+- crit text in &#39;weapon&#39; datamap for weapon-specific crits
+- what does it mean when monsters crit? Just more damage? Something spongier?
+- spilling the chalice: If you take damage in a round whilst carrying the full chalice, the next card should be what happens when the chalice spills (even if it&#39;s just a notification that this has happened that just leads onto the next card)
+- force determines damagemod
+- badmagic-themed player card? I like the idea of a zap of black lightning. Also, badmagic should store wherever the badmagic came from.
+- dungeon layout: an early decision about whether you&#39;ll be on the wit axis (horror or grime) or the force/dex axis (grime optionally) reflected in whether you go up or down in an early room.
+- high-level systems: conversation, sneaking, magic, gods
+- make &#39;sicken&#39;-esque page for badmagic
+- think about orthogonal unit differentiation
+- remove monsters entirely from rooms when they die (precursor to moving them around) but leave their loot and items behind by assigning something to the room array which is what the item code accesses
+- trial items for temporary large stat boosts
+- get nicer copy in there
+- armour: Do a think where it refunds you some hp at the end of a round if you&#39;re damaged? Rewrite the way damage is dealt in the game that reduces it? Makes you harder to hit in the first place? Changes base dex?
+
+
+DONE
+- Use Fred&#39;s player variables
+- Build proper datamaps for monsters with all sections from doc
+- 5 monsters, 5 rooms
+- Format monsters right
+- Use Fred&#39;s inventory system footer deal, but with a conditional to display it or not
+- Use my map methodology
+- Use nested datamaps for monsters a la Fred&#39;s system
+- Format rooms right
+- Figure out hack-and-slash in between cards
+- Rethink card insertion bit</tw-passagedata><tw-passagedata pid="2" name="loadplayer" tags="" position="228,19" size="100,100">{
+(set: $hp to 20)
+
+(set: $basehorror to 3)
+(set: $horrormod to 0)
+(set: $horror to $basehorror+$horrormod)
+
+&lt;!-- three key stats are dexterity, which is speed and fighting skill, force, which is constitution and how hard you can whack a thing, and wit, which is mental acuity. All monsters possess these stats and they can all be tested agains one another. Horror as a suboordinate property which abstracts the amount of gore and filth and horrendous necro shit the player has accumulated. Only the player has this stat. --&gt;
+
+(set: $basedex to 3)
+(set: $dexmod to 0)
+(set: $dex to $basedex+$dexmod)
+
+(set: $baseforce to 3)
+(set: $forcemod to 0)
+(set: $force to $baseforce+$forcemod)
+
+(set: $basewit to 3)
+(set: $witmod to 0)
+(set: $wit to $basewit+$witmod)
+
+(set: $weapon to &quot;sword&quot;)
+(set: $attack to &quot;slash&quot;)
+(set: $weapondamage to 2)
+
+(set: $basedamage to 3)
+(set: $damage to $basedamage+$weapondamage)
+
+(set: $pouch to (datamap:))
+(set: $mouth to (datamap:))
+(set: $hand to (datamap:))
+(set: $inv to (a: &quot;mouth&quot;, &quot;hand&quot;, &quot;pouch&quot;, &quot;rusty sword&quot;))
+
+(set: $equipped to (datamap:
+&quot;head&quot;, &quot;nothing&quot;,
+&quot;body&quot;, &quot;battered platemail armour&quot;,
+&quot;weapon&quot;, &quot;rusty sword&quot;
+))
+
+(set: $filth to 0)
+(set: $gore to 0)
+(set: $playercards to (a:))
+(set: $tags to (a:))
+
+(set: $boolmessage to false)
+(set: $message to &quot; &quot;)
+
+&lt;!-- possible player tags: badmagic, plague --&gt;
+&lt;!-- should also dynamically track gore, but I&#39;m not sure what for --&gt;
+
+(goto: &quot;loadmonsters&quot;)
+}
+</tw-passagedata><tw-passagedata pid="3" name="loadmonsters" tags="" position="355,20" size="100,100">{
+&lt;!-- note that if it says &#39;text&#39; in the index then it needs punctuation --&gt;
+&lt;!-- possible tags: humanoid, mind, amorphous, bloodthirsty, magicwary, filthy, undead --&gt;
+&lt;!-- monsterstatus: -1 is &#39;still in the room&#39;, 0 is &#39;nothing there&#39;, 1 is &#39;you see a beast&#39;, 2 is dead and unlooted, 3 is dead and looted. 4 is present but chill, but still attackable.  --&gt;
+
+(set: $monster to (datamap:))
+
+(set: $blankmonster to (datamap:
+&quot;name&quot;, &quot; &quot;,
+&quot;appeartexta&quot;, &quot; &quot;,
+&quot;appeartextb&quot;, &quot; &quot;,
+&quot;idletexta&quot;, &quot; &quot;,
+&quot;idletextb&quot;, &quot; &quot;,
+&quot;bodyparta&quot;, &quot; &quot;,
+&quot;bodypartb&quot;, &quot; &quot;,
+&quot;attacktext&quot;, &quot; &quot;,
+&quot;misstext&quot;, &quot; &quot;,
+&quot;escapetexta&quot;, &quot; &quot;,
+&quot;escapetextb&quot;, &quot; &quot;,
+&quot;deathtext&quot;, &quot; &quot;,
+&quot;dropitem&quot;, &quot; &quot;,
+&quot;remains&quot;, &quot; &quot;,
+&quot;defended&quot;, 1,
+&quot;defender&quot;, &quot; &quot;,
+&quot;staggered&quot;, &quot; &quot;,
+&quot;relationship&quot;, &quot; &quot;,
+&quot;hittable&quot;, true,
+&quot;size&quot;, 1,
+&quot;dex&quot;, 1,
+&quot;wit&quot;, 1,
+&quot;force&quot;, 1,
+&quot;damage&quot;, 1,
+&quot;hp&quot;, 1,
+&quot;cards&quot;, (a:),
+&quot;tags&quot;, (a:)
+))
+
+
+(set: $skeleton to (datamap:
+&quot;name&quot;, &quot;skeleton&quot;,
+&quot;appeartexta&quot;, &quot;lurches toward you. You hear the the scrape of bone on stone.&quot;,
+&quot;appeartextb&quot;, &quot;rattles toward you, shedding bone dust.&quot;,
+&quot;idletexta&quot;, &quot;A skeleton stands stock-still in one corner. Its eye sockets gaze vacantly at nothing.&quot;,
+&quot;idletextb&quot;, &quot;A humanoid mass of bones leans on a pillar, holding its own head in its hands.&quot;,
+&quot;bodyparta&quot;, &quot;gnarled hand&quot;,
+&quot;bodypartb&quot;, &quot;death-pale shin bone&quot;,
+&quot;attacktext&quot;, &quot;The fetid jaws dig into you!&quot;,
+&quot;misstext&quot;, &quot;It hisses bone dust as its jaws clamp onto thin air.&quot;,
+&quot;escapetexta&quot;, &quot;Your $attack is deflected!&quot;,
+&quot;escapetextb&quot;, &quot;Your $weapon swings hopelessly as the skeleton lurches out of the way.&quot;,
+&quot;deathtext&quot;, &quot;The skeleton crumbles to dust.&quot;,
+&quot;dropitem&quot;, &quot;bone fragments&quot;,
+&quot;remains&quot;, &quot;pile of bones&quot;,
+&quot;defended&quot;, 0,
+&quot;defender&quot;, &quot; &quot;,
+&quot;staggered&quot;, &quot; &quot;,
+&quot;relationship&quot;, &quot; &quot;,
+&quot;hittable&quot;, true,
+&quot;size&quot;, 1,
+&quot;dex&quot;, 7,
+&quot;wit&quot;, 5,
+&quot;force&quot;, 5,
+&quot;damage&quot;, 4,
+&quot;hp&quot;, 7,
+&quot;cards&quot;, (a:&quot;gnash&quot;, &quot;gnash&quot;, &quot;repair&quot;, &quot;repair&quot;),
+&quot;tags&quot;, (a: &quot;undead&quot;, &quot;bloodthirsty&quot;)
+))
+
+
+
+(set: $wurm to 
+(datamap:
+&quot;name&quot;, &quot;wurm&quot;,
+&quot;appeartexta&quot;, &quot;bursts from the ground with rows of teeth lining its belly.&quot;,
+&quot;appeartextb&quot;, &quot;writhes around as if in agony, then begins hauling itself towards you, probing the ground ahead of it with myriad tiny feelers.&quot;,
+&quot;idletexta&quot;, &quot;A creature like a slab of flesh adheres to the ceiling.&quot;,
+&quot;idletextb&quot;, &quot;A foul-smelling creature like a giant worm sucks on a pile of dry bones.&quot;,
+&quot;bodyparta&quot;, &quot;gaping maw&quot;,
+&quot;bodypartb&quot;, &quot;slab-like hide&quot;,
+&quot;attacktext&quot;, &quot;The wurm envelops you in its glistening flesh, pricking your flesh with its articulated teeth.&quot;,
+&quot;misstext&quot;, &quot;The wurm lunges but you stumble back and avoid it.&quot;,
+&quot;escapetexta&quot;, &quot;The thing rolls over and your $weapon sticks into the ground.&quot;,
+&quot;escapetextb&quot;, &quot;Your $attack barely grazes the wurm as it continues its assault.&quot;,
+&quot;deathtext&quot;, &quot;The wurm curls in on itself and ceases to move.&quot;,
+&quot;dropitem&quot;, &quot;oily flesh&quot;,
+&quot;remains&quot;, &quot;fleshy carapice&quot;,
+&quot;defended&quot;, 0,
+&quot;defender&quot;, &quot; &quot;,
+&quot;staggered&quot;, &quot; &quot;,
+&quot;relationship&quot;, &quot; &quot;,
+&quot;hittable&quot;, true,
+&quot;size&quot;, 1,
+&quot;dex&quot;, 7,
+&quot;wit&quot;, 5,
+&quot;force&quot;, 5,
+&quot;damage&quot;, 5,
+&quot;hp&quot;, 5,
+&quot;cards&quot;, (a:&quot;engulf&quot;, &quot;engulf&quot;, &quot;dig&quot;, &quot;dig&quot;),
+&quot;tags&quot;, (a:&quot;bloodthirsty&quot;, &quot;filthy&quot;, &quot;amorphous&quot;)
+)
+)
+
+(set: $cultist to (datamap:
+&quot;name&quot;, &quot;cultist&quot;,
+&quot;appeartexta&quot;, &quot;fails to meet your gaze while drifting towards you.&quot;,
+&quot;appeartextb&quot;, &quot;burbles and stammers.&quot;,
+&quot;idletexta&quot;, &quot;A reeking figure wrapped in a cloak paces around the $room&#39;s name.&quot;,
+&quot;idletextb&quot;, &quot;A cloaked figure inspects the nails on its gnarled, yellow hands.&quot;,
+&quot;bodyparta&quot;, &quot;long-nailed claw&quot;,
+&quot;bodypartb&quot;, &quot;shrivelled thigh&quot;,
+&quot;attacktext&quot;, &quot;A dagger is suddenly in the figure&#39;s hand, easily finding its way to the flesh beneath your robes.&quot;,
+&quot;misstext&quot;, &quot;The figure snarls as its blade cuts the air but misses its mark.&quot;,
+&quot;escapetexta&quot;, &quot;You $attack at the figure, but it&#39;s always one step ahead of your $weapon.&quot;,
+&quot;escapetextb&quot;, &quot;Your $weapon becomes entangled in the robes of the $monstername. It grins.&quot;,
+&quot;deathtext&quot;, &quot;The figure yells and collapses to the ground. Its robe reddens with blood.&quot;,
+&quot;dropitem&quot;, &quot;yew-carved eyeball&quot;,
+&quot;remains&quot;, &quot;tangle of robe and flesh&quot;,
+&quot;defended&quot;, 0,
+&quot;defender&quot;, &quot; &quot;,
+&quot;staggered&quot;, &quot; &quot;,
+&quot;relationship&quot;, &quot; &quot;,
+&quot;hittable&quot;, true,
+&quot;size&quot;, 1,
+&quot;dex&quot;, 6,
+&quot;wit&quot;, 8,
+&quot;force&quot;, 6,
+&quot;damage&quot;, 2,
+&quot;hp&quot;, 9,
+&quot;cards&quot;, (a:&quot;entreaty&quot;, &quot;invoke&quot;, &quot;entreaty&quot;, &quot;invoke&quot;),
+&quot;tags&quot;, (a:&quot;humanoid&quot;, &quot;mind&quot;)
+))
+
+(set: $massofslime to (datamap:
+&quot;name&quot;, &quot;slime blob&quot;,
+&quot;appeartexta&quot;, &quot;glides toward you, its gelatinous form strangely menacing.&quot;,
+&quot;appeartextb&quot;, &quot;drops from out of the dark with a thick gurgle.&quot;,
+&quot;idletexta&quot;, &quot;An orange mold is spread across one wall.&quot;,
+&quot;idletextb&quot;, &quot;A mass of fungal matter shudders atop a mound of rags.&quot;,
+&quot;bodyparta&quot;, &quot;jelly-like core&quot;,
+&quot;bodypartb&quot;, &quot;quivering mass&quot;,
+&quot;attacktext&quot;, &quot;It encircles you! You feel the acidic jelly burn your flesh.&quot;,
+&quot;misstext&quot;, &quot;It extends a tendril of slime, but you avoid its clutch.&quot;,
+&quot;escapetexta&quot;, &quot;Your $attack cleaves off a hunk of slime, but the mass is unaffected.&quot;,
+&quot;escapetextb&quot;, &quot;Your $weapon sinks hopelessly into the morass, but the slime doesn&#39;t react.&quot;,
+&quot;deathtext&quot;, &quot;The slime dissipates into water.&quot;,
+&quot;dropitem&quot;, &quot;lumps of slime&quot;,
+&quot;remains&quot;, &quot;viscous fluid&quot;,
+&quot;dex&quot;, 4,
+&quot;wit&quot;, 4,
+&quot;force&quot;, 7,
+&quot;damage&quot;, 4,
+&quot;hp&quot;, 8,
+&quot;defended&quot;, 0,
+&quot;defender&quot;, &quot; &quot;,
+&quot;staggered&quot;, &quot; &quot;,
+&quot;relationship&quot;, &quot; &quot;,
+&quot;hittable&quot;, true,
+&quot;size&quot;, 1,
+&quot;cards&quot;, (a: &quot;engulf&quot;, &quot;engulf&quot;, &quot;engulf&quot;, &quot;spore&quot;),
+&quot;tags&quot;, (a: &quot;amorphous&quot;, &quot;bloodthirsty&quot;, &quot;magicwary&quot;)
+))
+
+
+(set: $giantrat to (datamap:
+&quot;name&quot;, &quot;giant rat&quot;,
+&quot;appeartexta&quot;, &quot;darts toward you, jaws slavering.&quot;, 
+&quot;appeartextb&quot;, &quot;skitters into the light and turns toward you.&quot;,
+&quot;bodyparta&quot;, &quot;crusty paw&quot;,
+&quot;bodypartb&quot;, &quot;matted haunch&quot;,
+&quot;attacktext&quot;, &quot;It slashes at you with its chipped teeth.&quot;,
+&quot;misstext&quot;, &quot;Its teeth graze the air beside you.&quot;,
+&quot;escapetexta&quot;, &quot;Your attack merely nicks its stinking tail.&quot;,
+&quot;escapetextb&quot;, &quot;Your $weapon cuts hopelessly through thin air.&quot;,
+&quot;deathtext&quot;, &quot;The rat&#39;s body leaks blood onto the dirt floor.&quot;,
+&quot;dropitem&quot;, &quot;rat&#39;s teeth&quot;,
+&quot;remains&quot;, &quot;body of a rat&quot;,
+&quot;dex&quot;, 7,
+&quot;wit&quot;, 5,
+&quot;force&quot;, 4,
+&quot;damage&quot;, 5,
+&quot;hp&quot;, 5,
+&quot;defended&quot;, 0,
+&quot;defender&quot;, &quot; &quot;,
+&quot;staggered&quot;, &quot; &quot;,
+&quot;relationship&quot;, &quot; &quot;,
+&quot;hittable&quot;, true,
+&quot;size&quot;, 1,
+&quot;cards&quot;, (a: &quot;escape&quot;, &quot;plague&quot;, &quot;escape&quot;, &quot;plague&quot;),
+&quot;tags&quot;, (a: &quot;magicwary&quot;, &quot;filthy&quot;)
+))
+
+(set: $menagerie to (a: $skeleton, $massofslime, $giantrat, $cultist, $wurm))
+(set: $monsterdeck to (shuffled: ...$menagerie))
+
+(goto:&quot;loadrooms&quot;)
+
+
+}</tw-passagedata><tw-passagedata pid="4" name="loadrooms" tags="" position="480,18" size="100,100">{
+(set: $treasure to (a: &quot;gem&quot;, &quot;candlestick&quot;, &quot;potion&quot;))
+(set: $clutter to (a: &quot;glass&quot;, &quot;moss&quot;, &quot;cobwebs&quot;))
+
+&lt;!-- nb most are missing some of these --&gt;
+
+(set: $blankroom to (datamap:
+&quot;name&quot;, &quot; &quot;,
+&quot;announce&quot;, &quot; &quot;,
+&quot;treasure&quot;, (shuffled: ...$treasure)&#39;s 1st,
+&quot;treasurepresent&quot;, 1,
+&quot;clutter&quot;, (shuffled: ...$clutter)&#39;s 1st,
+&quot;monster&quot;, ($monsterdeck&#39;s 1st),
+&quot;monsterstatus&quot;, 1,
+&quot;features&quot;, (a:),
+&quot;cards&quot;, (a:),
+&quot;itema&quot;, &quot; &quot;,
+&quot;itemb&quot;, &quot; &quot;,
+))
+
+(set: $throneroom to (datamap:
+&quot;name&quot;, &quot;throneroom&quot;,
+&quot;announce&quot;, &quot;a large room with a throne at the end&quot;,
+&quot;treasure&quot;, (shuffled: ...$treasure)&#39;s 1st,
+&quot;treasurepresent&quot;, 0,
+&quot;clutter&quot;, (shuffled: ...$clutter)&#39;s 1st,
+&quot;monster&quot;, ($monsterdeck&#39;s 1st),
+&quot;monsterstatus&quot;, 1,
+&quot;features&quot;, (a:&quot;flagstones&quot;),
+&quot;cards&quot;, (shuffled: ...(a:&quot;throne&quot;, &quot;rug&quot;)),
+))
+
+(set: $cathedral to (datamap:
+&quot;name&quot;, &quot;cathedral&quot;,
+&quot;announce&quot;, &quot;a vaulted cathedral with dusty stained glass&quot;,
+&quot;treasure&quot;, (shuffled: ...$treasure)&#39;s 1st,
+&quot;treasurepresent&quot;, 1,
+&quot;clutter&quot;, (shuffled: ...$clutter)&#39;s 1st,
+&quot;monster&quot;, ($monsterdeck&#39;s 2nd),
+&quot;monsterstatus&quot;, 1,
+&quot;features&quot;, (a:&quot;flagstones&quot;),
+&quot;cards&quot;, (a:&quot;altar&quot;, &quot;rug&quot;),
+))
+
+(set: $slavepit to (datamap:
+&quot;name&quot;, &quot;slavepit&quot;,
+&quot;announce&quot;, &quot;chained slaves break rocks in a pit below you&quot;,
+&quot;treasure&quot;, (shuffled: ...$treasure)&#39;s 1st,
+&quot;treasurepresent&quot;, 0,
+&quot;clutter&quot;, (shuffled: ...$clutter)&#39;s 1st,
+&quot;monster&quot;, ($monsterdeck&#39;s 3rd),
+&quot;monsterstatus&quot;, 1,
+&quot;features&quot;, (a:&quot;mud&quot;),
+&quot;cards&quot;, (shuffled: ...(a:&quot;pit&quot;, &quot;ribs&quot;)),
+))
+
+(set: $burrow to (datamap:
+&quot;name&quot;, &quot;burrow&quot;,
+&quot;announce&quot;, &quot;a dry earthy tunnel leads downwards&quot;,
+&quot;treasure&quot;, (shuffled: ...$treasure)&#39;s 1st,
+&quot;treasurepresent&quot;, 0,
+&quot;clutter&quot;, (shuffled: ...$clutter)&#39;s 1st,
+&quot;monster&quot;, ($monsterdeck&#39;s 1st),
+&quot;monsterstatus&quot;, 1,
+&quot;features&quot;, (a:&quot;mud&quot;),
+&quot;cards&quot;, (shuffled: ...(a:&quot;eggs&quot;, &quot;ribs&quot;)),
+))
+
+(set: $hallway to (datamap:
+&quot;name&quot;, &quot;hallway&quot;,
+&quot;announce&quot;, &quot;a dusty passage&quot;,
+&quot;treasure&quot;, (shuffled: ...$treasure)&#39;s 1st,
+&quot;treasurepresent&quot;, 0,
+&quot;clutter&quot;, (shuffled: ...$clutter)&#39;s 1st,
+&quot;monster&quot;, ($monsterdeck&#39;s 1st),
+&quot;monsterstatus&quot;, 0,
+&quot;features&quot;, (a:&quot;trap&quot;),
+&quot;cards&quot;, (a:&quot;mud&quot;, &quot;trap&quot;),
+))
+
+
+(set: $dungeon to (a:&quot;cathedral&quot;, &quot;throneroom&quot;, &quot;slavepit&quot;, &quot;burrow&quot;, &quot;hallway&quot;))
+(set: $roomdeck to (shuffled: ...$dungeon))
+
+
+(set: $pos to 0)
+(set: $mescaped to false)
+(set: $displayfooter to true)
+(set: $passable to true)
+
+(goto:&quot;Page 1&quot;)
+}</tw-passagedata><tw-passagedata pid="5" name="footer" tags="footer" position="3,203" size="100,100">{
+(if: $displayfooter)[
+(display: &quot;footercontent&quot;)
+]
+}
+</tw-passagedata><tw-passagedata pid="6" name="status" tags="" position="133,205" size="100,100">{
+(if: $hp &gt;= 20)[good]
+(else-if: $hp &lt;20 and $hp&gt;=15)[ok]
+(else-if: $hp &lt;15 and $hp&gt;=12)[bruised]
+(else-if: $hp &lt;12 and $hp&gt;=8)[battered]
+(else-if: $hp &lt;8 and $hp&gt;=4)[bloody]
+(else-if: $hp &lt;4 and $hp&gt;=1)[dying]
+(if: $tags contains &quot;badmagic&quot;)[&lt;br /&gt;you carry the fizzing taint of magic gone wrong]
+(if: $tags contains &quot;plague&quot;)[&lt;br /&gt;yellow sores glisten on the backs of your hands]
+}
+&lt;!-- something about filth and gore --&gt;</tw-passagedata><tw-passagedata pid="7" name="inventory" tags="" position="133,330" size="100,100">{
+(print: $inv.join(&quot;
+&quot;))
+(click-replace: &quot;pouch&quot;)[(print: $pouch)]
+}</tw-passagedata><tw-passagedata pid="8" name="Page 1" tags="" position="403,228" size="100,100">(link: &quot;I am fast&quot;)[(set:$dexmod to 1)(set: $pos to 1)(goto: $roomdeck&#39;s $pos)]
+(link: &quot;I am strong&quot;)[(set:$forcemod to 1)(set: $pos to 1)(goto: $roomdeck&#39;s $pos)]
+</tw-passagedata><tw-passagedata pid="9" name="cathedral" tags="" position="2217,134" size="100,100">cathedral (set: $room to $cathedral)
+(display: &quot;standardroom&quot;)
+(display: &quot;generictraverse&quot;)</tw-passagedata><tw-passagedata pid="10" name="hallway" tags="" position="2215,509" size="100,100">hallway (set: $room to $hallway)
+(display: &quot;standardroom&quot;)
+(display: &quot;generictraverse&quot;)</tw-passagedata><tw-passagedata pid="11" name="throneroom" tags="" position="2217,259" size="100,100">throneroom (set: $room to $throneroom)
+(display: &quot;standardroom&quot;)
+(display: &quot;generictraverse&quot;)</tw-passagedata><tw-passagedata pid="12" name="slavepit" tags="" position="2217,6" size="100,100">slavepit (set: $room to $slavepit)
+(display: &quot;standardroom&quot;)
+(display: &quot;generictraverse&quot;)</tw-passagedata><tw-passagedata pid="13" name="burrow" tags="" position="2217,384" size="100,100">burrow (set: $room to $burrow)
+(display: &quot;standardroom&quot;)
+(display: &quot;generictraverse&quot;)</tw-passagedata><tw-passagedata pid="14" name="back" tags="" position="332,353" size="100,100">(set: $pos to it - 1)
+(goto: $roomdeck&#39;s ($pos))</tw-passagedata><tw-passagedata pid="15" name="generictraverse" tags="" position="875,20" size="100,100">&lt;!-- nb may be better to handle the logic here in the &#39;forward&#39; passage --&gt;
+{
+(if: $passable)[
+(if: $pos is 1)[(linkgoto: &quot;forward&quot;, &quot;forward&quot;)]
+(else-if: $pos &gt; 1 and $pos &lt; $roomdeck&#39;s length)[(linkgoto: &quot;forward&quot;, &quot;forward&quot;)&lt;br /&gt;
+(linkgoto: &quot;back&quot;, &quot;back&quot;)]
+(else-if: $pos is $roomdeck&#39;s length)[(linkgoto: &quot;back&quot;,&quot;back&quot;)]
+]
+}
+</tw-passagedata><tw-passagedata pid="16" name="standardroom" tags="" position="750,19" size="100,100">{
+(set: $displayfooter to true)
+(set: $monster to ($room&#39;s monster))&lt;br /&gt;
+&lt;!-- features --&gt;
+(if: $room&#39;s features contains &quot;mud&quot;)[There is muck and filth ankle-deep all over the floor. It isn&#39;t clear how deep it goes.]
+
+&lt;br /&gt;
+&lt;!-- do none of the following if you&#39;re dead --&gt;
+(if: $hp&lt;1)[(linkgoto:&quot;You die&quot;, &quot;loadplayer&quot;)]
+(else:)[
+&lt;!-- if the monster just escaped --&gt;
+(if: $mescaped)[(set: $room&#39;s monsterstatus to 0)(set:$mescaped to false)]
+
+&lt;!-- if there&#39;s a monster there --&gt;
+(if: $room&#39;s monsterstatus is 1 or $room&#39;s monsterstatus is -1)[(set: $passable to false)A (print: $room&#39;s monster&#39;s name) (print: (either: $room&#39;s monster&#39;s appeartexta, $room&#39;s monster&#39;s appeartextb))&lt;br /&gt;
+(linkgoto: &quot;fight&quot;, &quot;fightstart&quot;) &lt;br /&gt;
+(linkgoto: &quot;run&quot;, &quot;run&quot;)]
+(else:)[
+&lt;!-- All options below this one have a passable room --&gt;
+(set: $passable to true)]
+
+&lt;!-- if it&#39;s dead --&gt;
+(if: $room&#39;s monsterstatus is 2 or $room&#39;s monsterstatus is 3)[(print: &quot;There is a (Print: $room&#39;s monster&#39;s remains) on the floor.&quot;)]&lt;br /&gt;
+
+&lt;!-- looting --&gt;
+(if: $room&#39;s monsterstatus is 2)[Search the remains]
+(click-replace: &quot;Search the remains&quot;)[(set: $room&#39;s monsterstatus to 3)You find (print: $room&#39;s monster&#39;s dropitem).(if: $pouch contains ($room&#39;s monster&#39;s dropitem))[(set: $pouch&#39;s ($room&#39;s monster&#39;s dropitem) to it+(random: 1,3))](else:)[
+(set: $pouch to $pouch + (datamap: ($room&#39;s monster&#39;s dropitem), (random: 1,3)))]]
+
+&lt;!-- not fighting --&gt;
+(if: $room&#39;s monsterstatus is 4)[
+The (print: $monster&#39;s name) regards you silently but does not move towards you.&lt;br /&gt;
+&lt;br /&gt;
+(link: &quot;attack it anyway&quot;)[(set: $boolmessage to true)(set:$message to &quot;&#39;Traitor!&#39; yells the $monstername.&quot;)(goto:&quot;fightstart&quot;)] &lt;br /&gt;
+]
+]
+}
+
+</tw-passagedata><tw-passagedata pid="17" name="forward" tags="" position="463,353" size="100,100">&lt;!-- nb maybe use one of these for the east, west, etc. movements --&gt;
+(set: $pos to it + 1)
+(goto: $roomdeck&#39;s ($pos))</tw-passagedata><tw-passagedata pid="18" name="debug footer" tags="debug-footer" position="4,457" size="100,100">(print: $fightdeck)
+(print: $playercards)</tw-passagedata><tw-passagedata pid="19" name="fightstart" tags="" position="821,208" size="100,100">(display: &quot;fightplanner&quot;)
+
+(set: $fightdeck to (rotated: 1, ...$fightdeck))
+(goto: $fightdeck&#39;s 1st)</tw-passagedata><tw-passagedata pid="20" name="run" tags="" position="819,460" size="100,100">&lt;!-- start the fight in case it hasn&#39;t been initialised yet --&gt;
+(if: $fightdeck is 0)[(display: &quot;fightplanner&quot;)]
+&lt;!-- check there&#39;s somewhere to run to --&gt;
+(if: $pos is 1)[(linkgoto: &quot;nowhere to run&quot;, &quot;blows&quot;)]
+&lt;!-- roll --&gt;
+(elseif: $dex+(random:1,6)  &gt; $monster&#39;s dex or not $attackable)[
+&lt;!-- win --&gt;
+(if: not $attackable)[You grab your chance to escape while the monster is distracted.]
+(else:)[You flee the room as fast as your feet can carry you.]
+(link-goto:&quot;You escaped&quot;, &quot;back&quot;)]
+&lt;!-- lose --&gt;
+(else:)[You turn to run. (print:$monster&#39;s attacktext)(set: $hp to it-$monster&#39;s damage)
+&lt;!-- dead? --&gt;
+(if: $monsterhp&gt;0 and $hp&lt;=0)[You are dead
+(link-goto: &quot;Restart&quot;, &quot;loadplayer&quot;)]
+&lt;!-- carry on --&gt;
+(else:)[
+(set: $fightdeck to (rotated: 1, ...$fightdeck))
+(linkgoto: &quot;fight&quot;, $fightdeck&#39;s 1st) &lt;br /&gt;
+(linkgoto: &quot;run&quot;, &quot;run&quot;)
+]]
+</tw-passagedata><tw-passagedata pid="21" name="blows" tags="" position="883,335" size="100,100">{
+(print: $room&#39;s name)&lt;br /&gt;&lt;br /&gt;
+(set:$displayfooter to false)
+&lt;!-- statuses --&gt;
+(if: $mescaped is true)[(goto:$roomdeck&#39;s $pos)]
+(if: not $canattack)[(print: $cond)]
+(if: not $attackable)[(print: $monstercond)]
+(if: $staggered)[You are off-balance.(set: $dex to it/2)]
+(if:$mstaggered)[The $monstername is off-balance.(set: $monster&#39;s dex to it/2)]
+
+&lt;!-- messages --&gt;
+(if: $boolmessage)[(print: $message)(set:$boolmessage to false)]
+
+&lt;!-- basic attack loop --&gt;
+(if: $hp&gt;0 and $monsterhp&gt;0)[
+(if: (random: 1,6)+$dex &gt;= $monster&#39;s dex)[
+(display: &quot;playerattack&quot;)&lt;br /&gt;
+(if: $monsterhp&gt;0)[(display: &quot;monsterattack&quot;)]]
+(else:)[
+(if: $attackable and $monsterhp&gt;0)[
+The (print: $monster&#39;s name) is quicker than you. 
+(display: &quot;monsterattack&quot;)]&lt;br /&gt;
+(display: &quot;playerattack&quot;)
+]]
+
+&lt;!-- is the monster dead --&gt;
+(if: $monsterhp&lt;1)[(display: &quot;monsterdeath&quot;)]
+
+&lt;!-- are you dead --&gt;
+(if: $hp&lt;=0)[(linkgoto:&quot;you die&quot;, &quot;loadplayer&quot;)]
+
+&lt;!-- clear conditions (could be conditional itself) --&gt;
+(if: $mstaggered)[(set: $mstaggered to false)(set:$monster&#39;s dex to it*2)]
+(display: &quot;statreset&quot;)
+(set: $staggered to false)
+(set: $attackable to true)
+(set: $canattack to true)
+}
+&lt;!-- useful --&gt;
+hp (print: $hp)
+monsterhp (print: $monsterhp)
+
+
+&lt;!-- next links --&gt;
+{
+(if: $hp &gt;0 and $monsterhp &gt;0)[
+(set: $fightdeck to (rotated: 1, ...$fightdeck))
+(linkgoto: &quot;next&quot;, $fightdeck&#39;s 1st) &lt;br /&gt;
+(linkgoto: &quot;run&quot;, &quot;run&quot;)]
+}
+(display: &quot;footercontent&quot;)
+</tw-passagedata><tw-passagedata pid="22" name="gnash" tags="" position="1258,143" size="100,100">The (print: $monster&#39;s name) shrieks as it pulls its skull from atop its torso and hurls it at you.
+
+(linkgoto: &quot;jump quickly aside&quot;, &quot;gnash2&quot;)
+(linkgoto: (string:&quot;deflect it with a forceful swing of your &quot; + $weapon), &quot;gnash3&quot;)</tw-passagedata><tw-passagedata pid="23" name="repair" tags="" position="1258,13" size="100,100">The $monstername freezes mid-stride and begins to shake. Its bones begin to knit together more tightly. Whatever magic animates this thing is working to increase its vitality.
+
+(linkgoto: &quot;quickly slip past it before its will returns&quot;, &quot;repair2&quot;)
+(linkgoto: &quot;smash it to the ground&quot;, &quot;repair3&quot;)
+(link: &quot;keep your distance&quot;)[(set: $monsterhp to it +(random:3,6))(set: $message to &quot;The skeleton looks more robust than it did moments ago. &quot;)(set:$boolmessage to true)(goto: &quot;blows&quot;)]
+</tw-passagedata><tw-passagedata pid="24" name="throne" tags="" position="1813,11" size="100,100">&lt;!-- nb the throneroom should probably have the option to do something with the throne too --&gt;
+At the top of the room is a black stone throne which radiates an obnoxious aura. The $monstername seems to be avoiding the ground around the throne.
+
+(linkgoto: &quot;climb into the throne&quot;, &quot;throne2&quot;)
+(linkgoto: &quot;leave it&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="25" name="rug" tags="" position="1813,136" size="100,100">The (print: $monster&#39;s name) approaches you across a (either: &quot;worn&quot;, &quot;richly embellished&quot;) rug.
+
+(linkgoto: &quot;yank the rug from under it&quot;, &quot;rug2&quot;)
+(linkgoto: (string: &quot;skillfully roll the &quot; + $monstername + &quot; up in the rug&quot;), &quot;rug3&quot;)
+(linkgoto: &quot;leave the rug alone&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="26" name="plague" tags="" position="1256,265" size="100,100">The $monstername rushes at you, eyes rolling, foaming at the mouth. Its (print: $monster&#39;s bodyparta) surges towards your throat.
+
+(linkgoto: &quot;dive aside&quot;, &quot;plague2&quot;)
+(linkgoto: &quot;grab it and toss it away&quot;, &quot;plague3&quot;)
+(linkgoto: &quot;bellow at it&quot;, &quot;plague4&quot;)
+(link: &quot;let it bite you&quot;)[(display: &quot;sicken&quot;)(set:$boolmessage to true)(set: $message to &quot;The $monstername bites you, infecting you with its foul disease.&quot;)(set:$hp to it - (random:1,3))(goto: &quot;blows&quot;)]</tw-passagedata><tw-passagedata pid="27" name="engulf" tags="" position="1259,898" size="100,100">The $monstername&#39;s body distends upwards as it reaches up towards the ceiling. A cavity opens up in the middle of its front. It collapses down towards you, hoping to smother you.
+
+(linkgoto: &quot;roll out of the way&quot;, &quot;engulf2&quot;)
+(linkgoto: &quot;slash its innards as it bares down on you&quot;, &quot;engulf3&quot;)</tw-passagedata><tw-passagedata pid="28" name="dig" tags="" position="1258,640" size="100,100">(if: $room&#39;s features contains &quot;mud&quot;)[The $monstername starts writing around in the filth and grime on the floor, attempting to pile grime on top of itself.
+(linkgoto: &quot;yank it out of the mud&quot;, &quot;dig2&quot;)
+(link: &quot;let it happen&quot;)[(set: $canattack to false)(set:$cond to &quot;&quot;)(set:$attackable to false)(set:$monstercond to &quot;The $monstername has vanished beneath the mud on the floor. You cannot easily discern its location, but you can tell from the disturbance in the mud that it is somewhere beneath you. DOES NOTHING NOW BUT WILL MEAN CHANCE TO USE ITEMS ETC ONCE THAT&#39;S IMPLIMENTED&quot;)(set: $fightdeck to it+ (a:&quot;erupt&quot;))(goto:&quot;blows&quot;)]](else:)[The $monstername begins to thrash about in panic as it attempts to find a way to dig into the cold, hard flagstones of the (print:$room&#39;s name).
+(linkgoto: &quot;attack decisively now&quot;, &quot;frenzy&quot;)
+(linkgoto: &quot;bide your time and wait for the right moment&quot;, &quot;blows&quot;)]</tw-passagedata><tw-passagedata pid="29" name="entreaty" tags="" position="1253,1139" size="100,100">{
+&lt;!-- Check it has a mind --&gt;
+(if: $monster&#39;s tags contains &quot;mind&quot;)[
+(if: $hp&gt;$monsterhp*2)[
+&lt;!-- it tries to surrender --&gt;
+ The $monstername murmurs fearfully. (either:&quot;&#39;Spare my life and I will allow yours to continue.&#39;&quot;, &quot;&#39;I submit to your mercy.&#39;&quot;, &quot;&#39;Stop this madness. We both desire to live.&#39;&quot;)&lt;br /&gt;
+&lt;br /&gt;
+(linkgoto: &quot;ignore this prattle&quot;, &quot;blows&quot;)&lt;br /&gt;
+(linkgoto: &quot;accept his surrender&quot;, &quot;msurrender&quot;)]
+(else:)[
+&lt;!-- it tells you to surrender --&gt;
+The $monstername murmurs. (either: &quot;&#39;You can only fail. You can only fail. You can only fail.&#39;&quot;, &quot;&#39;I will overpower you and when you are dead, I will consume you.&#39;&quot;, &quot;&#39;You are a fool for coming here. You are wretched.&#39;&quot;)&lt;br /&gt;
+&lt;br /&gt;
+(linkgoto: &quot;ignore this prattle&quot;, &quot;blows&quot;)&lt;br /&gt;
+(linkgoto: &quot;surrender&quot;, &quot;surrender&quot;)]
+]
+(else:)[
+&lt;!-- if it lacks a mind --&gt;
+(goto:&quot;escape&quot;)
+]
+}</tw-passagedata><tw-passagedata pid="30" name="invoke" tags="" position="1254,1025" size="100,100">The $monstername shuts its eyes and begins to chant. 
+
+(linkgoto: &quot;whack the $monstername in the head&quot;, &quot;invoke2&quot;)
+(linkgoto: &quot;command it to stop&quot;, &quot;invoke3&quot;)
+(linkgoto: &quot;let it whisper&quot;, &quot;invoke4&quot;)</tw-passagedata><tw-passagedata pid="31" name="spore" tags="" position="1250,1374" size="100,100">spore
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="32" name="escape" tags="" position="1256,390" size="100,100">&lt;!-- do something with sizes here --&gt;
+(set:$mescaped to false)
+(set: $escaperoute to (either:&quot;slim crack in the wall&quot;, &quot;narrow hole beneath a flagstone&quot;))(set: $room&#39;s features to it + (a:(string:$escaperoute)))
+The $monstername is fearful, and moves as fast as it can towards a $escaperoute. (if: $tags contains &quot;badmagic&quot;)[Its terror seems abnormally severe, and as it runs at you the magical residue on your bones tingles.]
+(linkgoto:&quot;try and stop it&quot;, &quot;escape2&quot;)
+(link: &quot;let it run&quot;)[(set: $mescaped to true)(goto: $roomdeck&#39;s $pos)]</tw-passagedata><tw-passagedata pid="33" name="altar" tags="" position="1820,526" size="100,100">altar
+dusty chalice
+
+-throw liquid over enemy
+harms enemy of they&#39;re filthy
+maybe helps them if they&#39;re not?
+
+-drink liquid
+gives you heath if no filth or gore
+
+-pour liquid on the floor and keep the chalice
+gives a buff to the enemy or makes a new one
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="34" name="pit" tags="" position="1816,655" size="100,100">pit
+don&#39;t fall in! maybe a test to see whether you push them or they push you?
+this should also be a chance to invoke a god by doing some crazy shit
+goto pitbottom
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="35" name="ribs" tags="" position="1815,273" size="100,100">As the $monstername circles, you almost trip over the rib cage of some ancient rotten carcass, halfway submerged in the muck on the ground. If you clambered in, the $monstername might have a harder time hitting you.
+
+(linkgoto: &quot;climb in&quot;, &quot;ribs2&quot;)
+(linkgoto: &quot;ignore the filthy mess&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="36" name="eggs" tags="" position="1816,788" size="100,100">eggs
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="37" name="fightplanner" tags="" position="758,335" size="100,100">{
+(set: $displayfooter to false)
+(set: $monsterhp to $monster&#39;s hp)
+(set: $monstername to $monster&#39;s name)
+
+(set: $canattack to true)
+(set: $cond to &quot; &quot;)
+
+(set: $attackable to true)
+(set: $monstercond to &quot; &quot;)
+
+(set: $defended to 0)
+(set: $defender to &quot; &quot;)
+
+(set: $staggered to false)
+(set: $mstaggered to false)
+
+(set: $fightdeck to ($playercards + $room&#39;s cards + $monster&#39;s cards))
+(set: $fightdeck to (shuffled: ...$fightdeck))
+
+(if: ($monster&#39;s tags contains &quot;magicwary&quot;) and ($tags contains &quot;badmagic&quot;))[(set: $fightdeck to it + (a:&quot;escape&quot;))]
+(if: ($monster&#39;s tags contains &quot;bloodthirsty&quot;) and ($tags contains &quot;blood-soaked&quot;))[(set: $fightdeck to it+(a:&quot;frenzy&quot;))]
+
+}</tw-passagedata><tw-passagedata pid="38" name="playerattack" tags="" position="753,590" size="100,100">{
+&lt;!-- only attack if you can attack --&gt;
+(if: $canattack)[
+&lt;!-- don&#39;t attack if monster is dead --&gt;
+(if: $monsterhp &gt;0)[
+&lt;!-- roll --&gt;
+(set: $pcheck to (random: 1,6)+$dex)
+&lt;!-- crit --&gt;
+(if: $pcheck &gt;= $monster&#39;s dex+2)[
+You $attack the (print: $monster&#39;s name)&#39;s (print: (either: $monster&#39;s bodyparta, $monster&#39;s bodypartb))! (print:(either:&quot;You are full of righeous fury.&quot;, &quot;The $monstername crumbles beneath your blows.&quot;, &quot;Your $weapon finds the $monstername again and again.&quot;))(set: $monsterhp to it-($damage+$weapondamage+$dexmod))]
+&lt;!-- hit --&gt;
+(elseif: $pcheck &gt;= $monster&#39;s dex)[
+You $attack the (print: $monster&#39;s name)&#39;s (print: (either: $monster&#39;s bodyparta, $monster&#39;s bodypartb))! (set: $monsterhp to it-($damage))]
+&lt;!-- miss --&gt;
+(else:)[(print: (either: $monster&#39;s escapetexta, $monster&#39;s escapetextb))]
+]
+]
+}</tw-passagedata><tw-passagedata pid="39" name="monsterattack" tags="" position="883,590" size="100,100">{
+&lt;!-- only attack if player is attackable --&gt;
+(if: $attackable)[
+&lt;!-- monster only attacks if it&#39;s alive --&gt;
+(if: $monsterhp &gt;0)[
+&lt;!-- defender --&gt;
+(if: $defended &gt;0)[The $defender deflects the (print: $monster&#39;s name)&#39;s attack
+(if: $defended is 1)[, but is knocked aside].
+(set: $defended to it-1)]
+(else:)[
+&lt;!-- roll --&gt;
+(set: $mcheck to $dex+(random:1,6))
+&lt;!-- crit --&gt;
+(if: $mcheck +2  &lt;= $monster&#39;s dex)[
+(print: $monster&#39;s attacktext)
+(set: $hp to it-($monster&#39;s damage+2))]
+&lt;!-- hit --&gt;
+(elseif: $dex+(random:1,6)  &lt;= $monster&#39;s dex)[
+(print: $monster&#39;s attacktext)
+(set: $hp to it-$monster&#39;s damage)]
+&lt;!-- miss --&gt;
+(else:)[(print: $monster&#39;s misstext)]
+]
+]
+]
+}</tw-passagedata><tw-passagedata pid="40" name="footercontent" tags="" position="7,328" size="100,100">{
+the way I feel (click-replace: &quot;the way I feel&quot;)[(display: &quot;status&quot;)] &lt;br /&gt;
+the burdens I carry (click-replace: &quot;the burdens I carry&quot;)[(display: &quot;inventory&quot;)]
+}</tw-passagedata><tw-passagedata pid="41" name="monsterdeath" tags="" position="881,715" size="100,100">The (print: $monster&#39;s name) falls to the ground, unmoving. (set: $room&#39;s monsterstatus to 2)
+(if: $hp &gt;= 0)[
+(linkgoto: &quot;continue&quot;, $roomdeck&#39;s $pos)]</tw-passagedata><tw-passagedata pid="42" name="statreset" tags="" position="756,715" size="100,100">{
+(set: $damagemod to $forcemod)
+(set: $horror to $basehorror+$horrormod)
+(set: $dex to $basedex+$dexmod)
+(set: $force to $baseforce+$forcemod)
+(set: $wit to $basewit+$witmod)
+(set: $damage to $basedamage+$weapondamage)
+}</tw-passagedata><tw-passagedata pid="43" name="gnash2" tags="" position="1383,140" size="100,100">(set: $check to $dex+(random:1,6))
+(if: $check &gt;= $monster&#39;s dex+2)[You leap aside neatly. The (print: $monster&#39;s name) grabs its skull off the ground and resumes its assault.]
+(elseif:$check &gt;= $monster&#39;s dex)[(set:$staggered to true)You leap clumsily aside and crash shoulder-first into the ground. The (print: $monster&#39;s name) takes advantage of your confusion to collect its head before resuming its assaut.]
+(else:)[(set: $staggered to true)(set: $hp to it - (random:1,3))The skull continues to shriek as it flies through the air, and before you have time to react it clamps onto your (either:&quot;arm&quot;, &quot;leg&quot;, &quot;nose&quot;). The rest of the (print: $monster&#39;s name) closes in on you as you attempt to pry the skull off.]
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="44" name="gnash3" tags="" position="1508,140" size="100,100">(set: $check to $force+(random:1,6))
+(if: $check &gt;= $monster&#39;s dex+2)[(set: $attackable to false)(set: $monstercond to &quot;The body of the skeleton ambles around the room, chasing after its skull.&quot;) You swing your $weapon in an arc, knocking the skull away to the other side of the room. The (print: $monster&#39;s name)&#39;s torso wheels about in confusion.]
+(elseif:$check &gt;= $monster&#39;s dex)[Your swing connects with the skull, but only barely. The (print: $monster&#39;s name) charges towards you, collecting its skull from the ground as it runs.]
+(else:)[(set: $canattack to false)(set: $cond to &quot;You race across the room to collect your weapon.&quot;)You heave your $weapon around but your arms lack the stength to deflect the screaming projectile and the $weapon flies from your hands, clattering into the far corner of the room.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="45" name="repair2" tags="" position="1383,14" size="100,100">(set:$escape to false)(set: $check to $dex+(random:1,6))
+(if: $check &gt;= $monster&#39;s dex +2)[(set: $escape to true)You race past the (print: $monster&#39;s name) into the next room.]
+(elseif: $check &gt;= $monster&#39;s dex)[(set: $monsterhp to it+(random:3,6))Before you are able to get past the (print: $monster&#39;s name), its wits return. It looks sturdier than it did moments ago.]
+(else:)[(set: $staggered to true)(set: $monsterhp to it+(random:3,6))As you dash past the (print: $monster&#39;s name), it sticks out its leg and sends you sprawling onto the ground. It ceases to shake. You struggle to your feet. It looks sturdier than it did before.]
+
+(if:$escape)[(set:$escape to false)(linkgoto: &quot;next&quot;, &quot;forward&quot;)](else:)[(linkgoto: &quot;next&quot;, &quot;blows&quot;)]</tw-passagedata><tw-passagedata pid="46" name="repair3" tags="" position="1513,14" size="100,100">(set: $check to $force+(random:1,6))
+(if: $check &gt;= $monster&#39;s force+2)[(set: $monsterhp to it-($damage+$weaponmod))You bring your $weapon down hard on top of the (print: $monster&#39;s name)&#39;s head. It collapses to the ground and then staggers to its feet. A large crack has appeared across its scalp.]
+(elseif:$check &gt;= $monster&#39;s force)[(set: $monsterhp to it-($damage+$weaponmod))(set: $tags to it + (a:&quot;badmagic&quot;))The (print: $monster&#39;s name) is struck to the ground by your attack. As your $weapon connects with its skull, an crackle of black energy arcs into your chest. You feel a tingling sensation run across your bones.]
+(else:)[Your $weapon rebounds off the vibrating scalp of the (print: $monster&#39;s name)(set: $tags to it + (a:&quot;badmagic&quot;)) without leaving a dent. Black energy arcs from your $weapon into your chest. You feel a tingling sensation run across your bones.]
+
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="47" name="frenzy" tags="" position="1256,515" size="100,100">The $monstername descends into a frothy madness, swinging at you with furious abandon.
+(display: &quot;monsterattack&quot;)
+(display: &quot;monsterattack&quot;)
+Eventually, its wits return and it casts about, dizzied. (set: $mstaggered to true)
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="48" name="erupt" tags="" position="1257,773" size="100,100">(if: $fightdeck contains &quot;erupt&quot;)[(set: fightdeck to it - (a:&quot;erupt&quot;))]
+The movement under the mud stops. A silent moment passes, and then the mud below you jumps and the $monstername surges out of the ground between your feet.
+
+(linkgoto: &quot;get well out of the way&quot;, &quot;erupt2&quot;)
+(linkgoto: &quot;$attack it decisively as it erupts from the ground&quot;, &quot;erupt3&quot;)</tw-passagedata><tw-passagedata pid="49" name="check default" tags="" position="1118,13" size="100,100">(set: $check to $YOURSTAT+(random:1,6))
+(if: $check &gt;= $monster&#39;s THEIRSTAT+2)[]
+(elseif:$check &gt;= $monster&#39;s THEIRSTAT)[]
+(else:)[]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="50" name="rug2" tags="" position="1938,136" size="100,100">(set: $check to $force+(random:1,6))
+(if: $check &gt;= $monster&#39;s dex+2)[(set:$attackable to false)(set:$monstercond to &quot;The $monstername sprawls on the ground helplessly.&quot;)The $monstername slams into the hard floor as the rug slides out from under its feet.]
+(elseif:$check &gt;= $monster&#39;s dex)[(set: $mstaggered to true)The $monstername loses its footing for a moment as the rug is swept out from under it.]
+(else:)[(set: $staggered to true)You yank the rug but suceed only in pulling the monster towards you. It bares down on you at great speed and you have to jump back to avoid it, slipping on (print: $room&#39;s clutter) underfoot.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="51" name="rug3" tags="" position="2063,138" size="100,100">(if: $monster&#39;s tags contains &quot;amorphous&quot;)[(set: $staggered to true)You cannot contain the (print:$monster&#39;s name). Its slimy consistency causes it to erupt from one end of the rug. As its form collapses below you, you fall to the ground. The (print:$monster&#39;s name) splurges out across the ground and reforms.](else:)[
+(set: $check to $Dex+(random:1,6))
+(if: $check &gt;= $monster&#39;s dex+2)[(set:$attackable to false)(set:$monstercond to &quot;The $monstername struggles to extricate itself from the rug.&quot;)You barrel towards the $monstername, deftly lifting the near edge of the rug as you do so. You dodge around it, wrapping the rug around its (print: (either: $monster&#39;s bodyparta, $monster&#39;s bodypartb)). It is constricted.]
+(elseif:$check &gt;= $monster&#39;s dex)[(set: $mstaggered to true)The $monstername sees what you are doing and moves off the rug. This seems to break the flow of its attacks.]
+(else:)[(set: $hp to it - ($monster&#39;s damage - (random:1,3)))You grab the edge of the rug and attempt to wrap it around the $monstername. It seems you have succeeded, until the rug is abruptly torn asunder and the $monstername&#39;s (print: $monster&#39;s bodyparta) reaches through, tearing at your flesh. The $monstername shrugs off the shredded scraps of the carpet.]
+]
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="52" name="escape2" tags="" position="1381,390" size="100,100">(set: $mescaped to false)
+(set: $check to $dex+(random:1,6))
+(if:$check &gt;= $monster&#39;s dex+2)[(set: $mstaggered to true)You get between the $monstername and its target with amazing speed. It panics and wheels about.]
+(elseif:$check &gt;= $monster&#39;s dex)[You and your $weapon block the $monstername&#39;s way. It faces you silently for a moment.]
+(else:)[(set: $mescaped to true)You are too slow.]
+
+(if: not $mescaped)[(linkgoto: &quot;next&quot;, &quot;blows&quot;)](else:)[(linkgoto: &quot;it got away&quot;, $roomdeck&#39;s $pos)]</tw-passagedata><tw-passagedata pid="53" name="throne2" tags="" position="1938,11" size="100,100">&lt;!-- nb may be able to do the fightdeck card-add better. It might be more effective to go straight to the escape card rather than putting it in the pack --&gt;
+(set: $check to $wit+(random:1,6))
+(if: not ($tags contains &quot;badmagic&quot;))[(set: $tags to it + (a:&quot;badmagic&quot;))You feel suddenly nausious as you touch the blackened throne.](else:)[(set: $check to it + 1)You feel compelled, nay, entitled, to sit in this throne.]
+(if: $check &gt;= 8)[(set: $fightdeck&#39;s 2nd to &quot;escape&quot;)(set:$messagebool to true)(set:$message to &quot;The $monstername seems suddenly reluctant to be close to you.&quot;)(set:$mstaggered to true)The throne is comfortable. As you sit slowly down upon it, the $monstername stops moving and regards you. You grin, and grip your $weapon, and then you find yourself compelled to chase the wretch from your sight.]
+(elseif:$check &gt;= 6)[(set: $staggered to true)(set: $fightdeck&#39;s 2nd to &quot;escape&quot;)The throne seems to writhe under you as you sit upon it. The stone is deathly cold. The $monstername doesn&#39;t approach you. Then, suddenly, the throne casts you away. You tumble onto the ground.]
+(else:)[(set: $hp to it - (random:1,3))(set: $canattack to false)(set: $cond to &quot;You land on the floor with a thud.&quot;)The throne rejects you. You are hurled through the air atop an arc of black energy.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="54" name="puke" tags="" position="1534,395" size="100,100">(if: $fightdeck contains &quot;puke&quot;)[(set: fightdeck to it - (a:&quot;puke&quot;))]
+&lt;!-- might have different sorts of consequences in different types of deck --&gt;
+{(set:$canattack to false)(set: $cond to &quot;You vomit yellow frothy matter onto the floor uncontrollably. It smells of the tomb.&quot;)(set: $filth to it +1)(set: $room&#39;s features to it+(a:&quot;a pool of vomit&quot;))}You are overcome with retching. The $monstername swims before your eyes and you fall to one knee in paroxysms of violent sickness.
+
+(linkgoto:&quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="55" name="plague2" tags="" position="1385,265" size="100,100">(set: $check to $dex+(random:1,6))
+(if: $check &gt;= $monster&#39;s dex+2)[(set: $mstaggered to true)Right at the last moment, you leap sideways away from the $monstername, which slips on some (print: $room&#39;s clutter) and collapses in a heap.]
+(elseif:$check &gt;= $monster&#39;s dex)[The $monstername is uncoordinated and misses you as you step neatly out of its way.]
+(else:)[(display: &quot;sicken&quot;)(set:$staggered to true)You dive sideways but slip on some (print: $room&#39;s clutter). Before you can recover, the $monstername is upon you. It sticks its (print: $monster&#39;s bodyparta) into your mouth and you retch as your mouth is filled with sour-tasting effluvia.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)
+</tw-passagedata><tw-passagedata pid="56" name="plague3" tags="" position="1511,270" size="100,100">(if:$monster&#39;s tags contains &quot;amorphous&quot;)[(display: &quot;sicken&quot;)(set:$staggered to true)(set: $hp to it-(random:1,3))You try to grab the $monstername but your hands can&#39;t find purchase on its slimy, amorphous form. It is upon you.]
+(set: $check to $force+(random:1,6))
+(if: $check &gt;= $monster&#39;s force+2)[(set: $monsterhp to it-(random:1,3))(set:$mstaggered to true)You grab the $monstername before its (print: $monster&#39;s bodyparta) can reach you and hurl it across the room away from you. It hits the wall with a sickening crunch, looking dazed.]
+(elseif:$check &gt;= $monster&#39;s force)[You are able to break the $monstername&#39;s momentum and hurl it sideways across the room. ]
+(else:)[(display: &quot;sicken&quot;)(set:$staggered to true)(set: $hp to it-(random:1,3))Your attempt to keep the $monstername off you fails and you tumble to the ground with it. It inflicts numerous small nicks and cuts to your face and hands. Up close, the smell of the creature reminds you of (either: &quot;sewers&quot;, &quot;charnel&quot;, &quot;butcher&#39;s yards&quot;, &quot;the black pit&quot;, &quot;a plague camp&quot;). You struggle beneath its mass.]
+
+
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)
+</tw-passagedata><tw-passagedata pid="57" name="plague4" tags="" position="1640,270" size="100,100">(set: $check to $horror+(random:1,6))(set:$flee to false)
+(if: $tags contains &quot;badmagic&quot; and $monster&#39;s tags contains &quot;magicwary&quot;)[(set:$check to it +1)There is an unholy resonance to your voice.]
+(if: $check &gt;= $monster&#39;s wit+2)[(set: $flee to true)(set:$attackable to false)(set:$monstercond to &quot;The $monstername trembles at your approach as if rivited to the ground.&quot;)The $monstername abruptly halts its charge and cowers on the spot.]
+(elseif:$check &gt;= $monster&#39;s wit)[(set: $flee to true)The $monstername skids to a halt, then starts moving away from you.]
+(else:)[(display: &quot;sicken&quot;)(set: $canattack to false)(set: $cond to &quot;You pull the $monstername from atop your body as its repugnant fluids flow into your open wounds.&quot;) The $monstername is undeterred as it barrels towards you. Its (print: $monster&#39;s bodyparta) tears at your flesh and its mass knocks you to the ground.]
+
+(if: $flee is true)[(linkgoto: &quot;next&quot;, &quot;escape&quot;)]
+(else:)[(linkgoto: &quot;next&quot;, &quot;blows&quot;)]
+</tw-passagedata><tw-passagedata pid="58" name="sicken" tags="" position="1660,395" size="100,100">(if: not ($tags contains &quot;plague&quot;))[
+(set: $tags to it + (a:&quot;plague&quot;))
+(set: $playercards to it + (a:&quot;puke&quot;))
+(set: $boolmessage to true)(set: $message to &quot;You stomach crawls.&quot;)]
+(else:)[(set: $fightdeck to it + (a: &quot;puke&quot;))(set: $boolmessage to true)(set: $message to &quot;You stomach convulses. You are about to throw up.&quot;)]</tw-passagedata><tw-passagedata pid="59" name="ribs2" tags="" position="1941,270" size="100,100">You grab an opportunity to slither down into the chest cavity of the rib cage. You are caked in muck. (if: $monster&#39;s tags contains &quot;amorphous&quot;)[(set:$filth to it +1)(set:$staggered to true)However, the slimy nature of the $monstername allows it to ooze between the ribs. As you try to struggle out of the tangle of bones, you are easy prey.](else:)[You can attack the $monstername from in here without risk of being hurt.(set: $defended to it +1)(set: $defender to &quot;large rib-cage&quot;)(set:$filth to it +1)]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="60" name="dig2" tags="" position="1389,641" size="100,100">(set: $check to $force+(random:1,6))
+(if: $check &gt;= $monster&#39;s force+2)[(set:$mstaggered to true)You yank the $monstername out of its slime-pool. The mud makes a greasy popping sound as the $monstername comes free. You hurl it over your shoulder.]
+(elseif:$check &gt;= $monster&#39;s force)[You grab the $monstername around its girth and heave it out of its tunnel and over your shoulder.]
+(else:)[(set: $canattack to false)(set:$cond to &quot;&quot;)(set:$attackable to false)(set:$monstercond to &quot;The $monstername has vanished beneath the mud on the floor. You cannot easily discern its location, but you can tell from the disturbance in the mud that it is somewhere beneath you. DOES NOTHING NOW BUT WILL MEAN CHANCE TO USE ITEMS ETC ONCE THAT&#39;S IMPLIMENTED&quot;)(set:$filth to it +1)(set: $fightdeck to it + (a: &quot;erupt&quot;))Your hands slip off the greasy flanks of the $monstername and it vanishes beneath the muck.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="61" name="erupt2" tags="" position="1390,771" size="100,100">(set: $check to $dex+(random:1,6))
+(if: $check &gt;= $monster&#39;s dex+2)[(set:$mstaggered to true)The $monstername arcs over your head and lands awkwardly, splayed over the floor.]
+(elseif:$check &gt;= $monster&#39;s dex)[You step back easily and the $monstername passes you by, landing with a skid in the mud.]
+(else:)[(set:$hp to it-$monster&#39;s damage)Before you can leap, the ground gives way beneath your feet. The $monstername&#39;s (print:$monster&#39;s bodyparta) explodes from below you.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="62" name="erupt3" tags="" position="1518,773" size="100,100">(set: $check to $force+(random:1,6))
+(if: $check &gt;= $monster&#39;s dex+2)[(set: $monsterhp to it - ($damage+$forcemod))As the $monstername erupts from the ground beneath you, and you $attack its flank with your $weapon as it scrolls upwards, into the air. You narrowly avoid the wave of filth that follows the $monstername into the air.]
+(elseif:$check &gt;= $monster&#39;s dex)[(set: $monsterhp to it - ($damage))(set:$hp to it-(random:1,3))(set:$filth to it+1)As the $monstername breaks the surface, you are able to $attack its (print: $monster&#39;s bodyparta). However, it hits you hard under the chin and you taste blood in your mouth. You are coated in a wave of filth as the $monstername shoots past you.]
+(else:)[(set:$hp to it-$monster&#39;s damage)(set:$filth to it+1)You line up a crushing blow to $monstername but it comes at you so quickly that you are knocked up into the air before you can hurt it. You land with an agonising thump on the ground and are immediately coated in a wave of filth.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="63" name="engulf2" tags="" position="1385,896" size="100,100">(set: $check to $dex+(random:1,6))
+(if: $check &gt;= $monster&#39;s dex+2)[(set: $attackable to false)(set:$mcond to &quot;The $monstername collapses flat on the ground.&quot;)(set:$mstaggered to true)As you move aside, the $monstername collapses downwards towards the spot where you just stood.]
+(elseif:$check &gt;= $monster&#39;s dex)[The $monstername surges towads the spot where you were just standing, but you are several feet out of the way by the time its flanks slap back together.]
+(else:)[(set: $canattack to false)(set: $cond to &quot;You see the world twisting through the translucent body of the $monstername. You struggle against its mass whilst a multitude of acidic polyps sting your eyes and skin.&quot;)(set:$staggered to true)(set:$fightdeck to it + (a:&quot;engulfstruggle&quot;))Quicker than you would have thought possible, the $monstername drops and wraps itself around you. Its speed is uncanny. You $monstername&#39;s flanks enwrap you. You find that you cannot breathe.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="64" name="engulf3" tags="" position="1515,898" size="100,100">(set: $check to $force+(random:1,6))
+(if: $check &gt;= $monster&#39;s force+2)[(set: $monsterhp to it - (ceil:($damage*1.5)))(set:$filth to it +1)You swing your $weapon directly at the belly of the $monstername as it bares down upon you. Its membrane ruptures and its viscera spews all around you.]
+(elseif:$check &gt;= $monster&#39;s force)[(set: $monsterhp to it - (ceil:($damage*0.5)))(set:$filth to it +1)The $monstername surges around you but the swing of your $weapon knocks it away from you. It flails on its back for a moment but resumes its assault without losing a beat.]
+(else:)[(set: $canattack to false)(set: $cond to &quot;You see the world twisting through the translucent body of the $monstername. You struggle against its mass whilst a multitude of acidic polyps sting your eyes and skin.&quot;)(set:$staggered to true)(set:$fightdeck to it + (a:&quot;engulfstruggle&quot;))Your $weapon sinks uselessly into the flesh of the $monstername but it doesn&#39;t break its momentum.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="65" name="engulfstruggle" tags="" position="1642,899" size="100,100">(if: $fightdeck contains &quot;engulfstruggle&quot;)[(set: $fightdeck to it - (a:&quot;engulfstruggle&quot;))]
+(set: $check to $force + (random:1,6))
+You have no choice but to struggle aginst the pressure that the slimy stuff of the $monstername exerts upon you.
+(if: $check &gt;= $monster&#39;s force)[(set:$filth to it +1)(set:$mstaggered to true)Eventually you free your hand and then your arm from the $monstername&#39;s embrace. You get your mouth to the opening and take a breath of foul-tasting air as your body slips out of the side of the $monstername. It cast about, looking for you.]
+(else:)[Your struggling is useless, however, and you are unable to free yourself.(set: $canattack to false)(set: $cond to &quot;You see the world twisting through the translucent body of the $monstername. You struggle against its mass whilst a multitude of acidic polyps sting your eyes and skin.&quot;)(set:$staggered to true)(set:$fightdeck to it + (a:&quot;engulfstruggle&quot;))(set:$filth to it +1)]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="66" name="pitbottom" tags="" position="2342,6" size="100,100">Double-click this passage to edit it.</tw-passagedata><tw-passagedata pid="67" name="invoke3" tags="" position="1508,1023" size="100,100">(if: $tags contains $badmagic or ($horror+(random:1,6))&gt;=$monster&#39;s wit)[(set:$fightdeck to it + (a:&quot;entreaty&quot;))(set:$attackable to false)(set:$monstercond to &quot;The $monstername stares at you, uncertain.&quot;)You yell a single word at the $monstername and its eyes open suddenly and look at you sideways. It regards you in a new light.(if: $tags contains &quot;badmagic&quot;)[ Your bones tingle.]]
+(else:)[(display: &quot;darkfavour&quot;) It laughs as it lunges towards you.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="68" name="darkfavour" tags="" position="1758,1025" size="100,100">{
+(if: $fightdeck contains &quot;invoke&quot;)[(set: $fightdeck to it - (a:&quot;invoke&quot;))]
+
+(set: $option to (random:1,4))
+(if:$option is 1)[The $monstername&#39;s skin yellows and its eyes recede into their sockets. A foul smell comes off it.(set: $monstername to &quot;puke-&quot;+it)(set: $fightdeck to it + (a:&quot;plague&quot;))(set: $fightdeck to (shuffled: ...$fightdeck))(set: $fightdeck to it + (a:&quot;plague&quot;))]
+(elseif:$option is 2)[The $monstername&#39;s skin takes on a translucent quality and slime begins to drip from beneath its robes.(set: $monstername to &quot;mold-&quot;+it)(set: $fightdeck to it + (a:&quot;engulf&quot;))(set: $fightdeck to (shuffled: ...$fightdeck))(set: $fightdeck to it + (a:&quot;engulf&quot;))]
+(elseif:$option is 3)[The $monstername&#39;s legs and arms lengthen and its fingers start massaging the air with incredible speed. It begins to vibrate and cackle.(set: $monstername to &quot;fleetfoot-&quot; +it)(set: $monster&#39;s dex to it + 3)(set: $monsterhp to (ceil:$monsterhp/2))]
+(else:)[The $monstername&#39;s muscles bulge and its face distends as blood vessels rupture.(set: $monstername to &quot;fury-&quot;+it)(set: $monster&#39;s force to it+3)(set:$monster&#39;s damage to it + 3)(set: $fightdeck to it + (a:&quot;frenzy&quot;))(set: $fightdeck to (shuffled: ...$fightdeck))(set: $fightdeck to it + (a:&quot;frenzy&quot;))]
+}</tw-passagedata><tw-passagedata pid="69" name="invoke4" tags="" position="1633,1024" size="100,100">(display: &quot;darkfavour&quot;) The $monstername&#39;s eyes open and it licks its lips before leaping towards you.
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="70" name="invoke2" tags="" position="1383,1021" size="100,100">(if: $force &gt;= $monster&#39;s wit)[(set: $monsterhp to it - $damage)(set:$fightdeck to it + (a:&quot;entreaty&quot;))(set:$mstaggered to true)The $monstername doesn&#39;t react as you rush towards it and you deliver a solid strike to the top of its head. It recoils and its eyes blink open. It looks bleary.]
+(else:)[(set: $monsterhp to it - (random:1,3))(display: &quot;darkfavour&quot;) Your swing is interrupted as the $monstername&#39;s eyes flash open and you flinch, delivering only a glancing blow.]
+
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)</tw-passagedata><tw-passagedata pid="71" name="msurrender" tags="" position="1386,1153" size="100,100">(set: $room&#39;s monsterstatus to 4)
+&#39;Accept this token of my submission.&#39;
+
+The $monstername hands you a (print: $room&#39;s monster&#39;s dropitem).(if: $pouch contains ($room&#39;s monster&#39;s dropitem))[(set: $pouch&#39;s ($room&#39;s monster&#39;s dropitem) to it+1)](else:)[
+(set: $pouch to $pouch + (datamap: ($room&#39;s monster&#39;s dropitem), 1))]
+
+(linkgoto: &quot;next&quot;, $roomdeck&#39;s $pos)</tw-passagedata><tw-passagedata pid="72" name="surrender" tags="" position="1513,1153" size="100,100">(set: $room&#39;s monsterstatus to 4)(if: not ($tags contains &quot;badmagic&quot;))[(set: $tags to it + (a:&quot;badmagic&quot;))Your bones shiver and you are full of sadness as something invisible is taken away from you, and you find that although you know something vital to you has vanished, you cannot remember what it was.
+
+&quot;You belong to me now, slave. You will bear my mark always. All that you destroy will be to my glory.&quot;
+
+(linkgoto: &quot;next&quot;, $roomdeck&#39;s $pos)]
+(else:)[&quot;No... I feel... Your soul is accounted to some other force. Its taint is on you. There is no option but to kill you now.&quot;
+(if: $fightdeck contains &quot;entreaty&quot;)[(set: $fightdeck to it - (a:&quot;entreaty&quot;))]
+(linkgoto: &quot;next&quot;, &quot;blows&quot;)]
+
+</tw-passagedata></tw-storydata>

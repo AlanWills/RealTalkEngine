@@ -233,6 +233,34 @@ namespace RealTalkEngine.Tests.StorySystem
 
         #endregion
 
+        #region Find Node Tests
+
+        [TestMethod]
+        public void FindNode_InputtingNonExistentName_ReturnsNull()
+        {
+            Story story = new Story();
+
+            Assert.AreEqual(0, story.NodeCount);
+            Assert.IsNull(story.FindNode("WubbaLubba"));
+
+            story.CreateNode("TestNode");
+
+            Assert.AreEqual(1, story.NodeCount);
+            Assert.IsNull(story.FindNode("WubbaLubba"));
+        }
+
+        [TestMethod]
+        public void FindNode_InputtingExistentName_ReturnsCorrectNode()
+        {
+            Story story = new Story();
+            SpeechNode speechNode = story.CreateNode("TestNode");
+
+            Assert.AreEqual(1, story.NodeCount);
+            Assert.AreSame(speechNode, story.FindNode("TestNode"));
+        }
+
+        #endregion
+
         #region Load Tests
 
         #region File Overload

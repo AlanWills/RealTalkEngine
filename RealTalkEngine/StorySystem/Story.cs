@@ -115,7 +115,7 @@ namespace RealTalkEngine.StorySystem
                 story.CreateNode(twineSpeechNode);
             }
 
-            story.InitializeNodeLookup();
+            // Only need to initialize transitions here - story.CreateNode will initialize the lookup
             story.InitializeNodeTransitions(twineStory);
 
             return story;
@@ -231,6 +231,9 @@ namespace RealTalkEngine.StorySystem
             if (speechNode != null)
             {
                 speechNode.ParentStory = this;
+
+                // Keep our lookup and node list up to date
+                m_nodeLookup.Add(speechNode.Name, speechNode);
                 Nodes.Add(speechNode);
             }
 
@@ -272,6 +275,17 @@ namespace RealTalkEngine.StorySystem
         public SpeechNode GetNodeAt(uint index)
         {
             return 0 <= index && index < Nodes.Count ? Nodes[(int)index] : null;
+        }
+
+        /// <summary>
+        /// Attempts to find a node with a name which matches the inputted name.
+        /// Will return null if no such node could be found.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public SpeechNode FindNode(string name)
+        {
+            return m_nodeLookup.ContainsKey(name) ? m_nodeLookup[name] : null;
         }
 
         #endregion

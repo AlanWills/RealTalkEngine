@@ -1,0 +1,331 @@
+<tw-storydata name="NecroWorldBuild" startnode="5" creator="Twine" creator-version="2.2.1" ifid="DA37062D-5286-4A78-8B6A-4FCF65778C25" zoom="1" format="Harlowe" format-version="1.2.4" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script><tw-passagedata pid="1" name="worldgen" tags="" position="492,322" size="100,100">(set: $temperature to (shuffled:(a:&quot;hot&quot;),(a:&quot;cold&quot;)))
+(set: $climate to (shuffled:(a:&quot;wet&quot;),(a:&quot;dry&quot;)))
+(set: $age to (shuffled: (a:&quot;old&quot;),(a:&quot;young&quot;)))
+(set: $land to (shuffled:(a:&quot;flat&quot;),(a:&quot;steep&quot;)))
+(set: $people to (shuffled:(a:&quot;farms&quot;),(a:&quot;cities&quot;)))
+
+(set: $opposite to (datamap:
+&quot;hot&quot;, &quot;cold&quot;, 
+&quot;cold&quot;, &quot;hot&quot;, 
+&quot;wet&quot;, &quot;dry&quot;,
+&quot;dry&quot;, &quot;wet&quot;,
+&quot;old&quot;, &quot;young&quot;,
+&quot;young&quot;, &quot;old&quot;,
+&quot;flat&quot;, &quot;steep&quot;,
+&quot;steep&quot;, &quot;flat&quot;,
+&quot;farms&quot;, &quot;cities&quot;,
+&quot;cities&quot;, &quot;farms&quot;,
+))
+
+(set: $ascendant to (a:$temperature[1]) + (a:$climate[1]) +(a:$age[1]) + (a:$land[1]) + (a:$people[1])) 
+
+(set: $ascendant to (shuffled: ...$ascendant))
+
+(set: $waning to (a:$temperature[0]) + (a:$climate[0]) +(a:$age[0]) + (a:$land[0]) + (a:$people[0])) 
+
+(set: $waning to (shuffled: ...$waning))
+
+(goto: &quot;words&quot;)</tw-passagedata><tw-passagedata pid="2" name="Gods" tags="" position="668,69" size="100,100">(set:$God1 to (datamap:
+&quot;name&quot;, (string: $names[0]),
+&quot;type&quot;, &quot;god&quot;,
+&quot;domain&quot;, (string:$ascendant[0]),
+&quot;domain2&quot;, (string:$ascendant[3]),
+&quot;gender&quot;, (either: &quot;male&quot;, &quot;female&quot;, &quot;remote&quot;),
+&quot;attitude&quot;, (either: &quot;creator&quot;, &quot;destroyer&quot;),
+))
+
+(set:$God2 to (datamap:
+&quot;name&quot;, (string: $names[1]),
+&quot;type&quot;, &quot;god&quot;,
+&quot;domain&quot;, (string:$ascendant[1]),
+&quot;domain2&quot;, (string:$ascendant[4]),
+&quot;gender&quot;, (either: &quot;male&quot;, &quot;female&quot;, &quot;remote&quot;),
+&quot;attitude&quot;, (either: &quot;creator&quot;, &quot;destroyer&quot;),
+))
+
+(set:$God3 to (datamap:
+&quot;name&quot;, (string: $names[2]),
+&quot;type&quot;, &quot;god&quot;,
+&quot;domain&quot;, (string:$ascendant[2]),
+&quot;domain2&quot;, (string:$waning[4]),
+&quot;gender&quot;, (either: &quot;male&quot;, &quot;female&quot;, &quot;remote&quot;),
+&quot;attitude&quot;, (either: &quot;creator&quot;, &quot;destroyer&quot;),
+))
+
+(set:$God4 to (datamap:
+&quot;name&quot;, (string: $names[3]),
+&quot;type&quot;, &quot;demon&quot;,
+&quot;domain&quot;, (string:$waning[0]),
+&quot;domain2&quot;, (string:$waning[2]),
+&quot;gender&quot;, (either: &quot;male&quot;, &quot;female&quot;, &quot;remote&quot;),
+&quot;attitude&quot;, (either: &quot;creator&quot;, &quot;destroyer&quot;),
+))
+
+(set: $God5 to (datamap:
+&quot;name&quot;, (string: $names[4]),
+&quot;type&quot;, &quot;demon&quot;,
+&quot;domain&quot;, (string:$waning[1]),
+&quot;domain2&quot;, (string:$waning[3]),
+&quot;gender&quot;, (either: &quot;male&quot;, &quot;female&quot;, &quot;remote&quot;),
+&quot;attitude&quot;, (either: &quot;creator&quot;, &quot;destroyer&quot;),
+))
+
+(set: $deities to (a: $God1, $God2, $God3, $God4, $God5))
+
+(set: $n to 0)
+(goto: &quot;Gods2&quot;)</tw-passagedata><tw-passagedata pid="3" name="Todo" tags="" position="149,167" size="100,100">Todo:
+
+1) Generate world
+2) Generate gods
+3) Generate myths
+3a) Generate ur-gods and creation and destruction myths
+4) Generate cultists
+5) Generate murals
+6) Generate description of dungeon
+
+things that gods like and dislike?</tw-passagedata><tw-passagedata pid="4" name="namegen2" tags="" position="490,197" size="100,100">(set: $name to $first[$n] + $second[$n])
+(if: (either: 1,0) is 1)[(set: $name to it + $third[$n])(if: (either:1,0) is 1)[(set: $name to it + $forth[$n])]]
+(if: $name&#39;s last is &quot;-&quot;)[(set: $name to it + $forth[$n])]
+(if: $name contains &quot;--&quot;)[(set: $name to it - &quot;--&quot;)]
+
+
+(set: $n to it + 1)
+(if: $n&lt;6)[(set: $names to it + (a: $name))(goto: &quot;namegen2&quot;)]
+(elseif: $n&lt;10)[(set: $sparenames to it + (a: $name))(goto: &quot;namegen2&quot;)]
+(else:)[(goto: &quot;worldgen&quot;)]</tw-passagedata><tw-passagedata pid="5" name="namegen" tags="" position="487,68" size="100,100">(set: $names to (a:))
+(set: $sparenames to (a:))
+(set: $n to 0)
+(set: $first to (shuffled:...(a: &quot;Bl&quot;, &quot;Ch&quot;, &quot;Fl&quot;, &quot;Har&quot;, &quot;W&quot;, &quot;Bar&quot;, &quot;Werb&quot;, &quot;Nak&quot;, &quot;Eng&quot;, &quot;Finn&quot;, &quot;Reb&quot;, &quot;Tez&quot;)))
+(set: $second to (shuffled:...(a:&quot;ar&quot;, &quot;erg&quot;, &quot;ebnor&quot;, &quot;ingam&quot;, &quot;asch&quot;, &quot;erol&quot;, &quot;-&quot;, &quot;und&quot;, &quot;urk&quot;, &quot;abro&quot;, &quot;ezash&quot;)))
+(set: $third to (shuffled:...(a:&quot;-&quot;, &quot;um&quot;, &quot;ank&quot;, &quot;azeel&quot;, &quot;olo&quot;, &quot;eli&quot;, &quot;anz&quot;)))
+(set: $forth to (shuffled:...(a:&quot;ink&quot;, &quot;isk&quot;, &quot;arap&quot;, &quot;icut&quot;, &quot;enk&quot;, &quot;ibo&quot;, &quot;azer&quot;, &quot;izk&quot;)))
+(goto: &quot;namegen2&quot;)</tw-passagedata><tw-passagedata pid="6" name="words" tags="" position="493,453" size="100,100">(set: $adjectives to (datamap:
+&quot;hot&quot;, (shuffled: ...(a:&quot;firey&quot;, &quot;smouldering&quot;, &quot;charred&quot;)),
+&quot;cold&quot;, (shuffled: ...(a:&quot;frozen&quot;, &quot;chilling&quot;, &quot;icy&quot;)),
+&quot;wet&quot;, (shuffled: ...(a:&quot;steaming&quot;, &quot;verdanant&quot;, &quot;flourishing&quot;, &quot;fecund&quot;, &quot;flowering&quot;)),
+&quot;dry&quot;, (shuffled: ...(a:&quot;parched&quot;, &quot;cracked&quot;, &quot;thirsty&quot;, &quot;arid&quot;)),
+&quot;old&quot;, (shuffled: ...(a:&quot;ancient&quot;, &quot;venerable&quot;, &quot;hollow&quot;)),
+&quot;young&quot;, (shuffled: ...(a:&quot;fresh&quot;, &quot;aspirant&quot;, &quot;flourishing&quot;)),
+&quot;flat&quot;, (shuffled: ...(a:&quot;beveled&quot;, &quot;featureless&quot;, &quot;windy&quot;)),
+&quot;steep&quot;, (shuffled: ...(a:&quot;jagged&quot;, &quot;craggy&quot;, &quot;broken&quot;)),
+&quot;farms&quot;, (shuffled: ...(a:&quot;earthen&quot;, &quot;toiling&quot;, &quot;perspiring&quot;, &quot;besmirched&quot;)),
+&quot;cities&quot;, (shuffled: ...(a:&quot;brick&quot;, &quot;sprawling&quot;, &quot;righteous&quot;, &quot;broiling&quot;)),
+))
+
+(set: $nouns to (datamap:
+&quot;hot&quot;, (shuffled: ...(a:&quot;flame&quot;, &quot;ember&quot;, &quot;ash&quot;)),
+&quot;cold&quot;, (shuffled: ...(a:&quot;ice&quot;, &quot;rime&quot;, &quot;crystal&quot;)),
+&quot;wet&quot;, (shuffled: ...(a:&quot;jungle&quot;, &quot;mangrove&quot;, &quot;river&quot;)),
+&quot;dry&quot;, (shuffled: ...(a:&quot;dust&quot;, &quot;desert&quot;, &quot;savannah&quot;)),
+&quot;old&quot;, (shuffled: ...(a:&quot;consortium&quot;, &quot;republic&quot;, &quot;entourage&quot;)),
+&quot;young&quot;, (shuffled: ...(a:&quot;village&quot;, &quot;child&quot;, &quot;scaffold&quot;, &quot;hearth&quot;)),
+&quot;flat&quot;, (shuffled: ...(a:&quot;plain&quot;, &quot;wold&quot;, &quot;basin&quot;)),
+&quot;steep&quot;, (shuffled: ...(a:&quot;steppe&quot;, &quot;crag&quot;, &quot;mountain&quot;)),
+&quot;farms&quot;, (shuffled: ...(a:&quot;mine&quot;, &quot;pitchfork&quot;, &quot;steer&quot;, &quot;lamb&quot;)),
+&quot;cities&quot;, (shuffled: ...(a:&quot;city&quot;, &quot;pillar&quot;, &quot;citadel&quot;, &quot;chimney&quot;)),
+))
+
+(set: $tools to (datamap:
+&quot;hot&quot;, (shuffled: ...(a:&quot;brand&quot;, &quot;torch&quot;, &quot;charred stump&quot;)),
+&quot;cold&quot;, (shuffled: ...(a:&quot;icicle&quot;, &quot;sword of ice&quot;, &quot;steel mace&quot;)),
+&quot;wet&quot;, (shuffled: ...(a:&quot;living vine&quot;, &quot;flowering branch&quot;, &quot;ever-flowing ewer&quot;)),
+&quot;dry&quot;, (shuffled: ...(a:&quot;cracked femur&quot;, &quot;stick of dead wood&quot;, &quot;hollow-eyed corpse&quot;)),
+&quot;old&quot;, (shuffled: ...(a:&quot;ornate mace&quot;, &quot;gavel&quot;, &quot;bronze key&quot;)),
+&quot;young&quot;, (shuffled: ...(a:&quot;hammer&quot;, &quot;sickle&quot;, &quot;adze&quot;)),
+&quot;flat&quot;, (shuffled: ...(a:&quot;sheep carcass&quot;, &quot;raven skeleton&quot;, &quot;barren shrub&quot;)),
+&quot;steep&quot;, (shuffled: ...(a:&quot;spike of rock&quot;, &quot;flourospar&quot;, &quot;geode&quot;)),
+&quot;farms&quot;, (shuffled: ...(a:&quot;pitchfork&quot;, &quot;pickaxe&quot;, &quot;bushel of acorns&quot;)),
+&quot;cities&quot;, (shuffled: ...(a:&quot;ceremonial spear&quot;, &quot;marble edifice&quot;, &quot;ornate mace&quot;)),
+))
+
+(set: $landscapes to (datamap:
+&quot;hot&quot;, (shuffled: ...(a:&quot;ashen land&quot;, &quot;field of embers&quot;, &quot;red desert&quot;)),
+&quot;cold&quot;, (shuffled: ...(a:&quot;tundra&quot;, &quot;frozen forest&quot;, &quot;arctic plain&quot;)),
+&quot;wet&quot;, (shuffled: ...(a:&quot;turgid mire&quot;, &quot;tangled mangrove&quot;, &quot;briny sea&quot;)),
+&quot;dry&quot;, (shuffled: ...(a:&quot;parched desert&quot;, &quot;plain of cracked mud&quot;, &quot;dry riverbed&quot;)),
+&quot;old&quot;, (shuffled: ...(a:&quot;decaying ruin&quot;, &quot;twisted structure&quot;, &quot;abandoned fortress&quot;)),
+&quot;young&quot;, (shuffled: ...(a:&quot;bustling cityscape&quot;, &quot;rich valley&quot;, &quot;shining town&quot;)),
+&quot;flat&quot;, (shuffled: ...(a:&quot;rolling hill&quot;, &quot;peaceful meadow&quot;, &quot;quiet woodland&quot;)),
+&quot;steep&quot;, (shuffled: ...(a:&quot;spine of mountains&quot;, &quot;rugged steppe&quot;, &quot;crooked plateau&quot;)),
+&quot;farms&quot;, (shuffled: ...(a:&quot;pastoral meadow&quot;, &quot;field of maize&quot;, &quot;pigsty&quot;)),
+&quot;cities&quot;, (shuffled: ...(a:&quot;belt of factories&quot;, &quot;marble city square&quot;, &quot;museum of conquest&quot;)),
+))
+
+(set: $prepositions to (shuffled: ...(a:&quot;above&quot;, &quot;below&quot;, &quot;inside&quot;, &quot;next to&quot;, &quot;near&quot;, &quot;opposite&quot;, &quot;atop&quot;)))
+
+(set: $generalnouns to (shuffled: ...(a:&quot;face&quot;, &quot;visage&quot;, &quot;hand&quot;, &quot;finger&quot;)))
+
+
+(set: $ppron to (datamap:
+&quot;male&quot;, &quot;his&quot;,
+&quot;female&quot;, &quot;her&quot;,
+&quot;remote&quot;, &quot;its&quot;
+)) his/her/its
+
+(set: $spron to (datamap:
+&quot;male&quot;, &quot;him&quot;,
+&quot;female&quot;, &quot;her&quot;,
+&quot;remote&quot;, &quot;it&quot;
+)) him/her/it
+
+(set: $pron to (datamap:
+&quot;male&quot;, &quot;he&quot;,
+&quot;female&quot;, &quot;she&quot;,
+&quot;remote&quot;, &quot;it&quot;
+)) he/she/it
+
+
+
+(goto: &quot;Gods&quot;)
+</tw-passagedata><tw-passagedata pid="7" name="Gods2" tags="" position="665,199" size="100,100">(set: $title to &quot; the &quot; + ((&quot;domain&quot; of $deities[$n]) of $adjectives)[0])
+(set: (&quot;title&quot; of $deities[$n]) to (string:$title))
+
+
+(set: $aka to &quot; the &quot; + ((&quot;domain2&quot; of $deities[$n]) of $adjectives)[0] + &quot; &quot; + ((&quot;domain&quot; of $deities[$n]) of $nouns)[0])
+(set: (&quot;aka&quot; of $deities[$n]) to (string:$aka))
+
+(set: $opposites to (a: ((&quot;domain&quot; of $deities[$n]) of $opposite)) + (a: ((&quot;domain2&quot; of $deities[$n]) of $opposite)))
+(set: (&quot;opposites&quot; of $deities[$n]) to $opposites)
+
+--gonna need to throw in some pronouns
+
+
+(set: $n to it + 1)
+(if: $n &lt; 5)[(goto: &quot;Gods2&quot;)]
+(else:)[(goto: &quot;Gods3&quot;)]</tw-passagedata><tw-passagedata pid="8" name="Gods3" tags="" position="666,324" size="100,100">(set: $n to 0)
+(print: $deities[$n])
+(set: $n to it + 1)
+(print: $deities[$n])
+(set: $n to it + 1)
+(print: $deities[$n])
+(set: $n to it + 1)
+(print: $deities[$n])
+(set: $n to it + 1)
+(print: $deities[$n])
+
+(goto: &quot;myth1&quot;)</tw-passagedata><tw-passagedata pid="9" name="myth1" tags="" position="669,453" size="100,100">
+(set: $c1 to $God1)
+(set: $c2 to $God2)
+
+We make about 15 stories.
+We randomise how many gods are in a story (sometimes 1, sometimes 2, sometimes... 3?).
+We grab the appropriate number.
+We look at their relationship - god/demon, god/god, demon/demon, whether they&#39;re opposed, etc (maybe swapping them out if necessary).
+We generate a myth for each, ensuring each possibility is covered, using the strings generated in a deck-arrangement.
+
+-- 1 God:
+how that god was born
+if they are in the ascendant, a story about how they found their domain
+if they are in the supressed domains, a story about how they factor into the apocalypse
+
+
+-- 2 Gods:
+if they contain opposites, it&#39;s a story of how one destroyed the other and reshaped the world
+
+if they contain harmonious elements and are in the ascendant, they create a hero, who is surrounded by a sympathetic cult
+
+if they contain harmonious elements and are in the supressed domains, they create a usurper, who is entombed in the dungeon, and what the dungeon actually is
+
+if they have one harmonious element and one discordant element, it&#39;s a story of an uneasy compromise
+
+-- creation story:
+something about the ur-god
+
+-- destruction story:
+something about how the suppressed gods rise again
+something about the dungeon itself
+
+(goto: &quot;myth2&quot;)</tw-passagedata><tw-passagedata pid="10" name="myth2" tags="" position="817,456" size="100,100">
+(print: $God1)
+(print: $God2)
+
+
+(set: $r to (either: 1,2))
+(set: $s to ($r - 1))
+
+
+
+(set: $encounter1 to &quot;The &quot; + &quot;type&quot; of $c1 + &quot; &quot; + &quot;name&quot; of $c1 + &quot; &quot; + &quot;title&quot; of $c1 + &quot; raises &quot; + (&quot;gender&quot; of $c1) of $ppron + &quot; &quot; + ((&quot;domain2&quot; of $c1) of $adjectives)[$r] + &quot; &quot; + $generalnouns[$r] + &quot; and regards the &quot; +((&quot;domain&quot; of $c2) of $nouns)[$r] + &quot; of &quot; + &quot;name&quot; of $c2 + &quot;, &quot; + &quot;aka&quot; of $c2 + &quot;.&quot;)
+
+(set: $encounter2 to &quot;name&quot; of $c1 + &quot; rests &quot; + $prepositions[$r] + &quot; the &quot; + ((&quot;domain2&quot; of $c1) of $adjectives)[$r] + &quot; &quot; + ((&quot;domain&quot; of $c1) of $nouns)[$r] + &quot; as &quot; + &quot;aka&quot; of $c2 + &quot;, &quot; + &quot;name&quot; of $c2 + &quot;, moves past in the form of a &quot; + ((&quot;domain&quot; of $c2) of $adjectives)[$r] + &quot; &quot; + ((&quot;domain2&quot; of $c2) of $tools)[$r] + &quot;.&quot;)
+
+(set: $conjunction1 to &quot;name&quot; of $c1 + &quot; reaches &quot; + (&quot;gender&quot; of $c1) of $ppron + &quot; &quot; + ((&quot;domain&quot; of $c1) of $adjectives)[$r] + &quot; &quot; + $generalnouns[$r] + &quot; towards the &quot; + ((&quot;domain2&quot; of $c2) of $adjectives)[$r] + &quot; &quot; + $generalnouns[$s] + &quot; of &quot; + &quot;name&quot; of $c2 + &quot;title&quot; of $c2 + &quot;. &quot; + &quot;name&quot; of $c2 + &quot; glows &quot; + $prepositions[$r] + &quot; the &quot; + ((&quot;domain&quot; of $c1) of $landscapes)[$r] + &quot;.&quot;)
+
+(set: $conjunction2 to &quot;name&quot; of $c1 + &quot; &quot; + &quot;aka&quot; of $c1 + &quot; and &quot; + &quot;name&quot; of $c2 + &quot; &quot; + &quot;aka&quot; of $c2 + &quot; come together and are joined &quot; + $prepositions[$r] + &quot; the &quot; + ((&quot;domain&quot; of $c2) of $landscapes)[$r] + &quot; &quot; + $prepositions[$s] + &quot; the &quot; + ((&quot;domain2&quot; of $c1) of $landscapes)[$r] + &quot;.&quot;)
+
+(set: $creation1 to &quot;As &quot; + &quot;aka&quot; of $c2 + &quot; and &quot; + &quot;aka&quot; of $c1 + &quot; move apart, the &quot; + ((&quot;domain&quot; of $c1) of $landscapes)[$r] + &quot; is overcome by a &quot; + ((&quot;domain&quot; of $c2) of $adjectives)[$r] + &quot; &quot; + ((&quot;domain2&quot; of $c1) of $nouns)[$r] + &quot;, which opens to reveal the figure of &quot; + $sparenames[$r] +&quot;.&quot;)
+
+(set: $creation2 to &quot;The conjunction of &quot; + &quot;name&quot; of $c1 + &quot; and &quot; + &quot;name&quot; of $c2 + &quot; is furious. It causes a &quot; +  ((&quot;domain&quot; of $c2) of $adjectives)[$r] + &quot; &quot; + ((&quot;domain&quot; of $c2) of $tools)[$r] + &quot; and a &quot; + ((&quot;domain&quot; of $c1) of $adjectives)[$r] + &quot; &quot; + ((&quot;domain&quot; of $c1) of $tools)[$r] + &quot; to appear together &quot; + $prepositions[$r] + &quot; the &quot; + ((&quot;domain&quot; of $c1) of $landscapes)[$r] + &quot;. &quot; + $sparenames[$r] + &quot; is born &quot; + $prepositions[$r] + &quot; the &quot; + ((&quot;domain&quot; of $c2) of $landscapes)[$r] + &quot; while &quot; + &quot;aka&quot; of $c1 + &quot; and &quot; + &quot;aka&quot; of $c2 + &quot; tumble &quot; + $prepositions[$r] + &quot; the &quot; + ((&quot;domain2&quot; of $c1) of $adjectives)[$r] + &quot; &quot; + ((&quot;domain2&quot; of $c2) of $landscapes)[$r] + &quot;.&quot;)
+
+(set: $combat1 to &quot;&quot;)
+(set: $combat2 to &quot;&quot;)
+
+(set: $victory1 to &quot;&quot;)
+(set: $victory2 to &quot;&quot;)
+
+(set: $defeat1 to &quot;&quot;)
+(set: $defeat2 to &quot;&quot;)
+
+(set: $birth1 to &quot;&quot;) - a tumult causes a landscape to cross a landscape
+(set: $birth2 to &quot;&quot;) - someone carries a tool to a landscape
+
+(print: $encounter1)
+(print: $conjunction1)
+(print: $creation1)
+
+(print: $encounter2)
+(print: $conjunction2)
+(print: $creation2)
+
+
+rules:
+
+myths:
+-- demons are thwarted by gods and rail against them
+-- stories about Gods and how they made their domain if they&#39;re creative
+-- a romance between two creative gods
+-- stuff about notable followers?
+-- the birth of gods out of their personal domains
+
+prophecies:
+-- prophecies about Demons and how they&#39;ll create their domain if they&#39;re creative
+-- prophecies about how Demons will destroy whatever opposes their domain if they&#39;re destructive
+-- prophecies about how Gods&#39; domains will destroy the world if they&#39;re destructive
+
+
+-- a story of two peeps
+-- these should probably all be displayable pages</tw-passagedata></tw-storydata>

@@ -1,0 +1,157 @@
+<tw-storydata name="Resistjam Story" startnode="12" creator="Twine" creator-version="2.2.1" ifid="2127C78C-D027-415B-866D-BFD3D578F521" zoom="1" format="Harlowe" format-version="1.2.4" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">@import url('https://fonts.googleapis.com/css?family=Arvo|Gloria+Hallelujah|Lobster');
+
+html {
+	background-color: rgba(221, 173, 125, 255);
+	background-image: url(fragmentsBackground.png); 
+	background-position: center; 
+	background-size: 100% 400%; 
+  font-family: 'Arvo', serif;
+
+}
+
+tw-link {
+	font-family: 'Gloria Hallelujah', cursive;
+	
+}
+
+tw-link.visited {
+	display: none
+}
+
+tw-sidebar {
+  display: none	
+}
+
+.box {
+	
+	border: double #000 0.25em; 
+	border-radius: 0.02em;
+	
+	float: right;
+	width: 45%;
+	
+	padding: 1em;
+	
+	box-shadow: #000 0.05em 0.05em 0;
+	
+	color: rgb(168, 20, 20)
+	
+	font-family: 'Lobster', cursive;
+	font-size: 1.3em
+
+}
+
+.satan {
+	color: rgb(226, 45, 0);
+	
+}
+
+
+
+
+</style><script role="script" id="twine-user-script" type="text/twine-javascript">window.music = new Audio("06 Everywhere You Turn.mp3");
+
+	window.play = function () {
+		music.volume = 1
+	  music.play();
+	  music.loop = true;
+	};
+
+	window.playNoLoop = function () {
+	  music.play();
+	  music.loop = false;
+	};
+
+	window.pause = function () {
+	  music.pause();
+	};
+
+	window.loadTrackA = function () {
+	  window.music = new Audio("368743__frankum__electronic-pop-sweet-guitar.mp3");
+	};
+
+	window.loadTrackB = function () {
+		window.music = new Audio("365482__caitlin-100__camera-beeps-noises.mp3");
+	};
+
+</script><tw-passagedata pid="1" name="Intro" tags="" position="681,450" size="100,100">Hello $name
+
+
+(if: (either: true, false))[Surprise!]
+
+[[what happens|person]]
+[[where I am|garden]]
+[[what it will say|destination]]</tw-passagedata><tw-passagedata pid="2" name="person" tags="" position="515,685" size="100,100">&lt;div class = &quot;box&quot;&gt;
+A person walks up to you
+
+They say &quot;(display: &quot;insult&quot;)&quot;
+&lt;/div&gt;
+
+
+Hello my name is &lt;span class = &quot;satan&quot;&gt;SATAN&lt;/span&gt;</tw-passagedata><tw-passagedata pid="3" name="garden" tags="" position="838,679" size="100,100">(link: &quot;flowers&quot;)[(set: $smell to &quot;roses&quot;)(goto:&quot;flowers&quot;)]</tw-passagedata><tw-passagedata pid="4" name="RealIntro" tags="" position="708,130" size="100,100">choose your name 
+
+[[Jonso]]
+[[Baranquilla]]
+
+&lt;script&gt;
+play()
+&lt;/script&gt;
+
+
+&lt;img src=&quot;developers-will-resist.gif&quot; alt=&quot;RESIST&quot;&gt;
+
+A cat and a dog are here.
+
+(clickreplace: &quot;dog&quot;)[friendly doggo{
+&lt;script&gt;
+       var audio = new Audio(&quot;365482__caitlin-100__camera-beeps-noises.mp3&quot;);
+       audio.play();
+&lt;/script&gt;
+
+
+
+
+
+
+
+
+
+}]
+(clickreplace: &quot;cat&quot;)[horrid catterpault]
+(clickreplace: &quot;horrid&quot;)[quite nice]
+
+(link: &quot;trip&quot;)[(set: $tripping to true)(goto: &quot;RealIntro&quot;)]
+
+
+A bird is here.
+
+
+A bird is there.
+
+(set: $skulls to 0)</tw-passagedata><tw-passagedata pid="5" name="Jonso" tags="" position="566,288" size="100,100">(set: $name to &quot;Jonso&quot;)
+
+[[carry on|Intro]]</tw-passagedata><tw-passagedata pid="6" name="Baranquilla" tags="" position="880,275" size="100,100">(set: $name to &quot;Baranquilla&quot;)
+
+[[carry on|Intro]]</tw-passagedata><tw-passagedata pid="7" name="destination" tags="" position="674,749" size="100,100">You have $skulls skulls
+
+(if: $skulls &gt; 1)[Someone knocks them out of your hands (set: $skulls to 0)]
+(else:)[
+
+
+(link: &quot;pick up skulls&quot;)[(set: $skulls to it + 1)(goto: &quot;destination&quot;)]
+
+(link: &quot;motherlode&quot;)[(display: &quot;motherlode&quot;)(goto: &quot;destination&quot;)]
+
+
+
+]
+</tw-passagedata><tw-passagedata pid="8" name="flowers" tags="" position="927,852" size="100,100">Double-click this passage to edit it.</tw-passagedata><tw-passagedata pid="9" name="insult" tags="" position="317,486" size="100,100">You (either:&quot;stinky&quot;, &quot;troublesome&quot;, &quot;rude&quot;, &quot;nice&quot;) (either:&quot;monster&quot;, &quot;villain&quot;, &quot;expert&quot;, &quot;fool&quot;)!</tw-passagedata><tw-passagedata pid="10" name="motherlode" tags="" position="418,887" size="100,100">(set: $skulls to it + 1000)</tw-passagedata><tw-passagedata pid="11" name="footer" tags="footer" position="218,135" size="100,100">(if: $tripping)[(replace: &quot;bird&quot;)[rat]]</tw-passagedata><tw-passagedata pid="12" name="Untitled Passage" tags="" position="907,74" size="100,100">(set: $tripping to false)
+(goto: &quot;RealIntro&quot;)
+
+
+
+HTML -&gt; skeleton of the page
+
+CSS -&gt; what it should look like (colours)
+
+JAVASCRIPT -&gt; make it do stuff</tw-passagedata><tw-passagedata pid="13" name="Untitled Passage 1" tags="" position="691,283" size="100,100">Double-click this passage to edit it.</tw-passagedata></tw-storydata>
