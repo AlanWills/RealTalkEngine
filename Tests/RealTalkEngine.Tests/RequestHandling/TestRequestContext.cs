@@ -73,7 +73,7 @@ namespace RealTalkEngine.Tests.RequestHandling
         {
             SkillResponse response = ResponseBuilder.Tell("Test");
             RequestContext requestContext = new RequestContext(null, null, null);
-            requestContext.FallbackResponse = response;
+            RequestContext.FallbackResponse = response;
 
             Assert.IsNull(requestContext.SkillRequestHandler);
             Assert.AreSame(response, requestContext.HandleRequest());

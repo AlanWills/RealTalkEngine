@@ -126,6 +126,26 @@ namespace RealTalkEngine.StorySystem
 
         #endregion
 
+        #region Saving
+
+        public void Save(string filePath, bool overwrite = false)
+        {
+            // Will clear or create the file
+            File.WriteAllText(filePath, "");
+
+            using (FileStream file = new FileStream(filePath, FileMode.Open))
+            {
+                try
+                {
+                    BinaryFormatter formatter = new BinaryFormatter();
+                    formatter.Serialize(file, this);
+                }
+                catch { }
+            }
+        }
+
+        #endregion
+
         #region Deserialization
 
         [OnDeserialized]

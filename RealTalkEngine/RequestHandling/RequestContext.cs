@@ -32,7 +32,7 @@ namespace RealTalkEngine.RequestHandling
         /// The default response we will send back if we could not properly process the current context.
         /// Default value is an empty skill response.
         /// </summary>
-        public SkillResponse FallbackResponse { get; set; } = ResponseBuilder.Empty();
+        public static SkillResponse FallbackResponse { get; set; } = ResponseBuilder.Empty();
 
         #endregion
 

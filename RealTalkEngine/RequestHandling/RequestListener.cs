@@ -16,7 +16,7 @@ namespace RealTalkEngine.RequestHandling
         /// <summary>
         /// All of the available skill request handlers that can handle incoming skill requests.
         /// </summary>
-        public static ISkillRequestHandlerFactory SkillRequestHandlerFactory { get; set; }
+        public static ISkillRequestHandlerFactory SkillRequestHandlerFactory { get; set; } = new DefaultSkillRequestHandlerFactory();
 
         #endregion
 

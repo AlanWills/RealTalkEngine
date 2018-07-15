@@ -80,19 +80,20 @@ namespace RealTalkEngine.StorySystem
         #region Runtime Progression Functions
 
         /// <summary>
-        /// Obtain the current node and transition to the next valid node in the story.
-        /// Then create a response using the next node and return it.
+        /// Obtain the text from current node in the story.
+        /// Then create a response using the current node and return it.
+        /// Finally, transition to the next node in the story.
         /// </summary>
         /// <returns></returns>
         public SkillResponse ProcessRequest()
         {
-            SpeechNode nextNode = CurrentNode.GetNextNode();
             Speech speech = new Speech();
-            speech.Elements.Add(new Sentence(nextNode.Text));
+            speech.Elements.Add(new Sentence(CurrentNode.Text));
 
             SkillResponse response = ResponseBuilder.Tell(speech);
             Dictionary<string, object> sessionAttributes = RequestContext.Session.Attributes ?? new Dictionary<string, object>();
 
+            SpeechNode nextNode = CurrentNode.GetNextNode();
             if (!sessionAttributes.ContainsKey(CurrentNodeKey))
             {
                 // Add the name of the next node to update our progression through the story
