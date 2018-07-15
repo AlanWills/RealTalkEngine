@@ -128,8 +128,20 @@ namespace RealTalkEngine.StorySystem
 
         #region Saving
 
-        public void Save(string filePath, bool overwrite = false)
+        /// <summary>
+        /// Saves this story in binary format to the inputted file path.
+        /// Pass in true to the second parameter to overwrite the contents of the file if it already exists.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="overwrite"></param>
+        public bool Save(string filePath, bool overwrite = false)
         {
+            if (!overwrite && File.Exists(filePath))
+            {
+                // We have an existent file which we are not overwriting, so saving of this story fails
+                return false;
+            }
+
             // Will clear or create the file
             File.WriteAllText(filePath, "");
 
@@ -139,8 +151,10 @@ namespace RealTalkEngine.StorySystem
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
                     formatter.Serialize(file, this);
+
+                    return true;
                 }
-                catch { }
+                catch { return false; }
             }
         }
 

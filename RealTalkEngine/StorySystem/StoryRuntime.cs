@@ -94,15 +94,18 @@ namespace RealTalkEngine.StorySystem
             Dictionary<string, object> sessionAttributes = RequestContext.Session.Attributes ?? new Dictionary<string, object>();
 
             SpeechNode nextNode = CurrentNode.GetNextNode();
+            string nextNodeName = nextNode != null ? nextNode.Name : "";
+            response.Response.ShouldEndSession = nextNode == null;
+
             if (!sessionAttributes.ContainsKey(CurrentNodeKey))
             {
                 // Add the name of the next node to update our progression through the story
-                sessionAttributes.Add(CurrentNodeKey, nextNode.Name);
+                sessionAttributes.Add(CurrentNodeKey, nextNodeName);
             }
             else
             {
                 // Update the name of the next node to update our progression through the story
-                sessionAttributes[CurrentNodeKey] = nextNode.Name;
+                sessionAttributes[CurrentNodeKey] = nextNodeName;
             }
 
             response.SessionAttributes = sessionAttributes;

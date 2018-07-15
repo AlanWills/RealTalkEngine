@@ -507,6 +507,103 @@ namespace RealTalkEngine.Tests.StorySystem
 
         #endregion
 
+        #region Save Tests
+
+        [TestMethod]
+        public void Save_Overwrite_FileDoesNotExist_SavesFileCorrectly_ReturnsTrue()
+        {
+            Story story = new Story();
+            SpeechNode speechNode = story.CreateNode("Test");
+            SpeechNode speechNode2 = story.CreateNode("Test2");
+            speechNode.CreateTransition(speechNode2);
+
+            string filePath = Path.Combine(Resources.TempDir, "Test.data");
+
+            FileAssert.FileDoesNotExist(filePath);
+            Assert.IsTrue(story.Save(filePath, true));
+            FileAssert.FileExists(filePath);
+
+            Story loadedStory = Story.Load(filePath);
+
+            Assert.IsNotNull(loadedStory);
+            Assert.AreEqual(2, loadedStory.NodeCount);
+            Assert.IsNotNull(loadedStory.FindNode("Test"));
+            Assert.IsNotNull(loadedStory.FindNode("Test2"));
+            Assert.AreEqual(1, loadedStory.FindNode("Test").TransitionCount);
+            Assert.AreSame(loadedStory.FindNode("Test"), loadedStory.FindNode("Test").GetTransitionAt(0).Source);
+            Assert.AreSame(loadedStory.FindNode("Test2"), loadedStory.FindNode("Test").GetTransitionAt(0).Destination);
+        }
+
+        [TestMethod]
+        public void Save_Overwrite_FileExists_OverwritesFileCorrectly_ReturnsTrue()
+        {
+            Story story = new Story();
+            SpeechNode speechNode = story.CreateNode("Test");
+            SpeechNode speechNode2 = story.CreateNode("Test2");
+            speechNode.CreateTransition(speechNode2);
+
+            string filePath = Path.Combine(Resources.TempDir, "Test.data");
+            File.WriteAllText(filePath, "Test");
+
+            FileAssert.FileExists(filePath);
+            Assert.IsTrue(story.Save(filePath, true));
+            FileAssert.FileExists(filePath);
+
+            Story loadedStory = Story.Load(filePath);
+
+            Assert.IsNotNull(loadedStory);
+            Assert.AreEqual(2, loadedStory.NodeCount);
+            Assert.IsNotNull(loadedStory.FindNode("Test"));
+            Assert.IsNotNull(loadedStory.FindNode("Test2"));
+            Assert.AreEqual(1, loadedStory.FindNode("Test").TransitionCount);
+            Assert.AreSame(loadedStory.FindNode("Test"), loadedStory.FindNode("Test").GetTransitionAt(0).Source);
+            Assert.AreSame(loadedStory.FindNode("Test2"), loadedStory.FindNode("Test").GetTransitionAt(0).Destination);
+        }
+
+        [TestMethod]
+        public void Save_DontOverwrite_FileDoesNotExist_SavesFileCorrectly_ReturnsTrue()
+        {
+            Story story = new Story();
+            SpeechNode speechNode = story.CreateNode("Test");
+            SpeechNode speechNode2 = story.CreateNode("Test2");
+            speechNode.CreateTransition(speechNode2);
+
+            string filePath = Path.Combine(Resources.TempDir, "Test.data");
+
+            FileAssert.FileDoesNotExist(filePath);
+            Assert.IsTrue(story.Save(filePath, false));
+            FileAssert.FileExists(filePath);
+
+            Story loadedStory = Story.Load(filePath);
+
+            Assert.IsNotNull(loadedStory);
+            Assert.AreEqual(2, loadedStory.NodeCount);
+            Assert.IsNotNull(loadedStory.FindNode("Test"));
+            Assert.IsNotNull(loadedStory.FindNode("Test2"));
+            Assert.AreEqual(1, loadedStory.FindNode("Test").TransitionCount);
+            Assert.AreSame(loadedStory.FindNode("Test"), loadedStory.FindNode("Test").GetTransitionAt(0).Source);
+            Assert.AreSame(loadedStory.FindNode("Test2"), loadedStory.FindNode("Test").GetTransitionAt(0).Destination);
+        }
+
+        [TestMethod]
+        public void Save_DontOverwrite_FileExists_DoesNothing_ReturnsFalse()
+        {
+            Story story = new Story();
+            SpeechNode speechNode = story.CreateNode("Test");
+            SpeechNode speechNode2 = story.CreateNode("Test2");
+            speechNode.CreateTransition(speechNode2);
+
+            string filePath = Path.Combine(Resources.TempDir, "Test.data");
+            File.WriteAllText(filePath, "Test");
+
+            FileAssert.FileExists(filePath);
+            Assert.IsFalse(story.Save(filePath, false));
+            FileAssert.FileExists(filePath);
+            Assert.AreEqual("Test", File.ReadAllText(filePath));
+        }
+
+        #endregion
+
         #region Utility Functions
 
         /// <summary>
