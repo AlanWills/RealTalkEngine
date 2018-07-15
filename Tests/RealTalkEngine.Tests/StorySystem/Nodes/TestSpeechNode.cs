@@ -27,6 +27,14 @@ namespace RealTalkEngine.Tests.StorySystem.Nodes
         }
 
         [TestMethod]
+        public void Constructor_Default_SetsNodeIndex_ToZero()
+        {
+            SpeechNode speechNode = new SpeechNode();
+
+            Assert.AreEqual(0, speechNode.NodeIndex);
+        }
+
+        [TestMethod]
         public void Constructor_Default_SetsText_ToEmptyString()
         {
             SpeechNode speechNode = new SpeechNode();
@@ -70,6 +78,16 @@ namespace RealTalkEngine.Tests.StorySystem.Nodes
             SpeechNode speechNode = new SpeechNode(twineSpeechNode);
 
             Assert.AreEqual("Test", speechNode.Name);
+        }
+
+        [TestMethod]
+        public void Constructor_TwineSpeechNode_SetsNodeIndex_ToCorrectValue()
+        {
+            TwineSpeechNode twineSpeechNode = new TwineSpeechNode();
+            twineSpeechNode.OneBasedIndex = 13;
+            SpeechNode speechNode = new SpeechNode(twineSpeechNode);
+
+            Assert.AreEqual(12, speechNode.NodeIndex);
         }
 
         [TestMethod]

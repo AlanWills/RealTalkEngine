@@ -20,6 +20,11 @@ namespace RealTalkEngine.StorySystem.Nodes
         /// The display name of this node.
         /// </summary>
         public string Name { get; set; } = "";
+
+        /// <summary>
+        /// The zero-based index of this node within the story.
+        /// </summary>
+        public int NodeIndex { get; set; }
         
         /// <summary>
         /// The textual content of this node.
@@ -68,6 +73,7 @@ namespace RealTalkEngine.StorySystem.Nodes
         public SpeechNode(TwineSpeechNode twineSpeechNode)
         {
             Name = twineSpeechNode.Name;
+            NodeIndex = twineSpeechNode.OneBasedIndex - 1;
             Text = twineSpeechNode.Text;
             Tags.AddRange(twineSpeechNode.Tags);
         }

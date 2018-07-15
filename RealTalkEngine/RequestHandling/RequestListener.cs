@@ -16,13 +16,7 @@ namespace RealTalkEngine.RequestHandling
         /// <summary>
         /// All of the available skill request handlers that can handle incoming skill requests.
         /// </summary>
-        private static List<SkillRequestHandler> SkillRequestHandlers { get; set; } = new List<SkillRequestHandler>()
-        {
-            // Intent request is most likely
-            new IntentRequestHandler(),
-            new LaunchRequestHandler(),
-            new SessionEndedRequestHandler()
-        };
+        public static ISkillRequestHandlerFactory SkillRequestHandlerFactory { get; set; }
 
         #endregion
 
@@ -35,7 +29,7 @@ namespace RealTalkEngine.RequestHandling
         /// <returns></returns>
         public static SkillResponse HandleRequest(SkillRequest request, ILambdaContext lambdaContext)
         {
-            using (RequestContext context = new RequestContext(request, lambdaContext, SkillRequestHandlers.Find(x => x.IsHandlerForRequest(request))))
+            using (RequestContext context = new RequestContext(request, lambdaContext, SkillRequestHandlerFactory.SkillRequestHandlers.Find(x => x.IsHandlerForRequest(request))))
             {
                 return context.HandleRequest();
             }

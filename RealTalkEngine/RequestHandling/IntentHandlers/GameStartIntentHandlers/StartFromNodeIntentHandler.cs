@@ -3,6 +3,7 @@ using Alexa.NET.Request;
 using Alexa.NET.Response;
 using Amazon.Lambda.Core;
 using RealTalkEngine.StorySystem;
+using System.IO;
 
 namespace RealTalkEngine.RequestHandling.RequestHandlers
 {
@@ -27,8 +28,10 @@ namespace RealTalkEngine.RequestHandling.RequestHandlers
         public override SkillResponse HandleIntent(Intent intent)
         {
             long nodeIndex = long.Parse(intent.Slots["NodeIndex"].Value);
-            return ResponseBuilder.Empty();
-            //return Story.CreateResponseForNode(nodeIndex, intent, session, lambdaContext);
+            StoryRuntime storyRuntime = new StoryRuntime(RequestContext, Story.Load(Path.Combine(Directory.GetCurrentDirectory(), "Story.data")));
+            storyRuntime.TrySetCurrentNode((int)nodeIndex);
+            
+            return storyRuntime.ProcessRequest();
         }
 
         #endregion

@@ -26,9 +26,9 @@ namespace RealTalkEngine.StorySystem
         public string Name { get; set; } = "";
 
         /// <summary>
-        /// The 0-based index of the node index which is the starting node for this story.
+        /// The name of the node which is the start of our story.
         /// </summary>
-        private int StartNodeIndex { get; set; }
+        private string StartNodeName { get; set; } = "";
 
         /// <summary>
         /// The nodes contained within this story.
@@ -46,8 +46,9 @@ namespace RealTalkEngine.StorySystem
 
         /// <summary>
         /// The starting node for this story.
+        /// Will return null if the starting node could not be found.
         /// </summary>
-        public SpeechNode StartNode { get { return (0 <= StartNodeIndex && StartNodeIndex < Nodes.Count) ? Nodes[StartNodeIndex] : null; } }
+        public SpeechNode StartNode { get { return m_nodeLookup.ContainsKey(StartNodeName) ? m_nodeLookup[StartNodeName] : null; } }
 
         [NonSerialized]
         private StoryRuntime m_runtime;
@@ -108,7 +109,9 @@ namespace RealTalkEngine.StorySystem
 
             Story story = new Story();
             story.Name = twineStory.Name;
-            story.StartNodeIndex = twineStory.OneBasedStartNodeIndex;
+
+            TwineSpeechNode firstNode = twineStory.Nodes.Find(x => x.OneBasedIndex == twineStory.OneBasedStartNodeIndex);
+            story.StartNodeName = firstNode != null ? firstNode.Name : "";
             
             foreach (TwineSpeechNode twineSpeechNode in twineStory.Nodes)
             {
@@ -267,7 +270,7 @@ namespace RealTalkEngine.StorySystem
         }
 
         /// <summary>
-        /// If the inputted index is valid, returns the node at the corresponding index.
+        /// If the inputted index is valid, returns the node at the corresponding index in the nodes list.
         /// Otherwise returns null.
         /// </summary>
         /// <param name="index"></param>
@@ -286,6 +289,17 @@ namespace RealTalkEngine.StorySystem
         public SpeechNode FindNode(string name)
         {
             return m_nodeLookup.ContainsKey(name) ? m_nodeLookup[name] : null;
+        }
+
+        /// <summary>
+        /// Attempts to find a node with the same NodeIndex as the inputted value.
+        /// Will return null if no such node could be found.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public SpeechNode FindNode(int nodeIndex)
+        {
+            return Nodes.Find(x => x.NodeIndex == nodeIndex);
         }
 
         #endregion

@@ -26,7 +26,7 @@ namespace RealTalkEngine.RequestHandling
         /// <summary>
         /// The current request handler which has been chosen to handle the current request.
         /// </summary>
-        private SkillRequestHandler SkillRequestHandler { get; set; }
+        public SkillRequestHandler SkillRequestHandler { get; set; }
 
         /// <summary>
         /// The default response we will send back if we could not properly process the current context.
@@ -39,7 +39,7 @@ namespace RealTalkEngine.RequestHandling
         public RequestContext(SkillRequest request, ILambdaContext lambdaContext, SkillRequestHandler requestHandler)
         {
             Request = request;
-            Session = request.Session;
+            Session = request?.Session;
             SkillRequestHandler = requestHandler;
 
             if (SkillRequestHandler != null)
@@ -49,7 +49,7 @@ namespace RealTalkEngine.RequestHandling
 
             // Set up the logging here
             Logger.Initialize(lambdaContext?.Logger);
-            Logger.Log("Request Type: " + request.GetRequestType().Name);
+            Logger.Log("Request Type: " + request?.GetRequestType().Name);
         }
 
         #region Request Handling

@@ -16,6 +16,11 @@ namespace RealTalkEngine.RequestHandling.RequestHandlers
         /// </summary>
         public abstract string IntentName { get; }
 
+        /// <summary>
+        /// The request that we are currently processing.
+        /// </summary>
+        public RequestContext RequestContext { get; set; }
+
         #endregion
 
         #region Intent Handler Abstract Functions

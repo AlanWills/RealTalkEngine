@@ -5,6 +5,8 @@ using Amazon.Lambda.Core;
 using Alexa.NET.Request.Type;
 using Alexa.NET;
 using RealTalkEngine.StorySystem;
+using System.IO;
+using RealTalkEngine.RequestHandling.IntentHandlers;
 
 namespace RealTalkEngine.RequestHandling.RequestHandlers
 {
@@ -15,40 +17,12 @@ namespace RealTalkEngine.RequestHandling.RequestHandlers
         /// <summary>
         /// A list of custom intent handlers we will check first when processing an intent.
         /// </summary>
-        private static List<IntentHandler> CustomIntentHandlers { get; set; } = new List<IntentHandler>()
-        {
-            new PlayGameIntentHandler(),
-            new StartFromNodeIntentHandler(),
-            new HelpIntentHandler(),
-            new StopIntentHandler(),
-            new StartOverIntentHandler()
-        };
+        public static IIntentHandlerFactory IntentHandlerFactory { get; set; }
 
         /// <summary>
         /// All of the currently supported intents.
         /// </summary>
-        private static List<string> SupportedIntents { get; set; } = new List<string>()
-        {
-            Intents.YesIntentName,
-            Intents.NoIntentName,
-            Intents.TellMeWhatsHappenedIntent,
-            Intents.WithThemNowIntent,
-            Intents.HowManyWeeksPregnantIntent,
-            Intents.HowOldIsMotherIntent,
-            Intents.WhereAreYouIntent,
-            Intents.IsBabyVisibleIntent,
-            Intents.StayOnTheLineIntent,
-            Intents.BabyWillBeSlipperyIntent,
-            Intents.SupportBabyIntent,
-            Intents.CheckOkIntent,
-            Intents.IsBabyCryingOrBreathingIntent,
-            Intents.IsAnythingObviouslyWrongIntent,
-            Intents.RubBabysBackInstructionIntent,
-            Intents.IsBoyOrGirlIntent,
-            Intents.CongratulationsIntent,
-            Intents.AreParamedicsWithYouIntent,
-            Intents.WellDoneIntent,
-        };
+        private static IIntentNameFactory IntentNameFactory { get; set; }
 
         #endregion
 
@@ -76,17 +50,21 @@ namespace RealTalkEngine.RequestHandling.RequestHandlers
             IntentRequest intentRequest = RequestContext.Request.Request as IntentRequest;
             Logger.Log("Request Intent: " + intentRequest.Intent.Name);
 
-            IntentHandler handler = CustomIntentHandlers.Find(x => x.IsHandlerForIntent(intentRequest.Intent));
+            IntentHandler handler = IntentHandlerFactory.CustomIntentHandlers.Find(x => x.IsHandlerForIntent(intentRequest.Intent));
             if (handler != null)
             {
-                // Custom handler
-                return handler.HandleIntent(intentRequest.Intent);
+                // Set the context for the process of handling the intent and then reset it afterwards to avoid dangling references.
+                handler.RequestContext = RequestContext;
+                SkillResponse response = handler.HandleIntent(intentRequest.Intent);
+                handler.RequestContext = null;
+
+                return response;
             }
-            else if (SupportedIntents.Contains(intentRequest.Intent.Name))
+            else if (IntentNameFactory.IntentNames.Contains(intentRequest.Intent.Name))
             {
                 // Otherwise we have a story intent
-                return ResponseBuilder.Empty();
-                //return Story.CreateResponse(intentRequest.Intent, request.Session, lambdaContext);
+                StoryRuntime runtime = new StoryRuntime(RequestContext, Story.Load(Path.Combine(Directory.GetCurrentDirectory(), "Story.data")));
+                return runtime.ProcessRequest();
             }
             else
             {

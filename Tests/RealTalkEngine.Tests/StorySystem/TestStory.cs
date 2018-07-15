@@ -235,6 +235,8 @@ namespace RealTalkEngine.Tests.StorySystem
 
         #region Find Node Tests
 
+        #region String Overload
+
         [TestMethod]
         public void FindNode_InputtingNonExistentName_ReturnsNull()
         {
@@ -258,6 +260,40 @@ namespace RealTalkEngine.Tests.StorySystem
             Assert.AreEqual(1, story.NodeCount);
             Assert.AreSame(speechNode, story.FindNode("TestNode"));
         }
+
+        #endregion
+
+        #region Int Overload
+
+        [TestMethod]
+        public void FindNode_InputtingNonExistentNodeIndex_ReturnsNull()
+        {
+            Story story = new Story();
+
+            Assert.AreEqual(0, story.NodeCount);
+            Assert.IsNull(story.FindNode(1));
+
+            SpeechNode speechNode = story.CreateNode("TestNode");
+            speechNode.NodeIndex = 0;
+
+            Assert.AreEqual(0, speechNode.NodeIndex);
+            Assert.AreEqual(1, story.NodeCount);
+            Assert.IsNull(story.FindNode(1));
+        }
+
+        [TestMethod]
+        public void FindNode_InputtingExistentNodeIndex_ReturnsCorrectNode()
+        {
+            Story story = new Story();
+            SpeechNode speechNode = story.CreateNode("TestNode");
+            speechNode.NodeIndex = 1;
+
+            Assert.AreEqual(1, speechNode.NodeIndex);
+            Assert.AreEqual(1, story.NodeCount);
+            Assert.AreSame(speechNode, story.FindNode(1));
+        }
+
+        #endregion
 
         #endregion
 
@@ -387,6 +423,42 @@ namespace RealTalkEngine.Tests.StorySystem
 
             Assert.IsNotNull(story);
             Assert.AreEqual("Test", story.Name);
+        }
+
+        [TestMethod]
+        public void InputtingNonNullTwineStory_WithNonExistentStartNode_SetsStartNode_ToNull()
+        {
+            TwineStory twineStory = new TwineStory();
+            TwineSpeechNode twineSpeechNode = new TwineSpeechNode();
+            twineSpeechNode.Name = "TestName";
+            twineStory.Nodes.Add(twineSpeechNode);
+            twineStory.OneBasedStartNodeIndex = 100;
+
+            Assert.IsNull(twineStory.Nodes.Find(x => x.OneBasedIndex == 100));
+
+            Story story = Story.Load(twineStory);
+
+            Assert.IsNotNull(story);
+            Assert.IsNull(story.StartNode);
+        }
+
+        [TestMethod]
+        public void InputtingNonNullTwineStory_WithExistentStartNode_SetsUpStartNodeCorrectly()
+        {
+            TwineStory twineStory = new TwineStory();
+            TwineSpeechNode twineSpeechNode = new TwineSpeechNode();
+            twineSpeechNode.Name = "TestName";
+            twineSpeechNode.OneBasedIndex = 100;
+            twineStory.Nodes.Add(twineSpeechNode);
+            twineStory.OneBasedStartNodeIndex = 100;
+
+            Assert.AreSame(twineSpeechNode, twineStory.Nodes.Find(x => x.OneBasedIndex == 100));
+
+            Story story = Story.Load(twineStory);
+
+            Assert.IsNotNull(story);
+            Assert.IsNotNull(story.StartNode);
+            Assert.AreSame(story.StartNode, story.GetNodeAt(0));
         }
 
         [TestMethod]
