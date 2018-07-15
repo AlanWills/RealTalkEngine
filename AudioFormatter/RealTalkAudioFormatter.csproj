@@ -48,5 +48,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RealTalkEngine\RealTalkEngine.csproj">
+      <Project>{22508abb-de46-479d-933d-0b546364a044}</Project>
+      <Name>RealTalkEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
