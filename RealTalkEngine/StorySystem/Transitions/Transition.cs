@@ -1,4 +1,5 @@
-﻿using RealTalkEngine.StorySystem.Conditions;
+﻿using ProtoBuf;
+using RealTalkEngine.StorySystem.Conditions;
 using RealTalkEngine.StorySystem.Nodes;
 using System;
 using System.Collections;
@@ -9,7 +10,7 @@ namespace RealTalkEngine.StorySystem.Transitions
     [Serializable]
     public class Transition : IEnumerable<TransitionCondition>
     {
-        #region Properties and Fields
+        #region Serialized Properties
 
         /// <summary>
         /// The source node that this transition is connected from.
@@ -25,6 +26,10 @@ namespace RealTalkEngine.StorySystem.Transitions
         /// All of the conditions that must be satisfied for the transition to be valid at runtime.
         /// </summary>
         private List<TransitionCondition> Conditions { get; set; } = new List<TransitionCondition>();
+
+        #endregion
+
+        #region Properties and Fields
 
         /// <summary>
         /// Returns the number of conditions attached to this transition.
