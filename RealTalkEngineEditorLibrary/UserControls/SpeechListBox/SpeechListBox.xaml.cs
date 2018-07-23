@@ -1,5 +1,5 @@
-﻿using BindingsKernel;
-using RealTalkEngine.Alexa;
+﻿using Alexa.NET.Response.Ssml;
+using BindingsKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

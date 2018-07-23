@@ -60,7 +60,7 @@ namespace RealTalkEngineEditorLibrary.Editors
             Point originalMousePosition = (Point)Network.ContextMenu.DataContext;
             nodePosition.X += originalMousePosition.X;
             nodePosition.Y += originalMousePosition.Y;
-            StoryEditorViewModel.CreateNode(nodeType, "New " + (sender as MenuItem).Header, nodePosition);
+            StoryEditorViewModel.CreateNode("New " + (sender as MenuItem).Header, nodePosition);
         }
     }
 }

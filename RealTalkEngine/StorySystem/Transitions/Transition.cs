@@ -1,5 +1,4 @@
-﻿using ProtoBuf;
-using RealTalkEngine.StorySystem.Conditions;
+﻿using RealTalkEngine.StorySystem.Conditions;
 using RealTalkEngine.StorySystem.Nodes;
 using System;
 using System.Collections;

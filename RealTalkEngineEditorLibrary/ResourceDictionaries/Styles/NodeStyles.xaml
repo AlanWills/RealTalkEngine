@@ -6,14 +6,14 @@
                     xmlns:reactiveUi="http://reactiveui.net"
                     xmlns:utilities="clr-namespace:NodeNetwork.Utilities"
                     xmlns:nodeViews="clr-namespace:RealTalkEngineEditorLibrary.StorySystem.NodeViews">
-    <Style TargetType="{x:Type nodeViews:BaseNodeView}">
+    <Style TargetType="{x:Type nodeViews:SpeechNodeView}">
         <Setter Property="Background" Value="#5D9CEC"/>
         <Setter Property="Foreground" Value="#FFFFFF"/>
         <Setter Property="BorderBrush" Value="Orange"/>
         <Setter Property="CornerRadius" Value="4"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type nodeViews:BaseNodeView}">
+                <ControlTemplate TargetType="{x:Type nodeViews:SpeechNodeView}">
                     <Grid x:Name="Grid">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup Name="{x:Static views:NodeView.SelectedVisualStatesGroup}">

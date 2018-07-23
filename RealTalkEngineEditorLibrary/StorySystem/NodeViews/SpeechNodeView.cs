@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RealTalkEngineEditorLibrary.StorySystem.NodeViews
 {
-    public class SpeechNodeView : BaseNodeView
+    public class SpeechNodeView : NodeView
     {
     }
 }

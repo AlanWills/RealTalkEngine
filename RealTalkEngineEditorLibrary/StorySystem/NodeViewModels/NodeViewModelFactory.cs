@@ -42,7 +42,7 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
         /// <summary>
         /// A dictionary of node types with a factory function for creating them.
         /// </summary>
-        private static Dictionary<Type, Func<BaseNode, NodeViewModel>> NodeViewModelLookup { get; } = new Dictionary<Type, Func<BaseNode, NodeViewModel>>();
+        private static Dictionary<Type, Func<SpeechNode, NodeViewModel>> NodeViewModelLookup { get; } = new Dictionary<Type, Func<SpeechNode, NodeViewModel>>();
 
         #endregion
 
@@ -68,9 +68,9 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
                 NodeViewModelAttribute viewModelAttribute = viewModel.GetCustomAttribute<NodeViewModelAttribute>();
                 if (!NodeViewModelLookup.ContainsKey(viewModelAttribute.NodeType))
                 {
-                    NodeViewModelLookup.Add(viewModelAttribute.NodeType, (BaseNode baseNode) =>
+                    NodeViewModelLookup.Add(viewModelAttribute.NodeType, (SpeechNode node) =>
                     {
-                        return Activator.CreateInstance(viewModel, baseNode) as NodeViewModel;
+                        return Activator.CreateInstance(viewModel, node) as NodeViewModel;
                     });
                 }
                 else
@@ -89,7 +89,7 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public static NodeViewModel CreateViewModel(BaseNode node)
+        public static NodeViewModel CreateViewModel(SpeechNode node)
         {
             if (NodeViewModelLookup.ContainsKey(node.GetType()))
             {
@@ -101,15 +101,15 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
         }
 
         /// <summary>
-        /// Use the inputted node type name to create a view model from all the registered node view models.
+        /// Create a node and a wrapper node view model.
         /// Returns null if no view model exists for the inputted node type name.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="node"></param>
         /// <returns></returns>
-        public static NodeViewModel CreateViewModel(string nodeTypeName)
+        public static NodeViewModel CreateViewModel()
         {
-            BaseNode node = NodeFactory.CreateNode(nodeTypeName);
+            SpeechNode node = new SpeechNode();
             return node != null ? CreateViewModel(node) : null;
         }
 
@@ -120,36 +120,11 @@ namespace RealTalkEngineEditorLibrary.StorySystem.NodeViewModels
         /// <typeparam name="T"></typeparam>
         /// <param name="node"></param>
         /// <returns></returns>
-        public static T CreateViewModel<T>(BaseNode node) where T : NodeViewModel, INodeViewModel
+        public static T CreateViewModel<T>(SpeechNode node) where T : NodeViewModel, INodeViewModel
         {
             return CreateViewModel(node) as T;
         }
-
-        /// <summary>
-        /// Use the inputted node type name to create a view model from all the registered node view models.
-        /// Returns null if no view model exists for the inputted node type name.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        public static T CreateViewModel<T>(string nodeTypeName) where T : NodeViewModel, INodeViewModel
-        {
-            return CreateViewModel(nodeTypeName) as T;
-        }
-
-        /// <summary>
-        /// Use the inputted node generic type to create a view model from all the registered node view models.
-        /// Returns null if no view model exists for the inputted node type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="node"></param>
-        /// <returns></returns>
-        public static T CreateViewModel<T>() where T : BaseNode, new()
-        {
-            T node = new T();
-            return CreateViewModel(node) as T;
-        }
-
+        
         #endregion
     }
 }

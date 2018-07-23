@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BindingsKernel;
+using Newtonsoft.Json;
 using RealTalkEngine.StorySystem.Transitions;
 using System;
 using System.Collections;
@@ -12,15 +13,10 @@ using Twinary.StorySystem.Transitions;
 namespace RealTalkEngine.StorySystem.Nodes
 {
     [Serializable]
-    public class SpeechNode : IEnumerable<Transition>
+    public class SpeechNode : ScriptableObject, IEnumerable<Transition>
     {
         #region Serialized Properties
-
-        /// <summary>
-        /// The display name of this node.
-        /// </summary>
-        public string Name { get; set; } = "";
-
+        
         /// <summary>
         /// The zero-based index of this node within the story.
         /// </summary>
@@ -41,6 +37,11 @@ namespace RealTalkEngine.StorySystem.Nodes
         /// Used at runtime to determine the next nodes when moving through the story.
         /// </summary>
         private List<Transition> Transitions { get; set; } = new List<Transition>();
+
+        /// <summary>
+        /// The position of this node within the story graph.
+        /// </summary>
+        public Vector2 Position { get; set; }
 
         #endregion
 

@@ -39,9 +39,9 @@ namespace RealTalkEngineEditorLibrary.Editors
             Network.Nodes.Clear();
 
             Story story = TargetObject as Story;
-            foreach (BaseNode node in story.Nodes)
+            for (int i = 0; i < story.NodeCount; ++i)
             {
-                CreateNodeViewModel(node);
+                CreateNodeViewModel(story.GetNodeAt((uint)i));
             }
         }
 
@@ -56,32 +56,15 @@ namespace RealTalkEngineEditorLibrary.Editors
         /// <param name="type"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public NodeViewModel CreateNode(Type type, string name, Point position)
+        public NodeViewModel CreateNode(string name, Point position)
         {
-            if (!typeof(BaseNode).IsAssignableFrom(type) || type.IsAbstract)
-            {
-                CelDebug.Fail();
-                return null;
-            }
-
-            BaseNode node = Story.CreateNode(type, name);
+            SpeechNode node = Story.CreateNode(name);
             NodeViewModel nodeViewModel = CreateNodeViewModel(node);
             nodeViewModel.Position = position;
             
             return nodeViewModel;
         }
-
-        /// <summary>
-        /// Create a node of the inputted type and add it to the graph.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public T CreateNode<T>(string name, Point position) where T : NodeViewModel, INodeViewModel
-        {
-            return CreateNode(typeof(T), name, position) as T;
-        }
-
+        
         #endregion
 
         #region View Model Utility Functions
@@ -90,7 +73,7 @@ namespace RealTalkEngineEditorLibrary.Editors
         /// Creates and adds a view model for the inputted node and hooks up all relevant UI callbacks.
         /// </summary>
         /// <param name="node"></param>
-        private NodeViewModel CreateNodeViewModel(BaseNode node)
+        private NodeViewModel CreateNodeViewModel(SpeechNode node)
         {
             NodeViewModel nodeViewModel = NodeViewModelFactory.CreateViewModel(node);
             nodeViewModel.Changed.Subscribe(e =>
