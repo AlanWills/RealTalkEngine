@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Text;
 using Twinary.StorySystem.Nodes;
 
 namespace Twinary.StorySystem
@@ -18,7 +17,7 @@ namespace Twinary.StorySystem
         /// The name of this story.
         /// </summary>
         [JsonProperty(PropertyName = "name", Required = Required.Always)]
-        public string Name { get; set; }
+        public new string Name { get; set; }
 
         /// <summary>
         /// The 1-based index of the node index which is the starting node for this story.

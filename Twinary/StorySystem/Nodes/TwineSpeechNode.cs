@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.Serialization;
-using System.Text;
+using System.Numerics;
+using Twinary.Deserialization;
 using Twinary.StorySystem.Transitions;
 
 namespace Twinary.StorySystem.Nodes
@@ -44,6 +43,9 @@ namespace Twinary.StorySystem.Nodes
         /// </summary>
         [JsonProperty(PropertyName = "links")]
         public List<TwineLink> TwineLinks { get; private set; } = new List<TwineLink>();
+
+        [JsonProperty(PropertyName = "position", ItemConverterType = typeof(Vector2JsonDeserializer))]
+        public Vector2 Position { get; set; }
 
         #endregion
     }

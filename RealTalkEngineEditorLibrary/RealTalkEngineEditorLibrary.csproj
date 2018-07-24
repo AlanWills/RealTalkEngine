@@ -58,7 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetLoaders\StoryAssetLoader.cs" />
+    <Compile Include="AssetLoaders\TwineStoryAssetLoader.cs" />
     <Compile Include="Assets\StoryAsset.cs" />
+    <Compile Include="Assets\TwineStoryAsset.cs" />
     <Compile Include="Editors\StoryEditor\StoryEditor.xaml.cs">
       <DependentUpon>StoryEditor.xaml</DependentUpon>
     </Compile>

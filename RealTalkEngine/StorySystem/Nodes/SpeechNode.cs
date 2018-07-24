@@ -77,6 +77,7 @@ namespace RealTalkEngine.StorySystem.Nodes
             NodeIndex = twineSpeechNode.OneBasedIndex - 1;
             Text = twineSpeechNode.Text;
             Tags.AddRange(twineSpeechNode.Tags);
+            Position = new Vector2(twineSpeechNode.Position.X, twineSpeechNode.Position.Y);
         }
 
         #endregion

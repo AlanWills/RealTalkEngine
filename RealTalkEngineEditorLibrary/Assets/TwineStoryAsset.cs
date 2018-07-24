@@ -1,18 +1,18 @@
 ﻿using CelesteEngineEditor.Assets;
-using RealTalkEngine.StorySystem;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Twinary.StorySystem;
 
 namespace RealTalkEngineEditorLibrary.Assets
 {
-    public class StoryAsset : Asset<Story>
+    public class TwineStoryAsset : Asset<TwineStory>
     {
-        public StoryAsset(FileInfo file, Story story) :
-            base(file, story)
+        public TwineStoryAsset(FileInfo fileInfo, TwineStory twineStory) : 
+            base(fileInfo, twineStory)
         {
         }
 
