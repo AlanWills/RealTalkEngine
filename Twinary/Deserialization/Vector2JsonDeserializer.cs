@@ -17,13 +17,15 @@ namespace Twinary.Deserialization
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader.TokenType == JsonToken.Null)
+            {
                 return null;
+            }
 
             JObject jsonObject = JObject.Load(reader);
             Vector2 vector2 = existingValue is Vector2 ? (Vector2)existingValue : new Vector2();
 
-            vector2.X = jsonObject["x"].RemoveFromLowestPossibleParent().Value<float>();
-            vector2.Y = jsonObject["y"].RemoveFromLowestPossibleParent().Value<float>();
+            vector2.X = jsonObject["x"].Value<float>();
+            vector2.Y = jsonObject["y"].Value<float>();
             
             return vector2;
         }

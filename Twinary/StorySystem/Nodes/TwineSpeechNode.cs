@@ -44,7 +44,8 @@ namespace Twinary.StorySystem.Nodes
         [JsonProperty(PropertyName = "links")]
         public List<TwineLink> TwineLinks { get; private set; } = new List<TwineLink>();
 
-        [JsonProperty(PropertyName = "position", ItemConverterType = typeof(Vector2JsonDeserializer))]
+        [JsonProperty(PropertyName = "position")]
+        [JsonConverter(typeof(Vector2JsonDeserializer))]
         public Vector2 Position { get; set; }
 
         #endregion

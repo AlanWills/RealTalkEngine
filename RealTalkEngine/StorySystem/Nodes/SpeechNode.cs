@@ -13,10 +13,15 @@ using Twinary.StorySystem.Transitions;
 namespace RealTalkEngine.StorySystem.Nodes
 {
     [Serializable]
-    public class SpeechNode : ScriptableObject, IEnumerable<Transition>
+    public class SpeechNode : IEnumerable<Transition>
     {
         #region Serialized Properties
         
+        /// <summary>
+        /// The display name of this node.
+        /// </summary>
+        public string Name { get; set; }
+
         /// <summary>
         /// The zero-based index of this node within the story.
         /// </summary>

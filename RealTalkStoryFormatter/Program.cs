@@ -25,10 +25,16 @@ namespace RealTalkStoryFormatter
                     TwineStory twineStory = TwineStory.Load(input);
                     Story story = Story.Load(twineStory);
 
-                    string outputPath = Path.ChangeExtension(input, "data");
-                    story.Save(outputPath, true);
+                    string outputPath = Path.ChangeExtension(input, "bst");
 
-                    Console.WriteLine("Story saved to " + outputPath);
+                    if (story.Save(outputPath, true))
+                    {
+                        Console.WriteLine("Story saved to " + outputPath);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Story failed to save correctly");
+                    }
                 }
                 else
                 {
