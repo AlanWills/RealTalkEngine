@@ -3,10 +3,12 @@ using CelesteEngineEditor.Editors;
 using NodeNetwork.ViewModels;
 using RealTalkEngine.StorySystem;
 using RealTalkEngine.StorySystem.Nodes;
+using RealTalkEngine.StorySystem.Transitions;
 using RealTalkEngineEditorLibrary.StorySystem;
 using RealTalkEngineEditorLibrary.StorySystem.Interfaces;
 using RealTalkEngineEditorLibrary.StorySystem.NodeViewModels;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace RealTalkEngineEditorLibrary.Editors
@@ -38,10 +40,25 @@ namespace RealTalkEngineEditorLibrary.Editors
 
             Network.Nodes.Clear();
 
+            Dictionary<SpeechNode, NodeViewModel> nodeLookup = new Dictionary<SpeechNode, NodeViewModel>();
+
             Story story = TargetObject as Story;
             for (int i = 0; i < story.NodeCount; ++i)
             {
-                CreateNodeViewModel(story.GetNodeAt((uint)i));
+                SpeechNode node = story.GetNodeAt((uint)i);
+                NodeViewModel nodeViewModel = CreateNodeViewModel(node);
+                nodeLookup.Add(node, nodeViewModel);
+            }
+
+            for (int node_index = 0; node_index < story.NodeCount; ++node_index)
+            {
+                SpeechNode node = story.GetNodeAt((uint)node_index);
+                NodeViewModel nodeViewModel = nodeLookup[node];
+
+                foreach (Transition transition in node)
+                {
+                    Network.Connections.Add(new ConnectionViewModel(Network, nodeLookup[transition.Destination].Inputs[0], nodeViewModel.Outputs[0]));
+                }
             }
         }
 

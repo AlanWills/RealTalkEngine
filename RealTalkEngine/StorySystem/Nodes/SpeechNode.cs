@@ -20,6 +20,7 @@ namespace RealTalkEngine.StorySystem.Nodes
         /// <summary>
         /// The display name of this node.
         /// </summary>
+        [Serialize]
         public string Name { get; set; }
 
         /// <summary>
@@ -30,6 +31,7 @@ namespace RealTalkEngine.StorySystem.Nodes
         /// <summary>
         /// The textual content of this node.
         /// </summary>
+        [Serialize]
         public string Text { get; set; } = "";
 
         /// <summary>

@@ -16,8 +16,16 @@ namespace RealTalkEngineEditorLibrary.Assets
         {
         }
 
+        #region Save Override
+
+        /// <summary>
+        /// Saves the story to this asset's file path.
+        /// </summary>
         public override void Save()
         {
+            AssetObject.Save(FileInfo.FullName, true);
         }
+
+        #endregion
     }
 }
