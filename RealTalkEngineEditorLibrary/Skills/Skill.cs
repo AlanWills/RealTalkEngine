@@ -1,4 +1,5 @@
 ﻿using BindingsKernel;
+using RealTalkEngineEditorLibrary.Intents;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,12 @@ namespace RealTalkEngineEditorLibrary.Skills
         /// </summary>
         [Serialize]
         public string SkillName { get; set; }
+
+        /// <summary>
+        /// The intents associated with this skill.
+        /// </summary>
+        [Serialize]
+        public List<Intent> Intents { get; private set; } = new List<Intent>();
 
         #endregion
     }

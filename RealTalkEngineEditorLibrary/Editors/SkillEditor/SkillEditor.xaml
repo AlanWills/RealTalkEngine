@@ -13,8 +13,22 @@
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="SkillName" Grid.Column="0" Text="Skill Name" 
                        Style="{StaticResource DarkText}" HorizontalAlignment="Right" Margin="0,0,10,0"/>
-            <TextBox x:Name="SkillNameValue" Grid.Column="1" Text="{Binding SkillName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,20,0"
+            <TextBox x:Name="SkillNameValue" Grid.Column="1" Text="{Binding TargetObject.SkillName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,20,0"
                        Style="{StaticResource DefaultTextBox}" HorizontalAlignment="Stretch"/>
+        </Grid>
+        <Grid DockPanel.Dock="Top" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="Intents" Grid.Column="0" Text="Intents" 
+                       Style="{StaticResource DarkText}" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+            <DockPanel Grid.Column="1" LastChildFill="False" Margin="0,0,20,0">
+                <ListBox x:Name="IntentsValue" DockPanel.Dock="Top" ItemsSource="{Binding Intents}" DisplayMemberPath="Name"
+                           Style="{StaticResource DefaultListBox}" HorizontalAlignment="Stretch" MinHeight="200" MaxHeight="200"/>
+                <ComboBox DockPanel.Dock="Top" ItemsSource="{Binding AvailableIntents}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedIntent}"/>
+                <Button DockPanel.Dock="Top" Content="Add" Click="AddButton_Click"/>
+            </DockPanel>
         </Grid>
     </DockPanel>
 </editor:Editor>

@@ -24,10 +24,23 @@ namespace RealTalkEngineEditorLibrary.Editors
     [CustomEditor(typeof(Skill), "Skill Editor")]
     public partial class SkillEditor : Editor
     {
+        #region Properties and Fields
+
+        private SkillEditorViewModel SkillEditorViewModel { get; set; }
+
+        #endregion
+
         public SkillEditor() :
             base(new SkillEditorViewModel())
         {
+            SkillEditorViewModel = ViewModel as SkillEditorViewModel;
+
             InitializeComponent();
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            SkillEditorViewModel.AddIntent();
         }
     }
 }
