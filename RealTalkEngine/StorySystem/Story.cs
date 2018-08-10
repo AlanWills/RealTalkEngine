@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BindingsKernel.Objects;
+using Newtonsoft.Json;
 using RealTalkEngine.StorySystem.Conditions;
 using RealTalkEngine.StorySystem.Nodes;
 using RealTalkEngine.StorySystem.Transitions;
@@ -16,7 +17,7 @@ using Twinary.StorySystem.Transitions;
 namespace RealTalkEngine.StorySystem
 {
     [Serializable]
-    public class Story
+    public class Story : IReference
     {
         #region Serialized Properties
 
@@ -34,6 +35,11 @@ namespace RealTalkEngine.StorySystem
         /// The nodes contained within this story.
         /// </summary>
         private List<SpeechNode> Nodes { get; set; } = new List<SpeechNode>();
+
+        /// <summary>
+        /// A unique guid for this story we can use to identify it.
+        /// </summary>
+        private Guid Guid { get; set; } = Guid.NewGuid();
 
         #endregion
 
@@ -60,6 +66,11 @@ namespace RealTalkEngine.StorySystem
             get { return m_runtime; }
             set { m_runtime = value; }
         }
+
+        /// <summary>
+        /// A unique identifier for this story.
+        /// </summary>
+        public string UniqueIdentifier { get { return Guid.ToString(); } }
 
         /// <summary>
         /// A dictionary of node name to node instance which allows us to quickly access nodes from their names.
@@ -109,6 +120,7 @@ namespace RealTalkEngine.StorySystem
 
             Story story = new Story();
             story.Name = twineStory.Name;
+            story.Guid = twineStory.IfID;
 
             TwineSpeechNode firstNode = twineStory.Nodes.Find(x => x.OneBasedIndex == twineStory.OneBasedStartNodeIndex);
             story.StartNodeName = firstNode != null ? firstNode.Name : "";

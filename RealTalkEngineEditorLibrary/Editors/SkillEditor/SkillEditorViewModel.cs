@@ -1,4 +1,5 @@
-﻿using CelesteEngineEditor.Assets;
+﻿using BindingsKernel.Objects;
+using CelesteEngineEditor.Assets;
 using CelesteEngineEditor.Core;
 using CelesteEngineEditor.Editors;
 using RealTalkEngineEditorLibrary.Intents;
@@ -16,7 +17,7 @@ namespace RealTalkEngineEditorLibrary.Editors
     {
         #region Properties and Fields
         
-        public List<object> AvailableIntents
+        public List<IReference> AvailableIntents
         {
             get { return Project.Current.ProjectAssets.Where(x => (x is ScriptableObjectAsset) && (x as ScriptableObjectAsset).AssetObject is Intent).Select(x => x.AssetObjectInternal).ToList(); }
         }
