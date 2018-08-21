@@ -18,6 +18,16 @@ namespace RealTalkEngine.Tests.StorySystem
     [TestClass]
     public class TestStory : UnitTest
     {
+        #region Attribute Tests
+
+        [TestMethod]
+        public void Story_HasSerializableAttribute()
+        {
+            AssertExt.HasCustomAttribute<SerializableAttribute>(typeof(Story));
+        }
+
+        #endregion
+
         #region Constructor Tests
 
         [TestMethod]

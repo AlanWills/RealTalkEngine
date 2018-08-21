@@ -1,5 +1,6 @@
 ﻿using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
+using CelTestSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RealTalkEngine.RequestHandling;
 using RealTalkEngine.StorySystem;
@@ -15,6 +16,16 @@ namespace RealTalkEngine.Tests.StorySystem.Conditions
     [TestClass]
     public class TestIntentCondition
     {
+        #region Attribute Tests
+
+        [TestMethod]
+        public void IntentCondition_HasSerializableAttribute()
+        {
+            AssertExt.HasCustomAttribute<SerializableAttribute>(typeof(IntentCondition));
+        }
+
+        #endregion
+
         #region Condition Passes Tests
 
         [TestMethod]

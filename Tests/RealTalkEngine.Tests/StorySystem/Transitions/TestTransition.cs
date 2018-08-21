@@ -6,12 +6,23 @@ using System.Collections.Generic;
 using System.Text;
 using RealTalkEngine.Tests.Mocks.StorySystem.Conditions;
 using RealTalkEngine.StorySystem.Conditions;
+using CelTestSharp;
 
 namespace RealTalkEngine.Tests.StorySystem.Transitions
 {
     [TestClass]
     public class TestTransition
     {
+        #region Attribute Tests
+
+        [TestMethod]
+        public void Transition_HasSerializableAttribute()
+        {
+            AssertExt.HasCustomAttribute<SerializableAttribute>(typeof(Transition));
+        }
+
+        #endregion
+
         #region Constructor Tests
 
         [TestMethod]

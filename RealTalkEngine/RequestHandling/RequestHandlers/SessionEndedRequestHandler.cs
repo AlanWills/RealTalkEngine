@@ -21,7 +21,7 @@ namespace RealTalkEngine.RequestHandling.RequestHandlers
         /// <returns></returns>
         public override bool IsHandlerForRequest(SkillRequest request)
         {
-            return request.Request is SessionEndedRequest;
+            return request?.Request is SessionEndedRequest;
         }
 
         /// <summary>

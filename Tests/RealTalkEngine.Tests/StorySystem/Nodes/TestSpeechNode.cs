@@ -14,6 +14,16 @@ namespace RealTalkEngine.Tests.StorySystem.Nodes
     [TestClass]
     public class TestSpeechNode
     {
+        #region Attribute Tests
+
+        [TestMethod]
+        public void SpeechNode_HasSerializableAttribute()
+        {
+            AssertExt.HasCustomAttribute<SerializableAttribute>(typeof(SpeechNode));
+        }
+
+        #endregion
+
         #region Constructor Tests
 
         #region Default
