@@ -35,7 +35,7 @@ namespace RealTalkEngine.RequestHandling.RequestHandlers
         /// <returns></returns>
         public override bool IsHandlerForRequest(SkillRequest request)
         {
-            return request.Request is IntentRequest &&
+            return request?.Request is IntentRequest &&
                    (request.Request as IntentRequest).Intent != null;
         }
 
