@@ -61,6 +61,7 @@
     <Compile Include="AssetLoaders\TwineStoryAssetLoader.cs" />
     <Compile Include="Assets\StoryAsset.cs" />
     <Compile Include="Assets\TwineStoryAsset.cs" />
+    <Compile Include="Authentication\AmazonLogin.cs" />
     <Compile Include="Editors\SkillEditor\SkillEditor.xaml.cs">
       <DependentUpon>SkillEditor.xaml</DependentUpon>
     </Compile>

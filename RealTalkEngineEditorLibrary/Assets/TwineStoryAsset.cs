@@ -9,15 +9,15 @@ using Twinary.StorySystem;
 
 namespace RealTalkEngineEditorLibrary.Assets
 {
-    public class TwineStoryAsset : Asset<TwineStory>
-    {
-        public TwineStoryAsset(FileInfo fileInfo, TwineStory twineStory) : 
-            base(fileInfo, twineStory)
-        {
-        }
+    //public class TwineStoryAsset : Asset<TwineStory>
+    //{
+    //    public TwineStoryAsset(FileInfo fileInfo, TwineStory twineStory) : 
+    //        base(fileInfo, twineStory)
+    //    {
+    //    }
 
-        public override void Save()
-        {
-        }
-    }
+    //    public override void Save()
+    //    {
+    //    }
+    //}
 }

@@ -32,8 +32,9 @@ namespace RealTalkEngineEditorLibrary.AssetLoaders
         /// <returns></returns>
         public override IAsset Load(FileInfo file)
         {
-            TwineStory twineStory = TwineStory.Load(file.FullName);
-            return twineStory != null ? new TwineStoryAsset(file, twineStory) : null;
+            return null;
+            //TwineStory twineStory = TwineStory.Load(file.FullName);
+            //return twineStory != null ? new TwineStoryAsset(file, twineStory) : null;
         }
 
         #endregion
